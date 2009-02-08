@@ -1,0 +1,95 @@
+function S = addSeedsToVR(VD, sk, params)
+% function S = addSeedsTOVR(VD, sk, params)
+
+%
+% $Id: addSeedsToVR.m,v 1.1 2009/02/08 21:07:17 patrick Exp $
+%
+% Copyright (c) 2008 
+% Patrick Guio <p.guio@ucl.ac.uk>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+% seed coordinates
+xs = VD.Sx(sk);
+ys = VD.Sy(sk);
+
+% neighbour seeds coordinates
+ns = VD.Nk{sk};
+xn = VD.Sx(ns);
+yn = VD.Sy(ns);
+
+if 0,
+  % weight seed and weight vertices 1/3, 2/3
+  ws = 1; wv = 2;
+else
+  % weight seed and weight vertices gold number
+  ws = sqrt(5)-1; wv = 2;
+end
+% sum of weights
+wt = ws+wv;
+
+% get vertices list of VR(sk)
+[V,I] = getVRvertices(VD, sk);
+Sx = []; Sy = [];
+for i = 1:size(V,1),
+	x = round((ws*xs+wv*V(i,1))/wt);
+	y = round((ws*ys+wv*V(i,2))/wt);
+	% list all immediate neighbour seeds (sk, N(sk), S added)
+	Sxs = [xs; xn(:); Sx(:)]; 
+	Sys = [ys; yn(:); Sy(:)]; 
+	if isXinW([x,y], VD) & ...  
+	   all((Sxs-x).^2+(Sys-y).^2 > params.d2Seeds*ones(size(Sxs))),
+	    Sx = [Sx; x];
+	    Sy = [Sy; y];
+	end
+end
+S = [Sx(:), Sy(:)];
+
+if 0
+%subplot(212)
+clf
+
+plot(xs,ys,'ok', 'MarkerSize',8)
+text(xs,ys, num2str(sk), 'verticalalignment', 'bottom');
+set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+hold on
+for i=1:length(ns),
+  plot(xn(i),yn(i),'xk', 'MarkerSize',8)
+	text(xn(i),yn(i), ['n' num2str(ns(i))], 'verticalalignment', 'bottom');
+end
+for i=1:size(S,1)
+  plot(S(i,1),S(i,2),'xk', 'MarkerSize',8)
+	text(S(i,1),S(i,2), ['i' num2str(i)], 'verticalalignment', 'bottom');
+end
+for i=1:size(V,1)
+  plot(V(i,1),V(i,2),'xk', 'MarkerSize',8)
+	text(V(i,1),V(i,2), ['v' num2str(i)], 'verticalalignment', 'bottom');
+end
+[vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
+plot(vx,vy,'-k','LineWidth',1)
+hold off
+%pause
+
+for i=1:size(S,1),
+  if ~isempty(find(S(i,1)==VD.Sx & S(i,2)==VD.Sy)),
+	  sk = find(S(i,1)==VD.Sx & S(i,2)==VD.Sy);
+		s = sprintf('Error: seed i%d=(%d,%d) already in S(%d)=(%d,%d)', ...
+			    i, S(i,1),S(i,2), sk, VD.Sx(sk), VD.Sy(sk));
+	  fprintf(1,'%s\n', s);
+		V,I
+		pause
+	end
+end
+
+end
