@@ -1,8 +1,8 @@
-function [sslat, sslong, selat, selong] = computeJupiterAxis(epoch)
-% function [sslat, sslong, selat, selong] = computeJupiterAxis(epoch)
+function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
+% function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.2 2009/02/26 11:24:07 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.3 2009/02/26 16:11:21 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -75,6 +75,10 @@ sedist  = norm(seposn);
 selong  = mod(atan2(seposn(2), seposn(1))*180/pi, 360);
 selat   = 90 - acos(seposn(3)/sedist)*180/pi;
 
+
+sedistAU = cspice_convrt(sedist,'KM','AU');
+AU2km = cspice_convrt(1,'AU','KM');
+
 % Transform position of Jupiter axis to Radial Tangential Normal coordinates
 % Set up RTN definitions in Jupiter coordinates
 
@@ -110,10 +114,16 @@ end
 % get Jupiter axis / sun direction angular separation
 axis_sun_ang = acos(-1.0*rvec(3))*180/pi;
 
+if 0
 fprintf(1,'%s%s\n',char(' '*ones(1,17)), ...
         'UTC   Subsol Lat  Subsol Long   Subear Lat  Subear Long');
 fprintf(1,'%s %12.6f %12.6f %12.6f %12.6f\n', ...
         cspice_et2utc(et,'C',0), sslat, sslong, selat, selong);
+else
+fprintf(1,'Epoch                         = %s\n', cspice_et2utc(et,'C',0));
+fprintf(1,'Sub-Earth latitude, longitude = %12.4f, %12.4f\n', selat, selong);
+fprintf(1,'Sub-Solar latitude, longitude = %12.4f, %12.4f\n', sslat, sslong);
+end
 
 %  It's always good form to unload kernels after use,
 %  particularly in MATLAB due to data persistence.
