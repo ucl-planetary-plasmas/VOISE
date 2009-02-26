@@ -1,44 +1,67 @@
-function [sslat, sslong, selat, selong] = computeJupiterAxis(UDATE)
+function [sslat, sslong, selat, selong] = computeJupiterAxis(epoch)
+% function [sslat, sslong, selat, selong] = computeJupiterAxis(epoch)
+
+%
+% $Id: computeJupiterAxis.m,v 1.2 2009/02/26 11:24:07 patrick Exp $
+%
+% Copyright (c) 2008 
+% Patrick Guio <p.guio@ucl.ac.uk>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+% generic kernel path
+persistent spiceKernelsPath
+
+spiceKernelsPath = '/home/patrick/research/codes/spice/data/';
 
 % Load a leapseconds kernel.
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-cspice_furnsh('naif0009.tls');
+cspice_furnsh([spiceKernelsPath 'naif0009.tls']);
 
 % Load planetary ephemeris 
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
-cspice_furnsh('de421.bsp');
+cspice_furnsh([spiceKernelsPath 'de421.bsp']);
 
 % Load satellite ephemeris 
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/
-cspice_furnsh('jup263.bsp');
+cspice_furnsh([spiceKernelsPath 'jup263.bsp']);
 
 % Load orientation data for planets, natural 
 % satellites, the Sun, and selected asteroids
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
-cspice_furnsh('pck00008.tpc');
+cspice_furnsh([spiceKernelsPath 'pck00008.tpc']);
 
 
 % Convert string date to cspice
-et = cspice_str2et(UDATE);
-
+et = cspice_str2et(epoch);
 
 % Get position of Sun with respect to Jupiter
 target   = 'SUN';
 frame    = 'IAU_JUPITER';
 abcorr   = 'NONE';
 observer = 'JUPITER';
-% Look up the 'state' vectors and light time values
-% 'ltime'  corresponding to the vector of input
-% ephemeris time 'et'.
+% Look up the 'state' vectors and light time values 'ltime'  
+% corresponding to the vector of input ephemeris time 'et'.
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
 
-ssposn = state(1:3)';
+% The first three entries of state contain the X, Y, Z position components.
+% The final three contain the Vx, Vy, Vz velocity components.
+ssposn = state(1:3);
 ssdist  = norm(ssposn);
-sslong  = atan2(ssposn(2), ssposn(1))*180/pi;
+% modulo to get longitude 
+sslong  = mod(atan2(ssposn(2), ssposn(1))*180/pi, 360);
 sslat = 90 - acos(ssposn(3)/ssdist)*180/pi;
-if sslong < 0,
-  sslong = sslong + 360;
-end
 
 % and Earth
 target   = 'EARTH';
@@ -49,47 +72,48 @@ observer = 'JUPITER';
 
 seposn = state(1:3);
 sedist  = norm(seposn);
-selong  = atan2(seposn(2), seposn(1))*180/pi;
+selong  = mod(atan2(seposn(2), seposn(1))*180/pi, 360);
 selat   = 90 - acos(seposn(3)/sedist)*180/pi;
-if selong < 0,
-  selong = selong + 360;
-end
 
-% Transform position of Jupiter axis to RTN coordinates
+% Transform position of Jupiter axis to Radial Tangential Normal coordinates
 % Set up RTN definitions in Jupiter coordinates
 
-% R vector is normalized (and -ive) version of ssposn above
-rvec = -1.0* (ssposn / ssdist);
+% normalised radial vector from Sun toward Jupiter 
+rvec = -cspice_vhat(ssposn);
 
-% Convert the n-vector of 'et' to an array of corresponding
-% transformation matrices (dimensions (3,3,n) ).
-XForm = cspice_pxform('IAU_SUN', 'IAU_JUPITER', et);
+% get the matrix that transforms position vectors from Sun to Jupiter
+% a specified epoch 'et'. 
+% For a n-vector 'et' Sun2Jupiter is an array of dimensions (3,3,n).
+Sun2Jupiter = cspice_pxform('IAU_SUN', 'IAU_JUPITER', et);
 
-%sunaxis = cspice_mxv(XForm,[0.0, 0.0, 1.0])
-sunaxis = (XForm * [0.0, 0.0, 1.0]')';
+% Sun axis orientation in Sun-centred system
+sunaxis = [0.0; 0.0; 1.0];
+% and in frame of Jupiter
+sunaxis = Sun2Jupiter * sunaxis;
 
-%tvec = cspice_vcrss(sunaxis, rvec);
-tvec = cross(sunaxis, rvec);
-tvec = cspice_vhat(tvec')';
+% Tangential is perpendicular to radial and sun axis 
+tvec = cspice_vhat(cross(sunaxis, rvec));
+% Normal is perpendicular to radial and tangential
+nvec = cspice_vhat(cross(rvec, tvec));
 
-%nvec = cspice_vcrss(rvec, tvec);
-nvec = cross(rvec, tvec);
-nvec = cspice_vhat(nvec')';
+% Jupiter axis orientation in Jupiter-centred system
+jupaxis = [0.0; 0.0; 1.0]; 
 
-
-jupaxis = [0.0, 0.0, 1.0]; % Jupiter axis orientation in Jupiter-centred system
-
+% in RTN
+jupaxisRTN = [rvec,tvec,nvec]'*jupaxis;
+if 0
 jupaxis_r = sum(jupaxis.*rvec);
 jupaxis_t = sum(jupaxis.*tvec);
 jupaxis_n = sum(jupaxis.*nvec);
+end
 
-% get Jupiter axis / sun dirn angular separation
+% get Jupiter axis / sun direction angular separation
 axis_sun_ang = acos(-1.0*rvec(3))*180/pi;
 
-fprintf(1,'%s%s\n',char(' '*ones(1,16)), ...
-        'UTC  Subsol Lat Subsol Long Subear Lat Subear Long');
+fprintf(1,'%s%s\n',char(' '*ones(1,17)), ...
+        'UTC   Subsol Lat  Subsol Long   Subear Lat  Subear Long');
 fprintf(1,'%s %12.6f %12.6f %12.6f %12.6f\n', ...
-        UDATE, sslat, sslong, selat, selong);
+        cspice_et2utc(et,'C',0), sslat, sslong, selat, selong);
 
 %  It's always good form to unload kernels after use,
 %  particularly in MATLAB due to data persistence.
