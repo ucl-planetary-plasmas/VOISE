@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.3 2009/02/26 16:11:21 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.4 2009/02/26 16:21:32 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -81,6 +81,9 @@ AU2km = cspice_convrt(1,'AU','KM');
 
 % Transform position of Jupiter axis to Radial Tangential Normal coordinates
 % Set up RTN definitions in Jupiter coordinates
+% R = Sun to Jupiter unit vector
+% T = (Omega x R) / | (Omega x R) | where Omega is Sun's spin axis  
+% N completes the right-handed triad 
 
 % normalised radial vector from Sun toward Jupiter 
 rvec = -cspice_vhat(ssposn);
