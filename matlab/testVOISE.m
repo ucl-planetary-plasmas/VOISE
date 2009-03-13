@@ -5,7 +5,7 @@ function [params,VD,VD1,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
 % [params,VD,VD1,CVD] = testVOISE(100,100,12,@randomSeeds)
 
 %
-% $Id: testVOISE.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: testVOISE.m,v 1.2 2009/03/13 08:22:42 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,14 +39,14 @@ if ~exist('ns'),
 end
 
 x = linspace(-2,1,nc);
-y = linspace(-1,1,nr);
+y = linspace(-1,2,nr);
 
 [X,Y] = meshgrid(x,y);
 
-% [X(1,1)    , Y(1,1)    ] = -1  -1
+% [X(1,1)    , Y(1,1)    ] = -2  -1
 % [X(1,end)  , Y(1,end)  ] =  1  -1
-% [X(end,1)  , Y(end,1)  ] = -1  -1
-% [X(end,end), Y(end,end)] =  1   1
+% [X(end,1)  , Y(end,1)  ] = -2   2
+% [X(end,end), Y(end,end)] =  1   2
 
 load ../share/testImage
 
@@ -57,13 +57,18 @@ params.xlim = [min(params.x) max(params.x)];
 params.y = y;
 params.ylim = [min(params.y) max(params.y)];
 
+% VOISE algorithm parameters
+% Dividing
 params.dividePctile = 80;
 params.d2Seeds = 4;
+% Merging
 params.mergePctile = 60;
 params.dmu = 0.2;
 params.thresHoldLength = 0.3;
+% Regularise
 params.regMaxIter = 1;
 
+% diagnostics params
 params.oDir = '../share/';
 params.oMatFile = 'voise';
 params.divideExport = false;
