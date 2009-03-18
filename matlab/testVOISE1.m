@@ -5,7 +5,7 @@ function [params,VD,VD1,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
 % [params,VD,VD1,CVD] = testVOISE(100,100,12,@randomSeeds)
 
 %
-% $Id: testVOISE1.m,v 1.1 2009/02/10 18:13:50 patrick Exp $
+% $Id: testVOISE1.m,v 1.2 2009/03/18 16:27:53 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -79,8 +79,7 @@ rand('twister',10);
 close all
 
 t = cputime;
-
-[params,VD,VD1,CVD] = VOISE(params, ns, initSeeds, varargin{:});
+[params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin{:});
 t = cputime-t;
 fprintf(1,'Elapsed time %2d:%2d:%2d\n', ...
   floor(t/3600), floor(mod(t,3600)/60), floor(mod(mod(t,3660),60)));
