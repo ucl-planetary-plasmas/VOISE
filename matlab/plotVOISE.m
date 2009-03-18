@@ -2,7 +2,7 @@ function params = plotVOISE(VD, params, ic)
 % function params = plotVOISE(VD, params, ic)
 
 %
-% $Id: plotVOISE.m,v 1.1 2009/03/18 16:26:01 patrick Exp $
+% $Id: plotVOISE.m,v 1.2 2009/03/18 17:03:05 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,7 +26,7 @@ subplot(111),
 x = params.x;
 y = params.y;
 
-if ic==-1, % original image
+if isempty(VD), % original image
 	W = params.W;
 else, % median operator
   W = getVDOp(VD, params.W, @(x) median(x));
@@ -41,7 +41,7 @@ set(gca,'clim',params.Wlim);
 %set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
 set(gca,'xlim', params.xlim, 'ylim', params.ylim);
 
-if ic~=-1 & ic~=4,
+if ~isempty(VD) & ic~=4,
 hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
 sx = (max(params.x)-min(params.x))/(VD.xM-VD.xm);
@@ -50,11 +50,12 @@ plot((vx-VD.xm)*sx+min(params.x),(vy-VD.ym)*sy+min(params.y),'-k','LineWidth',0.
 hold off
 end
 
-title(sprintf('card(S) = %d', length(VD.Sk)))
 
-if ic==-1, % original image
+if isempty(VD), % original image
+  title('Original image')
   exportfig(gcf,[params.oDir 'orig.eps'],'color','cmyk');
 else
+  title(sprintf('card(S) = %d', length(VD.Sk)))
   exportfig(gcf,[params.oDir 'phase' num2str(ic) '.eps'],'color','cmyk');
 end
 
