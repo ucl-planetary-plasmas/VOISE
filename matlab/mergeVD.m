@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: mergeVD.m,v 1.2 2009/03/18 15:46:16 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,8 +20,13 @@ function [VD, params] = mergeVD(VD, params)
 % Public License for more details.
 %
 
-% 
-mergePctile = params.mergePctile;
+% do not attempt to merge if mergePctile < 0
+if params.mergePctile<0,
+  return;
+else
+  mergePctile = params.mergePctile;
+end
+
 % Similarity parameters |\mu_i-\mu_j|< dmu \mu_i
 dmu = params.dmu;
 % non homogeneous neighbours vertices length to circumference max ratio
