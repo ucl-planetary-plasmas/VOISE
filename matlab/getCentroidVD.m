@@ -2,7 +2,7 @@ function CVD = getCentroidVD(VD, params, maxIter)
 % function CVD = getCentroidVD(VD, params, maxIter)
 
 %
-% $Id: getCentroidVD.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: getCentroidVD.m,v 1.2 2009/03/18 15:47:12 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -19,6 +19,11 @@ function CVD = getCentroidVD(VD, params, maxIter)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+
+if params.regMaxIter < 1,
+  CVD = [];
+  return;
+end
 
 fprintf(1,'Computing Centroid Voronoi Diagram\n')
 
