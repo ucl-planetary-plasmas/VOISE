@@ -1,3 +1,54 @@
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: testVOISE.m, testVOISE1.m:
+	Fixed functions help according to new output arguments.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotVOISE.m:
+	Fixed bug in title for original image.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: testVOISE.m, testVOISE1.m:
+	Fixed the output of VOISE that now contain the Voronoi diagram for the
+	initialisation (IVD), dividing (DVD), merging (MVD) and regularisation
+	(CVD) phases.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotVOISE.m:
+	External default diagnostic function for the VOISE algorithm.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m:
+	Renamed and moved out internal diagnostic function plotCurrentVD() into
+	external function plotVOISE().
+	Removed length scale diagnostic.
+	Cleaned and commented the VOISE algorithm structure.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getVDOp.m:
+	Points exactly on the edges of the Voronoi diagram have their value set
+	to NaN independently of the operator.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getCentroidVD.m:
+	Added regMaxIter check: if negative just return.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/mergeVD.m:
+	Added mergePctile check: if negative just return.
+
+2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/divideVD.m:
+	Added dividePctile check: if negative just return.
+
 2009-03-12  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/plotDT.m: Plot function of Delaunay triangulation.
