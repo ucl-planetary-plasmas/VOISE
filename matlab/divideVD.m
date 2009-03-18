@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: divideVD.m,v 1.2 2009/03/18 15:45:56 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,8 +20,12 @@ function [VD, params]  = divideVD(VD, params)
 % Public License for more details.
 %
 
-%
-dividePctile = params.dividePctile;
+% do not attempt to divide if dividePctile < 0
+if params.dividePctile<0,
+  return;
+else
+  dividePctile = params.dividePctile;
+end
 
 iDiv = 1;
 stopDiv = false;
