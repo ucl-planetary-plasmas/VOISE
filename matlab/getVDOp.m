@@ -2,7 +2,7 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 % function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 
 %
-% $Id: getVDOp.m,v 1.1 2009/02/08 21:07:16 patrick Exp $
+% $Id: getVDOp.m,v 1.2 2009/03/18 15:49:58 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,7 +20,7 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 % Public License for more details.
 %
 
-Wop = W;
+Wop = zeros(size(W));
 
 if ~exist('op','var') | isempty(op), op = 'mean'; end
 [op,msg] = fcnchk(op);
@@ -38,6 +38,10 @@ end
 
 % find pixels not in any Voronoi region 
 ii = find(VD.Vk.v == 1);
+if 0,
 % rescale the value for these points 
 Wop(ii) = min(Sop(:))-(max(Sop(:))-min(Sop(:)));
+else
+Wop(ii) = NaN;
+end
   
