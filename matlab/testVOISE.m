@@ -1,11 +1,11 @@
-function [params,VD,VD1,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
-% function [params,VD,VD1,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
+function [params,IVD,DVD,MVD,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
+% function [params,IVD,DVD,MVD,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
 %
 % example:
-% [params,VD,VD1,CVD] = testVOISE(100,100,12,@randomSeeds)
+% [params,IVD,DVD,MVD,CVD] = testVOISE(100,100,12,@randomSeeds)
 
 %
-% $Id: testVOISE.m,v 1.3 2009/03/18 16:27:53 patrick Exp $
+% $Id: testVOISE.m,v 1.4 2009/03/18 17:04:00 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>

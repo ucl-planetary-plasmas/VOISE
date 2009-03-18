@@ -1,11 +1,11 @@
-function [params,VD,VD1,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
-% function [params,VD,VD1,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
+function [params,IVD,DVD,MVD,CVD] = testVOISE1(nr,nc,ns,initSeeds,varargin)
+% function [params,IVD,DVD,MVD,CVD] = testVOISE1(nr,nc,ns,initSeeds,varargin)
 %
 % example:
-% [params,VD,VD1,CVD] = testVOISE(100,100,12,@randomSeeds)
+% [params,IVD,DVD,MVD,CVD] = testVOISE1(100,100,12,@randomSeeds)
 
 %
-% $Id: testVOISE1.m,v 1.2 2009/03/18 16:27:53 patrick Exp $
+% $Id: testVOISE1.m,v 1.3 2009/03/18 17:04:00 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,14 +39,14 @@ if ~exist('ns'),
 end
 
 x = linspace(-2,1,nc);
-y = linspace(-1,1,nr);
+y = linspace(-1,2,nr);
 
 [X,Y] = meshgrid(x,y);
 
-% [X(1,1)    , Y(1,1)    ] = -1  -1
+% [X(1,1)    , Y(1,1)    ] = -2  -1
 % [X(1,end)  , Y(1,end)  ] =  1  -1
-% [X(end,1)  , Y(end,1)  ] = -1  -1
-% [X(end,end), Y(end,end)] =  1   1
+% [X(end,1)  , Y(end,1)  ] = -2   2
+% [X(end,end), Y(end,end)] =  1   2
 
 load ../share/testPic
 Z = double(Z);
