@@ -2,7 +2,7 @@ function CVD = getCentroidVD(VD, params, maxIter)
 % function CVD = getCentroidVD(VD, params, maxIter)
 
 %
-% $Id: getCentroidVD.m,v 1.2 2009/03/18 15:47:12 patrick Exp $
+% $Id: getCentroidVD.m,v 1.3 2009/03/20 16:26:05 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -35,13 +35,7 @@ ns = length(VD.Sk);
 Sc = zeros(0,2);
 Sk = [];
 for k = VD.Sk',
-  %sc  = getCentroidSeed(VD, k);
-	[ii, jj, ij] = getVRclosure(VD, k, VD.Nk{k});
-	sc = round([mean(jj), mean(ii)]);
-	if 0,
-	  fprintf(1, 'Seed %3d = (%3d, %3d), Centroid Seed = (%3d, %3d)\n', ...
-		  k, VD.Sx(k), VD.Sy(k), S(1), S(2));
-	end
+  sc  = getCentroidSeed(VD, k);
 	if isempty(find(sc(1) == Sc(:,1) & sc(2) == Sc(:,2)))
 	  % in some cases two centroid seeds could be identical
 		% for example here
@@ -53,7 +47,6 @@ for k = VD.Sk',
 	end
 end
 %pause
-
 % compute centroid Voronoi Diagram 
 CVD = computeVD(nr, nc, Sc);
 
