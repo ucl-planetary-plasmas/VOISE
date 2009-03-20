@@ -2,7 +2,7 @@ function [VD, params] = mergeVDFast(VD, params)
 % function [VD, params] = mergeVDFast(VD, params)
 
 %
-% $Id: mergeVDFast.m,v 1.1 2009/03/20 18:03:09 patrick Exp $
+% $Id: mergeVDFast.m,v 1.2 2009/03/20 18:40:31 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -120,12 +120,13 @@ while ~stopMerge,
   %save([params.oDir 'removedSeeds'], 'Sk');
 
 	% save homogeneity function and dynamic threshold
-	VD.mergeSHC{iMerge} = SHC;
-	VD.mergeHCThreshold(iMerge) = HCThreshold;
+	mergeSHC{iMerge} = SHC;
+	mergeHCThreshold(iMerge) = HCThreshold;
   if ~isempty(Sk),
     fprintf(1,'Removing %d seeds to Voronoi Diagram\n', length(Sk));
     %pause
-    VD = computeVDFast(VD.nr, VD.nc, S);
+		Skeep = setdiff(VD.Sk,Sk);
+    VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)]);
 		if 0
     for k = Sk(:)',
       VD  = removeSeedFromVD(VD, k);
@@ -141,6 +142,8 @@ while ~stopMerge,
   end
 end
 
+VD.mergeSHC = mergeSHC;
+VD.mergeHCThreshold = mergeHCThreshold;
 
 function params = plotCurrentVD(VD, params, iMerge)
 
