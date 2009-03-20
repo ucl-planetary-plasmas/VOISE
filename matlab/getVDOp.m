@@ -2,7 +2,7 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 % function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 
 %
-% $Id: getVDOp.m,v 1.2 2009/03/18 15:49:58 patrick Exp $
+% $Id: getVDOp.m,v 1.3 2009/03/20 17:34:54 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -28,7 +28,7 @@ if ~exist('op','var') | isempty(op), op = 'mean'; end
 Swop = zeros(size(VD.Sk));
 is = 1;
 for s = VD.Sk', % for all seeds
-  % find pixels in the Voronoi region VR(s)
+  % find pixels inside the Voronoi region VR(s)
   ii = find(VD.Vk.lambda == s & VD.Vk.v == 0);
 	% apply operator for pixels in  the Voronoi region VR(s)
 	Sop(is) = op(W(ii), varargin{:});
@@ -36,7 +36,7 @@ for s = VD.Sk', % for all seeds
 	is = is+1;
 end
 
-% find pixels not in any Voronoi region 
+% find pixels not in any Voronoi region but on boundaries
 ii = find(VD.Vk.v == 1);
 if 0,
 % rescale the value for these points 
