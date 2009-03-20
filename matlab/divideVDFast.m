@@ -2,7 +2,7 @@ function [VD, params]  = divideVDFast(VD, params)
 % function [VD,params] = divideVDFast(VD, params)
 
 %
-% $Id: divideVDFast.m,v 1.1 2009/03/20 18:03:09 patrick Exp $
+% $Id: divideVDFast.m,v 1.2 2009/03/20 18:38:40 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -61,8 +61,8 @@ while ~stopDiv,
 	end
 
 	% save homogeneity function and dynamic threshold
-	VD.divSHC{iDiv} = SHC;
-	VD.divHCThreshold(iDiv) = HCThreshold;
+	divSHC{iDiv} = SHC;
+	divHCThreshold(iDiv) = HCThreshold;
   if ~isempty(S),
     fprintf(1,'Adding %d seeds to Voronoi Diagram\n', size(S,1))
     for k = 1:size(S,1),
@@ -83,6 +83,8 @@ while ~stopDiv,
 	end
 end
 
+VD.divSHC = divSHC;
+VD.divHCThreshold = divHCThreshold;
 function params = plotCurrentVD(VD, params, iDiv)
 
 VDW = getVDOp(VD, params.W, @(x) median(x));
