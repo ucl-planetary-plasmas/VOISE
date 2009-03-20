@@ -1,3 +1,13 @@
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getCentroidVD.m:
+	Replace call to function getCentroidSeed instead of inlined code.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getCentroidSeed.m:
+	Commented report for seed and centroid positions.
+
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/H.m:
@@ -70,6 +80,10 @@
 
 2009-02-08  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/computeVDFast.m: Added code to compute neighbour and (lambda,v) structures using Matlab voronoin() function
+
+2009-02-08  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/: H.m, VOISE.m, boardSeeds.m, divideVD.m, drawVD.m,
 	  fig4Seeds.m, getCentroidVD.m, getVRvertices.m, isXinW.m,
 	  mergeVD.m, printSet.m, seedDist.m, testIncVD.m, testVD2CVD.m,
@@ -92,7 +106,6 @@
 	  randomSeeds.m, removeSeedFromVD.m, removeSeedFromVDFast.m,
 	  uniformSeeds.m, addSeedsToVR.m, checkVD.m, computeHCThreshold.m,
 	  initVD.m, prctile.m, updateNeighboursListsFromVoronoin.m,
-	  addSeedToVD.m, addSeedToVDFast.m, computeVD.m, computeVDFast.m,
-	  createTestImage.m, getCentroidSeed.m, getEquidistantPoint.m,
-	  homogeneousCriteria.m: Initial revision
+	  addSeedToVD.m, addSeedToVDFast.m, computeVD.m, createTestImage.m,
+	  getCentroidSeed.m, getEquidistantPoint.m, homogeneousCriteria.m: Initial revision
 
