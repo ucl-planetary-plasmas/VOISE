@@ -2,7 +2,7 @@ function S = getCentroidSeed(VD, k)
 % function S = getCentroidSeed(VD, k)
 
 %
-% $Id: getCentroidSeed.m,v 1.1 2009/02/08 21:07:18 patrick Exp $
+% $Id: getCentroidSeed.m,v 1.2 2009/03/20 16:24:42 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -25,8 +25,10 @@ function S = getCentroidSeed(VD, k)
 
 S = round([mean(jj), mean(ii)]);
 
+if 0
 fprintf(1, 'Seed %3d = (%3d, %3d), Centroid Seed = (%3d, %3d)\n', ...
 	k, VD.Sx(k), VD.Sy(k), S(1), S(2));
+end
 
 
 
