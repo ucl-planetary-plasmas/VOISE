@@ -1,5 +1,43 @@
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/mergeVDFast.m:
+	Report mergeSHC and mergeHCThreshold history in the VD structure before
+	exiting the function since computeVDFast overwrite the VD structure at each
+	iteration.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/divideVDFast.m:
+	Report divSHC and divHCThreshold history in the VD structure before exiting
+	the function since computeVDFast overwrite the VD structure at each
+	iteration.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: VOISEf.m, divideVDFast.m, getCentroidVDFast.m,
+	  mergeVDFast.m:
+	Added `faster' code that compute the entire Voronoi diagram uusing the
+	Matlab voronoin function and update the different necessary structures of
+	neighbours and (lambda,v).
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/cmpVDalgo.m:
+	Test code for comparison of computeVD and computeVDFast functions.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getClosedVDOp.m:
+	New function to calculate the value of the operator over the closed
+	Voronoi diagram.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getVDOp.m:
+	Improved code comment.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/getCentroidVD.m:
 	Replace call to function getCentroidSeed instead of inlined code.
 
