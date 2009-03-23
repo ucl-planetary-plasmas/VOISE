@@ -1,3 +1,14 @@
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotDT.m:
+	Added alternative code using DelaunayTri and triplot functions.
+
+2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotHistHC.m:
+	Do not assume that divide/mergeSHC and dividemergeHCThreshold history data
+	are in the same VD structure and provide both DVD and MVD structures.
+
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/mergeVDFast.m:
