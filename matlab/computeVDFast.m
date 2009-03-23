@@ -2,7 +2,7 @@ function VD = computeVDFast(nr, nc, S)
 % function VD = computeVDFast(nr, nc, S)
 
 %
-% $Id: computeVDFast.m,v 1.2 2009/03/20 17:12:51 patrick Exp $
+% $Id: computeVDFast.m,v 1.3 2009/03/23 17:43:03 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -61,18 +61,15 @@ VD.Sy = S(VD.Sk,2);
 Nk = cell(ns, 1);
 for s = 1:ns, % for each seed s
   %fprintf(1,'seed %d:\n', s);
-  for i = 1:length(C{s}), % for all vertices in VR(s)
-    iv = C{s}(i);
+  for iv = find(C{s}~=1), % for all vertices in VR(s) not infinite
     %fprintf(1,' iv=%d, (%f,%f)\n', iv,  V(iv,1:2));
-    if iv ~= 1, % not infinite vertex
-      for r = setdiff([1:ns], s), % for all seeds S\s
-        if ~isempty(find(C{r}(:) == iv)),
-					Nk{s} = [Nk{s}; setdiff(r, Nk{s})];
-          %si = VD.Sk(s);
-          %ri = VD.Sk(r);
-          %Nk{si} = [Nk{si}; setdiff(ri, Nk{si})];
-          %Nk{ri} = [Nk{ri}; setdiff(si, Nk{ri})];
-        end
+    for r = setdiff([1:ns], s), % for all seeds S\s
+      if ~isempty(find(C{r}(:) == iv)),
+				Nk{s} = [Nk{s}; setdiff(r, Nk{s})];
+        %si = VD.Sk(s);
+        %ri = VD.Sk(r);
+        %Nk{si} = [Nk{si}; setdiff(ri, Nk{si})];
+        %Nk{ri} = [Nk{ri}; setdiff(si, Nk{ri})];
       end
     end
   end
