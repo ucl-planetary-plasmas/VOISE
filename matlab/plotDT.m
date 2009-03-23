@@ -2,7 +2,7 @@ function [hs,hl]=plotDT(x,y,scatterSpecs,lineSpecs)
 % function [hs,hl]=plotDT(x,y)
 
 %
-% $Id: plotDT.m,v 1.1 2009/03/12 15:41:24 patrick Exp $
+% $Id: plotDT.m,v 1.2 2009/03/23 16:02:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,6 +20,8 @@ function [hs,hl]=plotDT(x,y,scatterSpecs,lineSpecs)
 % Public License for more details.
 %
 
+if 1
+
 tri = delaunay(x, y);
 
 if ~exist('scatterSpecs','var') | isempty(scatterSpecs),
@@ -32,12 +34,29 @@ hl = zeros(size(tri,1));
 if ~exist('lineSpecs','var') | isempty(lineSpecs),
   for i=1:size(tri,1)
     index = [tri(i,:) tri(i,1)];
-	  hl(i) = line(x(index), y(index)); %,'color','k');
+	  hl(i) = line(x(index), y(index)); 
   end
 else
   for i=1:size(tri,1)
     index = [tri(i,:) tri(i,1)];
-	  hl(i) = line(x(index), y(index),lineSpecs{:}); %,'color','k');
+	  hl(i) = line(x(index), y(index),lineSpecs{:});
   end
 end
 
+else
+
+tri = DelaunayTri(x, y);
+
+specs = {};
+if exist('scatterSpecs','var') & ~isempty(scatterSpecs), 
+  specs = {specs{:}, scatterSpecs{:}}; 
+end
+if exist('lineSpecs','var') & ~isempty(lineSpecs), 
+  specs = {specs{:}, lineSpecs{:}}; 
+end
+h=triplot(tri, x, y, specs{:});
+
+hs = findobj(h, 'type', 'hggroup');
+hl = findobj(h, 'type', 'line');
+
+end
