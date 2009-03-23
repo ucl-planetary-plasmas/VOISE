@@ -2,7 +2,7 @@ function CVD = getCentroidVDFast(VD, params, maxIter)
 % function CVD = getCentroidVDFast(VD, params, maxIter)
 
 %
-% $Id: getCentroidVDFast.m,v 1.1 2009/03/20 18:03:09 patrick Exp $
+% $Id: getCentroidVDFast.m,v 1.2 2009/03/23 17:40:33 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -35,7 +35,7 @@ ns = length(VD.Sk);
 Sc = zeros(0,2);
 Sk = [];
 for k = VD.Sk',
-  sc  = getCentroidSeed(VD, k);
+  sc  = getCentroidSeed(VD, params, k);
 	if isempty(find(sc(1) == Sc(:,1) & sc(2) == Sc(:,2)))
 	  % in some cases two centroid seeds could be identical
 		% for example here
@@ -58,7 +58,7 @@ while max(abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + ...
   Sc = zeros(0,2);
 	Sk = [];
   for k = VD.Sk',
-    sc  = getCentroidSeed(VD, k);
+    sc  = getCentroidSeed(VD, params, k);
 		if isempty(find(sc(1) == Sc(:,1) & sc(2) == Sc(:,2)))
 	    % in some cases two centroid seeds could be identical
       Sc = [[Sc(:,1); sc(1)],[Sc(:,2); sc(2)]];

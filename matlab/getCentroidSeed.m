@@ -1,8 +1,8 @@
-function S = getCentroidSeed(VD, k)
-% function S = getCentroidSeed(VD, k)
+function S = getCentroidSeed(VD, params, k)
+% function S = getCentroidSeed(VD, params, k)
 
 %
-% $Id: getCentroidSeed.m,v 1.2 2009/03/20 16:24:42 patrick Exp $
+% $Id: getCentroidSeed.m,v 1.3 2009/03/23 17:40:33 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
