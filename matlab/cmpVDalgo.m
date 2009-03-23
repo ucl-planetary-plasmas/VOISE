@@ -5,7 +5,7 @@ function [VD,VDf] = cmpVDalgo(nr,nc,ns,initSeeds,varargin)
 % [VD,VDf] = cmpVDalg(100,100,12,@randomSeeds);
 
 %
-% $Id: cmpVDalgo.m,v 1.1 2009/03/20 17:44:09 patrick Exp $
+% $Id: cmpVDalgo.m,v 1.2 2009/03/23 17:42:24 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -87,6 +87,8 @@ subplot(222), imagesc(VDf.Vk.lambda)
 subplot(223), imagesc(VD.Vk.v)
 subplot(224), imagesc(VDf.Vk.v)
 
+find(VD.Vk.lambda~=VDf.Vk.lambda)
+find(VD.Vk.v~=VDf.Vk.v)
 return
 
 
