@@ -2,7 +2,7 @@ function S = getCentroidSeed(VD, params, k)
 % function S = getCentroidSeed(VD, params, k)
 
 %
-% $Id: getCentroidSeed.m,v 1.3 2009/03/23 17:40:33 patrick Exp $
+% $Id: getCentroidSeed.m,v 1.4 2009/03/23 18:36:27 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -23,7 +23,12 @@ function S = getCentroidSeed(VD, params, k)
 % find out closure of Voronoi Region associated to seed k
 [ii, jj, ij] = getVRclosure(VD, k, VD.Nk{k});
 
-S = round([mean(jj), mean(ii)]);
+x = jj;
+y = ii;
+S = round([mean(x), mean(y)]);
+%w = params.W(ij);
+%S = round([sum(x.*w), sum(y.*w)]/sum(w));
+
 
 if 0
 fprintf(1, 'Seed %3d = (%3d, %3d), Centroid Seed = (%3d, %3d)\n', ...
