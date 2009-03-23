@@ -1,8 +1,8 @@
-function CVD = getCentroidVDFast(VD, params, maxIter)
-% function CVD = getCentroidVDFast(VD, params, maxIter)
+function CVD = getCentroidVDFast(VD, params)
+% function CVD = getCentroidVDFast(VD, params)
 
 %
-% $Id: getCentroidVDFast.m,v 1.2 2009/03/23 17:40:33 patrick Exp $
+% $Id: getCentroidVDFast.m,v 1.3 2009/03/23 18:04:55 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>

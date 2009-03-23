@@ -1,8 +1,8 @@
-function CVD = getCentroidVD(VD, params, maxIter)
-% function CVD = getCentroidVD(VD, params, maxIter)
+function CVD = getCentroidVD(VD, params)
+% function CVD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.4 2009/03/23 17:40:33 patrick Exp $
+% $Id: getCentroidVD.m,v 1.5 2009/03/23 18:04:55 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
