@@ -1,5 +1,37 @@
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/getCentroidSeed.m:
+	Added code for weighted centroid with image intensity.
+
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testVD2CVD.m:
+	Embedbed image into params structure.
+	Provided regMaxIter into params structure.
+
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: getCentroidVD.m, getCentroidVDFast.m:
+	Removed unused argument maxIter.
+
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/computeVDFast.m:
+	Improved code for building neighbour list.
+
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/cmpVDalgo.m:
+	Added additional equality check of (lambda,v) matrices.
+
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: getCentroidSeed.m, getCentroidVD.m, getCentroidVDFast.m:
+	Added params as an argument in order to access the image as potential
+	weight ffunction to calculate the centroid Voronoi diagram.
+
+2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/plotDT.m:
 	Added alternative code using DelaunayTri and triplot functions.
 
