@@ -1,8 +1,12 @@
-function VD = testVD2CVD(nr,nc,ns,initSeeds,varargin)
-% function VD = testVD2CVD(nr,nc,ns)initSeeds,varargin)
+function [VD,CVD] = testVD2CVD(nr,nc,ns,initSeeds,varargin)
+% function [VD,CVD] = testVD2CVD(nr,nc,ns,initSeeds,varargin)
+%
+% example:
+%
+% VD = testVD2CVD(100,100,50,@randomSeeds)
 
 %
-% $Id: testVD2CVD.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: testVD2CVD.m,v 1.2 2009/03/23 18:13:16 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -73,8 +77,11 @@ VD = computeVD(nr, nc, S);
 plotVDop(VD, W, @(x) median(x))
 pause
 
+params.W = W;
+params.regMaxIter = 50;
+
 vdc = figure;
-CVD = getCentroidVD(VD);
+CVD = getCentroidVD(VD,params);
 plotVDop(CVD, W, @(x) median(x))
 
 
