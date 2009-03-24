@@ -2,7 +2,7 @@ function S = getCentroidSeed(VD, params, k)
 % function S = getCentroidSeed(VD, params, k)
 
 %
-% $Id: getCentroidSeed.m,v 1.4 2009/03/23 18:36:27 patrick Exp $
+% $Id: getCentroidSeed.m,v 1.5 2009/03/24 17:44:25 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -25,14 +25,21 @@ function S = getCentroidSeed(VD, params, k)
 
 x = jj;
 y = ii;
+w = ones(size(params.W(ij)));
 S = round([mean(x), mean(y)]);
-%w = params.W(ij);
-%S = round([sum(x.*w), sum(y.*w)]/sum(w));
+w = params.W(ij);
+S = round([sum(x.*w), sum(y.*w)]/sum(w));
 
 
-if 0
+if 1
 fprintf(1, 'Seed %3d = (%3d, %3d), Centroid Seed = (%3d, %3d)\n', ...
 	k, VD.Sx(k), VD.Sy(k), S(1), S(2));
+imagesc(params.x,params.y,W)
+axis xy
+hold on
+scatter(x,y,5,2*w);
+hold off
+pause
 end
 
 
