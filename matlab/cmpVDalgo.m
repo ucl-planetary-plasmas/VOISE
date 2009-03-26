@@ -5,7 +5,7 @@ function [VD,VDf] = cmpVDalgo(nr,nc,ns,initSeeds,varargin)
 % [VD,VDf] = cmpVDalg(100,100,12,@randomSeeds);
 
 %
-% $Id: cmpVDalgo.m,v 1.2 2009/03/23 17:42:24 patrick Exp $
+% $Id: cmpVDalgo.m,v 1.3 2009/03/26 12:00:28 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -99,7 +99,7 @@ subplot(212), imagesc(WVDf)
 
 return
 
-plotVDop(VD, W, @(x) median(x))
+plotVDOp(VD, W, @(x) median(x))
 pause
 
 if 0
@@ -114,6 +114,6 @@ for k = seedList,
 	drawVD(VD);
 end
 
-plotVDop(VD, W, @(x) median(x))
+plotVDOp(VD, W, @(x) median(x))
 
 

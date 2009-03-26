@@ -1,8 +1,8 @@
-function plotVDop(VD, W, op, varargin)
-% function plotVDop(VD, W, op, varargin)
+function plotVDOp(VD, W, op, varargin)
+% function plotVDOp(VD, W, op, varargin)
 
 %
-% $Id: plotVDOp.m,v 1.1 2009/02/08 21:07:16 patrick Exp $
+% $Id: plotVDOp.m,v 1.2 2009/03/26 12:00:28 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>

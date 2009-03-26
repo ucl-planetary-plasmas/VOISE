@@ -6,7 +6,7 @@ function [VD,CVD] = testVD2CVD(nr,nc,ns,initSeeds,varargin)
 % VD = testVD2CVD(100,100,50,@randomSeeds)
 
 %
-% $Id: testVD2CVD.m,v 1.2 2009/03/23 18:13:16 patrick Exp $
+% $Id: testVD2CVD.m,v 1.3 2009/03/26 12:00:28 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -74,7 +74,7 @@ end
 
 VD = computeVD(nr, nc, S);
 
-plotVDop(VD, W, @(x) median(x))
+plotVDOp(VD, W, @(x) median(x))
 pause
 
 params.W = W;
@@ -82,6 +82,6 @@ params.regMaxIter = 50;
 
 vdc = figure;
 CVD = getCentroidVD(VD,params);
-plotVDop(CVD, W, @(x) median(x))
+plotVDOp(CVD, W, @(x) median(x))
 
 
