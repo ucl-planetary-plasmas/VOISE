@@ -2,7 +2,7 @@ function S = addSeedsToVR(VD, sk, params)
 % function S = addSeedsTOVR(VD, sk, params)
 
 %
-% $Id: addSeedsToVR.m,v 1.1 2009/02/08 21:07:17 patrick Exp $
+% $Id: addSeedsToVR.m,v 1.2 2009/03/31 16:38:04 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,8 +32,12 @@ yn = VD.Sy(ns);
 if 0,
   % weight seed and weight vertices 1/3, 2/3
   ws = 1; wv = 2;
+  % weight seed and weight vertices 3/8, 5/8
+  % transform an equilateral triangle into four regions of equal area
+  ws = 3; wv = 5;
 else
-  % weight seed and weight vertices gold number
+  % weight seed and weight vertices golden number 
+  % (sqrt95)-1)/(sqrt(5)+1), 2/(sqrt(5)+1)
   ws = sqrt(5)-1; wv = 2;
 end
 % sum of weights
