@@ -8,11 +8,6 @@
 	* matlab/: cmpVDalgo.m, plotVDOp.m, testIncVD.m, testVD2CVD.m:
 	Renamed function plotVDop() into plotVDOp().
 
-2009-03-24  Patrick Guio <p.guio@ucl.ac.uk>
-
-	* matlab/plotHistHC.m:
-	Added diagnostic of number of seeds as function of iterations.
-
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getCentroidSeed.m:
@@ -49,12 +44,6 @@
 
 	* matlab/plotDT.m:
 	Added alternative code using DelaunayTri and triplot functions.
-
-2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
-
-	* matlab/plotHistHC.m:
-	Do not assume that divide/mergeSHC and dividemergeHCThreshold history data
-	are in the same VD structure and provide both DVD and MVD structures.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
@@ -184,11 +173,11 @@
 	  fig4Seeds.m, getCentroidVD.m, getVRvertices.m, isXinW.m,
 	  mergeVD.m, printSet.m, seedDist.m, testIncVD.m, testVD2CVD.m,
 	  testVOISE.m, VDexample.m, getVDOp.m, getVRclosure.m, isXinC.m,
-	  plotHistHC.m, plotVDOp.m, poissonSeeds.m, printVD.m,
-	  randomSeeds.m, removeSeedFromVD.m, removeSeedFromVDFast.m,
-	  uniformSeeds.m, addSeedsToVR.m, checkVD.m, computeHCThreshold.m,
-	  initVD.m, prctile.m, updateNeighboursListsFromVoronoin.m,
-	  addSeedToVD.m, addSeedToVDFast.m, computeVD.m, computeVDFast.m,
+	  plotVDOp.m, poissonSeeds.m, printVD.m, randomSeeds.m,
+	  removeSeedFromVD.m, removeSeedFromVDFast.m, uniformSeeds.m,
+	  addSeedsToVR.m, checkVD.m, computeHCThreshold.m, initVD.m,
+	  prctile.m, updateNeighboursListsFromVoronoin.m, addSeedToVD.m,
+	  addSeedToVDFast.m, computeVD.m, computeVDFast.m,
 	  createTestImage.m, getCentroidSeed.m, getEquidistantPoint.m,
 	  homogeneousCriteria.m: Imported stable basic routines for VOISE
 
@@ -198,10 +187,10 @@
 	  fig4Seeds.m, getCentroidVD.m, getVRvertices.m, isXinW.m,
 	  mergeVD.m, printSet.m, seedDist.m, testIncVD.m, testVD2CVD.m,
 	  testVOISE.m, VDexample.m, getVDOp.m, getVRclosure.m, isXinC.m,
-	  plotHistHC.m, plotVDOp.m, poissonSeeds.m, printVD.m,
-	  randomSeeds.m, removeSeedFromVD.m, removeSeedFromVDFast.m,
-	  uniformSeeds.m, addSeedsToVR.m, checkVD.m, computeHCThreshold.m,
-	  initVD.m, prctile.m, updateNeighboursListsFromVoronoin.m,
-	  addSeedToVD.m, addSeedToVDFast.m, computeVD.m, createTestImage.m,
+	  plotVDOp.m, poissonSeeds.m, printVD.m, randomSeeds.m,
+	  removeSeedFromVD.m, removeSeedFromVDFast.m, uniformSeeds.m,
+	  addSeedsToVR.m, checkVD.m, computeHCThreshold.m, initVD.m,
+	  prctile.m, updateNeighboursListsFromVoronoin.m, addSeedToVD.m,
+	  addSeedToVDFast.m, computeVD.m, createTestImage.m,
 	  getCentroidSeed.m, getEquidistantPoint.m, homogeneousCriteria.m: Initial revision
 
