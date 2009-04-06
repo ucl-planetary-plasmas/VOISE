@@ -8,7 +8,7 @@ function VD = addSeedToVD(VD, S)
 % Vol. 18, No 10, October 1997
 
 %
-% $Id: addSeedToVD.m,v 1.1 2009/02/08 21:07:18 patrick Exp $
+% $Id: addSeedToVD.m,v 1.2 2009/04/06 16:45:10 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -46,9 +46,11 @@ VD.Sk = [VD.Sk; k];
 VD.Sx = [VD.Sx; S(1)];
 VD.Sy = [VD.Sy; S(2)];
 
+if 0
 s1 = sprintf('*** Add seed %d (%d,%d) at k=%d ***', k, S, k);
 s2 = sprintf('%s', char('*'*ones(length(s1),1)));
 fprintf(1,'\n%s\n%s\n%s\n', s2, s1, s2);
+end
 
 if 0
 % Update list of neighbours N_k to N_{k+1}
@@ -57,9 +59,13 @@ VD = updateNeighboursLists(VD, k);
 toc
 %pause
 else
+if 0
 tic
+end
 VD = updateNeighboursListsFromVoronoin(VD,'add',k);
+if 0
 toc
+end
 %pause
 end
 

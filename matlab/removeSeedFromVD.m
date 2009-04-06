@@ -8,7 +8,7 @@ function VD = removeSeedFromVD(VD, sk)
 % Vol. 18, No 10, October 1997
 
 %
-% $Id: removeSeedFromVD.m,v 1.1 2009/02/08 21:07:16 patrick Exp $
+% $Id: removeSeedFromVD.m,v 1.2 2009/04/06 16:45:10 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -37,10 +37,12 @@ end
 % increment time
 k = VD.k+1;
 
+if 0
 s1 = sprintf('*** Remove seed %d (%d,%d) at k=%d ***', ...
 	sk, VD.Sx(sk), VD.Sy(sk), k);
 s2 = sprintf('%s', char('*'*ones(length(s1),1)));
 fprintf(1,'\n%s\n%s\n%s\n', s2, s1, s2);
+end
 
 
 if 0
@@ -54,11 +56,17 @@ fprintf('length(W) = %d length(C(%d,N(%d)) = %d\n', ...
 end
 
 % find out closure of Voronoi Region associated to seed s* = k
+if 0
 tic
+end
 [ii, jj, ij] = getVRclosure(VD, sk, VD.Nk{sk});
+if 0
 toc
+end
+if 0
 fprintf('length(W) = %d length(C(%d,N(%d)) = %d\n', ...
 	length(VD.Vk.lambda), sk, sk, length(ij))
+end
 
 if 0 & ~isempty(find(sort(iin) ~= sort(ij)))
   find(sort(iin) ~= sort(ij))
@@ -109,8 +117,10 @@ i1 = find(VD.Vk.lambda(iin) == sk & VD.Vk.v(iin) == 0);
 % V_k[i,j].v = 1 ((i,j) in K_{k})
 i2 = find(VD.Vk.v(iin) == 1);
 
+if 0
 fprintf(1,'length(i1) = %d, length(i2) = %d, length(i1^i2) = %d\n', ...
 	length(i1), length(i2), length(intersect(i1,i2)));
+end
 
 % mu = min( d^2(p, s), s in N_k(s*), p in C(s*, N_k(s*)
 mu = Inf*ones(size(iin));
