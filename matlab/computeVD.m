@@ -2,7 +2,7 @@ function VD = computeVD(nr, nc, S)
 % function VD = computeVD(nr, nc, S)
 
 %
-% $Id: computeVD.m,v 1.1 2009/02/08 21:07:18 patrick Exp $
+% $Id: computeVD.m,v 1.2 2009/04/06 16:43:24 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -33,7 +33,9 @@ for k = 3:ns,
     fprintf(1,'.');
   end
 end
+if 0
 fprintf(1,'\n');
+end
 
 fprintf(1,'Voronoi Diagram computed\n')
 %pause
