@@ -2,7 +2,7 @@ function A = getVRArea(VD, sk)
 % function A = getVRArea(VD, sk)
 
 %
-% $Id: getVRArea.m,v 1.1 2009/04/06 17:58:48 patrick Exp $
+% $Id: getVRArea.m,v 1.2 2009/04/07 12:25:53 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -30,11 +30,13 @@ y = [V(:,2); V(1,2)];
 
 if all(isfinite(x)) & all(isfinite(y))
   A = 1/2*sum(x(1:end-1).*y(2:end)-x(2:end).*y(1:end-1));
+	if 0
 	plot(x,y,'-x');
 	for i=1:length(x)-1,
 	  text(x(i), y(i), num2str(i), 'verticalalignment', 'bottom');
 	end
 	pause
+	end
 else
   A = Inf;
 end
