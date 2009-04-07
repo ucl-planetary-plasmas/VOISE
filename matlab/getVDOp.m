@@ -2,7 +2,7 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 % function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 
 %
-% $Id: getVDOp.m,v 1.3 2009/03/20 17:34:54 patrick Exp $
+% $Id: getVDOp.m,v 1.4 2009/04/07 12:10:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -25,7 +25,7 @@ Wop = zeros(size(W));
 if ~exist('op','var') | isempty(op), op = 'mean'; end
 [op,msg] = fcnchk(op);
 
-Swop = zeros(size(VD.Sk));
+Sop = zeros(size(VD.Sk));
 is = 1;
 for s = VD.Sk', % for all seeds
   % find pixels inside the Voronoi region VR(s)
