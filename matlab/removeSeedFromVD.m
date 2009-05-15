@@ -8,7 +8,7 @@ function VD = removeSeedFromVD(VD, sk)
 % Vol. 18, No 10, October 1997
 
 %
-% $Id: removeSeedFromVD.m,v 1.2 2009/04/06 16:45:10 patrick Exp $
+% $Id: removeSeedFromVD.m,v 1.3 2009/05/15 15:00:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -192,9 +192,9 @@ else
 % Update time
 VD.k = k;
 
-tic
+if 0, tic, end
 VD = updateNeighboursListsFromVoronoin(VD,'remove',sk);
-toc
+if 0, toc, end
 end
 
 %printVD(1, VD);
