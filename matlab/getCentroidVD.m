@@ -2,7 +2,7 @@ function CVD = getCentroidVD(VD, params)
 % function CVD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.5 2009/03/23 18:04:55 patrick Exp $
+% $Id: getCentroidVD.m,v 1.6 2009/05/15 15:02:45 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -50,9 +50,13 @@ end
 % compute centroid Voronoi Diagram 
 CVD = computeVD(nr, nc, Sc);
 
+dist = abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk));
+dist2 = sqrt((CVD.Sx(CVD.Sk)-VD.Sx(Sk)).^2 + (CVD.Sy(CVD.Sk)-VD.Sy(Sk)).^2);
+fprintf(1,'Maximum distance seed/centre-of-mass %.1f (%.1f)\n', ...
+        max(dist), max(dist2));
+
 iter = 1;
-while max(abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + ...
-          abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk))) > 1e-2 & iter<params.regMaxIter, 
+while max(dist) > 1e-2 & iter<params.regMaxIter, 
   % copy CVD to old VD
   VD = CVD;
   Sc = zeros(0,2);
@@ -68,6 +72,12 @@ while max(abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + ...
   %pause
   CVD = computeVD(nr, nc, Sc);
 	iter = iter + 1;
+
+  dist = abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk));
+  dist2 = sqrt((CVD.Sx(CVD.Sk)-VD.Sx(Sk)).^2 + (CVD.Sy(CVD.Sk)-VD.Sy(Sk)).^2);
+  fprintf(1,'Maximum distance seed/centre-of-mass %.1f (%.1f)\n', ...
+	        max(dist), max(dist2));
+
 end
 fprintf(1,'Centroid Voronoi Diagram computed\n')
 
