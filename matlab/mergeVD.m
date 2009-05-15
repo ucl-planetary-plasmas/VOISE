@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.2 2009/03/18 15:46:16 patrick Exp $
+% $Id: mergeVD.m,v 1.3 2009/05/15 15:01:36 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -64,19 +64,19 @@ while ~stopMerge,
     % isk contains indice in array of size number of seeds
 	  %  sk contains seed indice in VD.Nk
     sk = VD.Sk(isk);
-    if 1,
+    if 0,
 	    fprintf(1,'s=%3d HC=%5.2f (%d) mu=%5.2f HC Threshold=%5.2f\n', ...
 		          [sk, SHC(isk),(SHC(isk) < HCThreshold),VD.Smu(isk),HCThreshold]);
 	  end
 	  % Homogeneous neighbour VR
 	  ihc = (SHC(IST(VD.Nk{sk}))' < HCThreshold);
-	  if 1,
+	  if 0,
 	    fprintf(1,'n=%3d HC=%5.2f (%d) mu=%5.2f\n', ...
-	            [VD.Nk{sk}, SHC(IST(VD.Nk{sk}))', ihc, VD.Smu(IST(VD.Nk{sk}))']');
+	            [VD.Nk{sk}, SHC(IST(VD.Nk{sk})), ihc', VD.Smu(IST(VD.Nk{sk}))]');
 	  end
 	  % 
     err  =  abs(VD.Smu(isk) - VD.Smu(IST(VD.Nk{sk}(ihc)))'); 
-	  if 1,
+	  if 0,
 	    if ~isempty(err), 
 	      fprintf(1,'err=');
 	      fprintf(1,' %5.2f', err); 
@@ -102,16 +102,22 @@ while ~stopMerge,
 		  % unbounded VR not handled properly
       [V,I] = getVRvertices(VD, sk);
 		  edgesLength = sqrt(sum((V([1:end],:)-V([2:end 1],:)).^2,2));
+			if 0,
 		  fprintf(1,'edgesLength='); 
 			fprintf(1,' %5.2f', edgesLength);
 			fprintf(1,'\n');
+			end
 	  	totalLength = sum(edgesLength);
 		  nonHCLength = sum(edgesLength(I(ihc)));
 		  r = nonHCLength/totalLength;
+			if 0
 		  fprintf(1,'totalLength=%.2f nonHCLength=%.2f ratio=%f\n',...
 			        totalLength, nonHCLength, r);
+			end
 		  if r < thresHoldLength,
+			  if 0
 		    fprintf(1,'s=%d to be removed\n', sk);
+				end
 		    Sk = [Sk; sk]; 
 		  end
 		  %pause
@@ -127,6 +133,7 @@ while ~stopMerge,
     %pause
     for k = Sk(:)',
       VD  = removeSeedFromVD(VD, k);
+			fprintf(1,'Voronoi Diagram computed\n')
 	    if 0
         drawVD(VD);
 	    end
