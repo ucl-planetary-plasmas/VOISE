@@ -2,7 +2,7 @@ function VD = computeVDFast(nr, nc, S)
 % function VD = computeVDFast(nr, nc, S)
 
 %
-% $Id: computeVDFast.m,v 1.3 2009/03/23 17:43:03 patrick Exp $
+% $Id: computeVDFast.m,v 1.4 2009/07/03 08:13:50 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -50,9 +50,11 @@ end
 
 % seed's index and coordinates 
 ns = size(S, 1);
+VD.Nk = [];
+VD.k = ns;
 VD.Sk = [1:ns]';
-VD.Sx = S(VD.Sk,1);
-VD.Sy = S(VD.Sk,2);
+VD.Sx = S(VD.Sk, 1);
+VD.Sy = S(VD.Sk, 2);
 
 % Calculate Voronoi Diagram for current seeds
 [V, C] = voronoin([VD.Sx(VD.Sk), VD.Sy(VD.Sk)]);
@@ -61,7 +63,21 @@ VD.Sy = S(VD.Sk,2);
 Nk = cell(ns, 1);
 for s = 1:ns, % for each seed s
   %fprintf(1,'seed %d:\n', s);
-  for iv = find(C{s}~=1), % for all vertices in VR(s) not infinite
+	if 0
+	fprintf(1,'method 1\n');
+	for i = 1:length(C{s}), % for all vertices in VR(s)
+	  iv = C{s}(i);
+	  if iv ~= 1, % not infinite vertex
+	    fprintf(1,' iv=%d, (%f,%f)\n', iv,  V(iv,1:2))
+	  end
+	end
+	fprintf(1,'method 2\n');
+	for iv = C{s}(find(C{s}(:) ~= 1)),
+	  fprintf(1,' iv=%d, (%f,%f)\n', iv,  V(iv,1:2))
+	end
+	pause
+	end
+  for iv = C{s}(find(C{s}(:) ~= 1)), % for all vertices in VR(s) not infinite
     %fprintf(1,' iv=%d, (%f,%f)\n', iv,  V(iv,1:2));
     for r = setdiff([1:ns], s), % for all seeds S\s
       if ~isempty(find(C{r}(:) == iv)),
