@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.2 2009/03/18 15:45:56 patrick Exp $
+% $Id: divideVD.m,v 1.3 2009/07/03 08:16:52 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -61,8 +61,8 @@ while ~stopDiv,
 	end
 
 	% save homogeneity function and dynamic threshold
-	VD.divSHC{iDiv} = SHC;
-	VD.divHCThreshold(iDiv) = HCThreshold;
+	divSHC{iDiv} = SHC;
+	divHCThreshold(iDiv) = HCThreshold;
   if ~isempty(S),
     fprintf(1,'Adding %d seeds to Voronoi Diagram\n', size(S,1))
     for k = 1:size(S,1),
@@ -84,6 +84,10 @@ while ~stopDiv,
     %pause
 	end
 end
+
+VD.divSHC = divSHC;
+VD.divHCThreshold = divHCThreshold;
+
 
 function params = plotCurrentVD(VD, params, iDiv)
 
