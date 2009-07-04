@@ -2,7 +2,7 @@ function benchVD
 % function benchVD
 
 %
-% $Id: benchVD.m,v 1.1 2009/07/04 13:22:31 patrick Exp $
+% $Id: benchVD.m,v 1.2 2009/07/04 15:04:16 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,7 +39,7 @@ end
 
 
 
-tVD = zeros(size(is));
+tVDi = zeros(size(is));
 tVDf = zeros(size(is));
 
 s = S([1:is(1)],:);
@@ -47,7 +47,7 @@ s = S([1:is(1)],:);
 % incremental 
 tStart = tic;
 VD = computeVD(nr, nc, s);
-tVD(1) = toc(tStart);
+tVDi(1) = toc(tStart);
 
 % full
 tStart = tic;
@@ -55,7 +55,7 @@ VDf = computeVDFast(nr, nc, s);
 tVDf(1) = toc(tStart);
 
 fprintf(1,'%4d seeds: elapsed time inc/full %8.3f/%8.3f\n', ...
-        size(s,1), tVD(1), tVDf(1));
+        size(s,1), tVDi(1), tVDf(1));
 
 for i=2:length(is)
 
@@ -65,7 +65,7 @@ for i=2:length(is)
   for k = 1:length(s),
     VD = addSeedToVD(VD, s(k,:));
 	end
-  tVD(i) = toc(tStart);
+  tVDi(i) = toc(tStart);
 
   % full
   s = S([1:is(i)],:);
@@ -74,16 +74,21 @@ for i=2:length(is)
   tVDf(i) = toc(tStart);
 
   fprintf(1,'%4d seeds: elapsed time inc/full %8.3f/%8.3f\n', ...
-	        size(s,1), tVD(i), tVDf(i));
+	        size(s,1), tVDi(i), tVDf(i));
 
-  plot(is(1:i), tVD(1:i), is(1:i), tVDf(1:i));
+  plot(is(1:i), tVDi(1:i), is(1:i), tVDf(1:i));
 	drawnow
 
 end
 
-save VOISEtiming is tVD tVDf
 
-ptVD = polyfit(is, tVD, 2);
+ptVDi = polyfit(is, tVDi, 2);
 ptVDf = polyfit(is, tVDf, 2);
+
+plot(is, [tVDi;polyval(ptVDi,is)], '-o', is, [tVDf;polyval(ptVDf,is)], '-o');
+xlabel('number of seeds')
+ylabel('time [s]')
+
+save VOISEtiming is tVDi tVDf ptVDi ptVDf
 
 
