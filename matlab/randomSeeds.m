@@ -2,7 +2,7 @@ function S = randomSeeds(nr,nc,ns,pc)
 % function S = randomSeeds(nr,nc,ns,pc)
 
 %
-% $Id: randomSeeds.m,v 1.1 2009/02/08 21:07:16 patrick Exp $
+% $Id: randomSeeds.m,v 1.2 2009/07/04 17:21:34 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,4 +31,24 @@ end
 S = round([(nc-2*pc*nc)*(rand(ns,1))+pc*nc, ...
            (nr-2*pc*nr)*(rand(ns,1))+pc*nr]);
 
+% iterate until all seeds are different
+uniqueSeeds=false;
+while ~uniqueSeeds,
 
+  nIdentical = 0;
+  for k=1:size(S,1),
+    ii = find(S(k,1)==S([k+1:end-1],1) & S(k,2)==S([k+1:end-1],2));
+    if ~isempty(ii),
+      ns = length(ii);
+      S(k+ii,:) = round([(nc-2*pc*nc)*(rand(ns,1))+pc*nc, ...
+                         (nr-2*pc*nr)*(rand(ns,1))+pc*nr]);
+      nIdentical = nIdentical+ns;
+    end
+  end
+  if ~nIdentical,
+    uniqueSeeds = true;
+  else
+    fprintf(1,'nIdentical %d\n', nIdentical);
+  end
+
+end
