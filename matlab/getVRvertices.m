@@ -2,7 +2,7 @@ function [V,I] = getVRvertices(VD, s)
 % function [V,I] = getVRvertices(VD, s)
 
 %
-% $Id: getVRvertices.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: getVRvertices.m,v 1.2 2009/07/04 21:17:11 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,9 +34,10 @@ yn = VD.Sy(ns);
 %   0 <= mod(atan2(y,x),2*pi) <= 2*pi from x-axis
 asn = mod(atan2(yn-ys,xn-xs),2*pi);
 % sort neighbour list (ordered anti-clockwise) 
+% I is such that asnSorted = asn(I) 
 [asnSorted, I] = sort(asn(:));
 % close the neighbour list 
-is = [I; I(1)];
+is = [I(end); I];
 % get vertices as equidistant point between seed and two adjacent neighbours
 % oriented anti-clockwise
 rsu = [ns(is(1:end-1)), s*ones(size(asn(:))),  ns(is(2:end))];

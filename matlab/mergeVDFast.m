@@ -2,7 +2,7 @@ function [VD, params] = mergeVDFast(VD, params)
 % function [VD, params] = mergeVDFast(VD, params)
 
 %
-% $Id: mergeVDFast.m,v 1.2 2009/03/20 18:40:31 patrick Exp $
+% $Id: mergeVDFast.m,v 1.3 2009/07/04 21:17:11 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -64,22 +64,23 @@ while ~stopMerge,
     % isk contains indice in array of size number of seeds
 	  %  sk contains seed indice in VD.Nk
     sk = VD.Sk(isk);
-    if 1,
-	    fprintf(1,'s=%3d HC=%5.2f (%d) mu=%5.2f HC Threshold=%5.2f\n', ...
+    if 0,
+      fprintf(1,'s=%4d HC=%5.2f (%d) mu=%8.3g HC Threshold=%5.2f\n', ...
 		          [sk, SHC(isk),(SHC(isk) < HCThreshold),VD.Smu(isk),HCThreshold]);
 	  end
-	  % Homogeneous neighbour VR
+	  % Flag for homogeneous neighbour VR
 	  ihc = (SHC(IST(VD.Nk{sk}))' < HCThreshold);
-	  if 1,
-	    fprintf(1,'n=%3d HC=%5.2f (%d) mu=%5.2f\n', ...
-	            [VD.Nk{sk}, SHC(IST(VD.Nk{sk}))', ihc, VD.Smu(IST(VD.Nk{sk}))']');
+	  if 0,
+      fprintf(1,'n=%4d HC=%5.2f (%d) mu=%8.3g\n', ...
+	            [VD.Nk{sk}, SHC(IST(VD.Nk{sk})), ihc', VD.Smu(IST(VD.Nk{sk}))]');
 	  end
 	  % 
     err  =  abs(VD.Smu(isk) - VD.Smu(IST(VD.Nk{sk}(ihc)))'); 
-	  if 1,
+	  if 0,
 	    if ~isempty(err), 
+        fprintf(1,'dmu |mu|=%7.2g\n', dmu*abs(VD.Smu(isk)));
 	      fprintf(1,'err=');
-	      fprintf(1,' %5.2f', err); 
+	      fprintf(1,' %.2g', err); 
         fprintf(1,'\n');
 	    end
 	  end
@@ -88,30 +89,59 @@ while ~stopMerge,
 	    imagesc(Wmu), 
 	    set(gca,'clim',params.Wlim);
 	    colorbar
-	    axis xy,
+	    axis xy, axis equal
 	    hold on
 	    plot(VD.Sx(sk), VD.Sy(sk), 'xk', 'MarkerSize', 5);
-	    plot(VD.Sx(VD.Nk{sk}(ihc)), VD.Sy(VD.Nk{sk}(ihc)), 'ok', 'MarkerSize', 5);
+      plot(VD.Sx(VD.Nk{sk}(ihc)), VD.Sy(VD.Nk{sk}(ihc)), 'ok', 'MarkerSize', 5);
+			for i=1:length(ihc),
+			  text(VD.Sx(VD.Nk{sk}(i)), VD.Sy(VD.Nk{sk}(i)), ...
+				     num2str(VD.Nk{sk}(i)), 'verticalalignment', 'bottom');
+			end
 	    plot(vx,vy,'-k','LineWidth',0.5)
-	    hold off
+      hold off
+			set(gca,'xlim',[min(VD.Sx(VD.Nk{sk}(:)))-2 max(VD.Sx(VD.Nk{sk}(:)))+2])
+			set(gca,'ylim',[min(VD.Sy(VD.Nk{sk}(:)))-2 max(VD.Sy(VD.Nk{sk}(:)))+2])
 	    %pause
-	  end
+    end
 	  if all(err < dmu*abs(VD.Smu(isk))), 
 	    % all homogeneous neighbours are less than dmu\% different
       % get vertices list of VR(sk)
 		  % unbounded VR not handled properly
       [V,I] = getVRvertices(VD, sk);
+      if 0, % diagnostic plot
+        hold on
+        plot(V(:,1),V(:,2), 'dk', 'MarkerSize', 5);
+        for i=1:size(V,1),
+          text(V(i,1), V(i,2), num2str(i), 'verticalalignment', 'bottom');
+        end
+        hold off
+      end
 		  edgesLength = sqrt(sum((V([1:end],:)-V([2:end 1],:)).^2,2));
-		  fprintf(1,'edgesLength='); 
-			fprintf(1,' %5.2f', edgesLength);
-			fprintf(1,'\n');
+			if 0,
+        % trick to get the reverse indices of I
+        % VD.Nk{sk}(I) sorted neighbour as edgesLength calculated from V
+        % edgesLength(revI) sorted as VD.Nk{sk}(:)
+        revI = zeros(size(I));
+        revI(I) = [1:length(I)]';
+        fprintf(1,'verticeSeed='); fprintf(1,' %5d', VD.Nk{sk}(I));
+        fprintf(1,'\n');
+        fprintf(1,'edgesLength='); fprintf(1,' %5.1f', edgesLength);
+        fprintf(1,'\n');
+        fprintf(1,'edgesHCflag='); fprintf(1,' %5d', ihc(I));
+        fprintf(1,'\n');
+			end
 	  	totalLength = sum(edgesLength);
-		  nonHCLength = sum(edgesLength(I(ihc)));
+			% ihc(I) provides HC flags sorted as edgesLength calculated from V
+		  nonHCLength = sum(edgesLength(~ihc(I)));
 		  r = nonHCLength/totalLength;
-		  fprintf(1,'totalLength=%.2f nonHCLength=%.2f ratio=%f\n',...
-			        totalLength, nonHCLength, r);
+			if 0
+		  fprintf(1,'totalLength=%.1f nonHCLength=%.1f ratio=%.2f (max=%.2f)\n',...
+			        totalLength, nonHCLength, r, thresHoldLength);
+			end
 		  if r < thresHoldLength,
+			  if 0
 		    fprintf(1,'s=%d to be removed\n', sk);
+				end
 		    Sk = [Sk; sk]; 
 		  end
 		  %pause
@@ -123,14 +153,14 @@ while ~stopMerge,
 	mergeSHC{iMerge} = SHC;
 	mergeHCThreshold(iMerge) = HCThreshold;
   if ~isempty(Sk),
-    fprintf(1,'Removing %d seeds to Voronoi Diagram\n', length(Sk));
+    fprintf(1,'Removing %d seeds from Voronoi Diagram\n', length(Sk));
     %pause
-		Skeep = setdiff(VD.Sk,Sk);
+    Skeep = setdiff(VD.Sk,Sk);
     VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)]);
 		if 0
     for k = Sk(:)',
       VD  = removeSeedFromVD(VD, k);
-	    if 0
+      if 0
         drawVD(VD);
 	    end
     end
