@@ -1,3 +1,18 @@
+2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotDefaultVOISE.m:
+	Generic diagnostic function for VOISE.
+
+2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/benchVD.m:
+	Function to bench incremental VD versus full VD.
+
+2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getVRMaxAngle.m:
+	Function to calculate the max angle of Voronoi regions. Work to be done!
+
 2009-07-03  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getFiniteVR.m:
