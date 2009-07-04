@@ -1,5 +1,15 @@
 2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/randomSeeds.m:
+	Add an iteration loop to ensure unicity of seeds.
+
+2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/benchVD.m:
+	Added fit to parabola and save fit result in VOISEtiming.mat.
+
+2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/plotDefaultVOISE.m:
 	Generic diagnostic function for VOISE.
 
