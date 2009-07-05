@@ -2,7 +2,7 @@ function benchVD
 % function benchVD
 
 %
-% $Id: benchVD.m,v 1.3 2009/07/05 19:44:03 patrick Exp $
+% $Id: benchVD.m,v 1.4 2009/07/05 19:55:05 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -68,6 +68,9 @@ for i=2:length(ns)
   tVDa(i) = toc(tStart);
   fprintf(1,'add    %4d seeds (%3d:%3d) %8.1f s\n', ...
           size(s,1),ns(i-1)+1,ns(i),tVDa(i));
+  subplot(211)
+  plot(ns(1:i), tVDa(1:i)./nd(1:i));
+	drawnow
 
   % full
   s = S([1:ns(i)],:);
@@ -76,7 +79,8 @@ for i=2:length(ns)
   tVDf(i) = toc(tStart);
   fprintf(1,'full   %4d seeds (%3d:%3d) %8.1f s\n', size(s,1), 1, ns(i), tVDf(i));
 
-  plot(ns(1:i), tVDa(1:i)./nd(1:i), ns(1:i), tVDf(1:i));
+  subplot(212)
+  plot(ns(1:i), tVDf(1:i));
 	drawnow
 
 end
@@ -111,18 +115,18 @@ tVDr(end) = [];
 [ptVDr] = polyfit(nsr, tVDr./ndr, 1);
 
 subplot(211),
-plot(ns, [tVDf; polyval(ptVDf,ns)], '-o');
-xlabel('number of seeds')
-ylabel('time [s]')
-title('Full VOISE')
-
-subplot(212),
 plot(ns, [tVDa./nd; polyval(ptVDa,ns)], '-o', ...
 		 nsr, [tVDr./ndr; polyval(ptVDr,nsr)], '-o');
 legend('Add','Add fit','Remove','Remove fit','location','northwest')
 xlabel('number of seeds')
 ylabel('time [s]')
 title('Incremental VOISE')
+
+subplot(212),
+plot(ns, [tVDf; polyval(ptVDf,ns)], '-o');
+xlabel('number of seeds')
+ylabel('time [s]')
+title('Full VOISE')
 
 
 save VOISEtiming ns nd tVDa tVDf ptVDa ptVDf nsr ndr tVDr ptVDr
