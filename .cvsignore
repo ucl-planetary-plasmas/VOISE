@@ -1,0 +1,13 @@
+aclocal.m4
+config.guess
+config.log
+config.status
+config.sub
+configure
+COPYING
+INSTALL
+install-sh
+Makefile
+Makefile.in
+missing
+

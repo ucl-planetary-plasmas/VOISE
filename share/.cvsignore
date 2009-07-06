@@ -1,4 +1,5 @@
-VOISEtiming.mat
 Makefile
 Makefile.in
+*.eps
+voise.mat
 
