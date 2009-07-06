@@ -2,7 +2,7 @@ function benchVD
 % function benchVD
 
 %
-% $Id: benchVD.m,v 1.4 2009/07/05 19:55:05 patrick Exp $
+% $Id: benchVD.m,v 1.5 2009/07/06 08:50:58 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -49,13 +49,13 @@ s = S([1:ns(1)],:);
 tStart = tic;
 VDa = computeVD(nr, nc, s);
 tVDa(1) = toc(tStart);
-fprintf(1,'add    %4d seeds (%3d:%3d) %8.1f s\n', size(s,1), 1, ns(1), tVDa(1));
+fprintf(1,'add    %4d seeds (%34:%4d) %8.1f s\n', size(s,1), 1, ns(1), tVDa(1));
 
 % full 
 tStart = tic;
 VDf = computeVDFast(nr, nc, s);
 tVDf(1) = toc(tStart);
-fprintf(1,'full   %4d seeds (%3d:%3d) %8.1f s\n', size(s,1), 1, ns(1), tVDf(1));
+fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', size(s,1), 1, ns(1), tVDf(1));
 
 for i=2:length(ns)
 
@@ -66,7 +66,7 @@ for i=2:length(ns)
     VDa = addSeedToVD(VDa, s(k,:));
 	end
   tVDa(i) = toc(tStart);
-  fprintf(1,'add    %4d seeds (%3d:%3d) %8.1f s\n', ...
+  fprintf(1,'add    %4d seeds (%4d:%4d) %8.1f s\n', ...
           size(s,1),ns(i-1)+1,ns(i),tVDa(i));
   subplot(211)
   plot(ns(1:i), tVDa(1:i)./nd(1:i));
@@ -77,7 +77,7 @@ for i=2:length(ns)
   tStart = tic;
   VDf = computeVDFast(nr, nc, s);
   tVDf(i) = toc(tStart);
-  fprintf(1,'full   %4d seeds (%3d:%3d) %8.1f s\n', size(s,1), 1, ns(i), tVDf(i));
+  fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', size(s,1), 1, ns(i), tVDf(i));
 
   subplot(212)
   plot(ns(1:i), tVDf(1:i));
@@ -101,7 +101,7 @@ for i=1:length(nsr)-1,
 	end
   tVDr(i) = toc(tStart);
 
-  fprintf(1,'remove %4d seeds (%3d:%3d) %8.1f s\n', ...
+  fprintf(1,'remove %4d seeds (%4d:%4d) %8.1f s\n', ...
 	        size(s,1), nsr(i), nsr(i+1)+1, tVDr(i));
 
   plot(nsr(1:i), tVDr(1:i)./ndr(1:i));
