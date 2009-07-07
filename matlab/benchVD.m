@@ -2,7 +2,7 @@ function benchVD
 % function benchVD
 
 %
-% $Id: benchVD.m,v 1.6 2009/07/07 11:02:04 patrick Exp $
+% $Id: benchVD.m,v 1.7 2009/07/07 14:10:45 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -49,11 +49,12 @@ tVDf = zeros(size(nsf));
 for i=1:length(nsf)
 
   s = S([1:nsf(i)],:);
+	ns = size(s,1);
   tStart = tic;
   VDf = computeVDFast(nr, nc, s);
   tVDf(i) = toc(tStart);
   fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', ...
-	        size(s,1), 1, nsf(i), tVDf(i));
+	        ns, 1, nsf(i), tVDf(i));
 
   if 0
   plot(nsf(1:i), tVDf(1:i));
@@ -76,13 +77,14 @@ fprintf(1,'init   %4d seeds (%4d:%4d) %8.1f s\n', ...
 for i=2:length(nsa)
 
   s = S([nsa(i-1)+1:nsa(i)],:);
+	ns = size(s,1);
   tStart = tic;
-  for k = 1:length(s),
+  for k = 1:ns,
     VDa = addSeedToVD(VDa, s(k,:));
 	end
   tVDa(i) = toc(tStart);
   fprintf(1,'add    %4d seeds (%4d:%4d) %8.1f s\n', ...
-          size(s,1), nsa(i-1)+1, nsa(i), tVDa(i));
+          ns, nsa(i-1)+1, nsa(i), tVDa(i));
 
   if 0
   plot(nsa(1:i), tVDa(1:i)./nda(1:i));
@@ -98,15 +100,16 @@ tVDr = zeros(size(nsr));
 VDr = VDa;
 for i=1:length(nsr)-1,
   
-  s = VDr.Sk(nsr(i):-1:nsr(i+1)+1);
+  sk = VDr.Sk([nsr(i):-1:nsr(i+1)+1]);
+	ns = length(sk);
   tStart = tic;
-  for k = 1:length(s),
+  for k = 1:ns,
     VDr = removeSeedFromVD(VDr, s(k,:));
 	end
   tVDr(i) = toc(tStart);
 
   fprintf(1,'remove %4d seeds (%4d:%4d) %8.1f s\n', ...
-	        size(s,1), nsr(i), nsr(i+1)+1, tVDr(i));
+	        ns, nsr(i), nsr(i+1)+1, tVDr(i));
 
   if 0
   plot(nsr(1:i), tVDr(1:i)./ndr(1:i));
