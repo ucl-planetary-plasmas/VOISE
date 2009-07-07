@@ -1,8 +1,8 @@
-function params = getDefaultparams
-% function params = getDefaultparams
+function params = getDefaultParams
+% function params = getDefaultParams
 
 %
-% $Id: getDefaultParams.m,v 1.1 2009/02/18 18:08:34 patrick Exp $
+% $Id: getDefaultParams.m,v 1.2 2009/07/07 14:12:15 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -33,12 +33,29 @@ params.ylim = [];
 % Dividing
 params.dividePctile = 80;
 params.d2Seeds = 4;
+% divideAlgo choice
+% 0 incremental 
+% 1 full
+% 2 timing based
+params.divideAlgo = 2;
+
 % Merging
 params.mergePctile = 60;
 params.dmu = 0.2;
 params.thresHoldLength = 0.3;
+% mergeAlgo choice
+% 0 incremental 
+% 1 full
+% 2 timing based
+params.mergeAlgo = 2;
+
 % Regularise
 params.regMaxIter = 1;
+% regAlgo choice
+% 0 incremental 
+% 1 full
+% 2 timing based
+params.regAlgo = 2;
 
 % Diagnostics parameters
 params.oDir = '../share/';
