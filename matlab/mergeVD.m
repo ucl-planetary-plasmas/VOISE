@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.4 2009/07/04 21:17:11 patrick Exp $
+% $Id: mergeVD.m,v 1.5 2009/07/07 14:16:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -25,6 +25,10 @@ if params.mergePctile<0,
   return;
 else
   mergePctile = params.mergePctile;
+end
+
+if params.mergeAlgo == 2 & exist('VOISEtiming.mat','file'),
+  timing = load('VOISEtiming.mat');
 end
 
 % Similarity parameters |\mu_i-\mu_j|< dmu \mu_i
@@ -153,14 +157,37 @@ while ~stopMerge,
 	mergeSHC{iMerge} = SHC;
 	mergeHCThreshold(iMerge) = HCThreshold;
   if ~isempty(Sk),
-    fprintf(1,'Removing %d seeds from Voronoi Diagram\n', length(Sk));
+	  nSr = length(Sk);
+    fprintf(1,'Iter %2d Removing %d seeds from Voronoi Diagram\n', iMerge, nSr);
     %pause
-    for k = Sk(:)',
-      VD  = removeSeedFromVD(VD, k);
-      if 0
-        drawVD(VD);
-	    end
-    end
+		switch params.mergeAlgo,
+		  case 0, % incremental
+        for k = Sk(:)',
+          VD  = removeSeedFromVD(VD, k);
+					% diagnostic plot
+          if 0, drawVD(VD); end
+        end
+			case 1, % full
+			  Skeep = setdiff(VD.Sk, Sk);
+				VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)]);
+			case 2, % timing based
+			  ns = length(VD.Sk);
+			  Skeep = setdiff(VD.Sk, Sk);
+			  tf = polyval(timing.ptVDf, ns-nSr);
+				ti = sum(polyval(timing.ptVDr,ns-[0:nSr-1]));
+				fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
+				        1, ns-nSr, ns, ns-nSr, tf, ti);
+				tStart = tic;
+				if tf < ti, % full faster than incremental
+				  Skeep = setdiff(VD.Sk,Sk);
+					VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)]);
+				else, % incremental faster than full
+          for k = Sk(:)',
+            VD  = removeSeedFromVD(VD, k);
+          end
+				end
+				fprintf(1,'Used time %8.1f s\n', toc(tStart));
+		end
     params = plotCurrentVD(VD, params, iMerge);
 	  iMerge = iMerge+1;
 		fprintf(1,'Voronoi Diagram computed\n')

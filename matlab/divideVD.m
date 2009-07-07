@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.3 2009/07/03 08:16:52 patrick Exp $
+% $Id: divideVD.m,v 1.4 2009/07/07 14:16:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,6 +26,11 @@ if params.dividePctile<0,
 else
   dividePctile = params.dividePctile;
 end
+
+if params.divideAlgo == 2 & exist('VOISEtiming.mat','file'),
+  timing = load('VOISEtiming.mat');
+end
+
 
 iDiv = 1;
 stopDiv = false;
@@ -64,14 +69,48 @@ while ~stopDiv,
 	divSHC{iDiv} = SHC;
 	divHCThreshold(iDiv) = HCThreshold;
   if ~isempty(S),
-    fprintf(1,'Adding %d seeds to Voronoi Diagram\n', size(S,1))
-    for k = 1:size(S,1),
-		  if isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
-        VD = addSeedToVD(VD, S(k,:));
-				if 0, % diagnostic plot
-          drawVD(VD);
+	  nSa = size(S,1);
+    fprintf(1,'Iter %2d Adding %d seeds to Voronoi Diagram\n', iDiv, nSa)
+		switch params.divideAlgo,
+		  case 0, % incremental
+        for k = 1:nSa,
+				  if isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
+            VD = addSeedToVD(VD, S(k,:));
+		        % diagnostic plot
+		        if 0, drawVD(VD); end
+					end
 				end
-			end
+			case 1, % full
+			  for k = 1:nSa,
+				  if isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
+					  VD.Sx = [VD.Sx; S(k,1)];
+						VD.Sy = [VD.Sy; S(k,2)];
+					end
+				end
+				VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy]);
+			case 2, % timing based
+			  ns = length(VD.Sk);
+			  tf = polyval(timing.ptVDf, ns+nSa);
+				ti = sum(polyval(timing.ptVDa, ns+[0:nSa-1]));
+				fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
+				        1, ns+nSa, ns, ns+nSa, tf, ti);
+				tStart = tic;
+				if tf < ti, % full faster than incremental
+			    for k = 1:size(S,1),
+				    if isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
+					    VD.Sx = [VD.Sx; S(k,1)];
+						  VD.Sy = [VD.Sy; S(k,2)];
+					  end
+				  end
+				  VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy]);
+        else, % incremental faster than full
+          for k = 1:size(S,1),
+					  if isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
+              VD = addSeedToVD(VD, S(k,:));
+						end
+					end
+				end
+				fprintf(1,'Used time %8.1f s\n', toc(tStart));
     end
 	  params = plotCurrentVD(VD, params, iDiv);
 	  iDiv = iDiv+1;

@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.3 2009/03/18 16:24:47 patrick Exp $
+% $Id: VOISE.m,v 1.4 2009/07/07 14:16:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -44,8 +44,28 @@ else
   error('initSeeds not defined or not a Function Handle');
 end
 
+if params.divideAlgo == 2 & exist('VOISEtiming.mat','file'),
+  timing = load('VOISEtiming.mat');
+end
+
 % Initialise VD
-IVD = computeVD(nr, nc, S);
+switch params.divideAlgo,
+  case 0, % incremental
+    IVD = computeVD(nr, nc, S);
+	case 1, % full
+	  IVD = computeVDFast(nr, nc, S);
+	case 2, % timing based
+	  tf = polyval(timing.ptVDf, ns);
+		ti = sum(polyval(timing.ptVDa, [1:ns]));
+		fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
+		        1, ns, 1, ns, tf, ti);
+		tStart = tic;
+		if tf < ti, % full faster than incremental
+		  IVD = computeVDFast(nr, nc, S);
+		else, % incremental faster than full
+		  IVD = computeVD(nr, nc, S);
+		end
+end
 % save 
 save([params.oDir params.oMatFile], '-append', 'IVD'); 
 % plot 
