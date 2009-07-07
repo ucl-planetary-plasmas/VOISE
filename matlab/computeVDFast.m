@@ -2,7 +2,7 @@ function VD = computeVDFast(nr, nc, S)
 % function VD = computeVDFast(nr, nc, S)
 
 %
-% $Id: computeVDFast.m,v 1.4 2009/07/03 08:13:50 patrick Exp $
+% $Id: computeVDFast.m,v 1.5 2009/07/07 14:12:44 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -127,5 +127,7 @@ for s = 2:ns, % for each seed s
 end
 
 
+if 0
 fprintf(1,'Voronoi Diagram computed\n')
 %pause
+end
