@@ -2,7 +2,7 @@ function benchVD
 % function benchVD
 
 %
-% $Id: benchVD.m,v 1.5 2009/07/06 08:50:58 patrick Exp $
+% $Id: benchVD.m,v 1.6 2009/07/07 11:02:04 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,11 +20,18 @@ function benchVD
 % Public License for more details.
 %
 
-%ns = fix(logspace(log10(10),log10(3000),30));
-ns = fix(linspace(10,3000,30));
-%ns = fix(linspace(20,300,30));
+numSeeds = 40;
+begSeed = 5;
+endSeed = 3000;
+% values for test purpose
+%numSeeds = 10;
+%endSeed = 300;
 nr = 256;
 nc = 256;
+
+nsf = round(logspace(log10(begSeed), log10(endSeed), numSeeds));
+nsa = round(linspace(begSeed, endSeed, numSeeds));
+
 initSeeds = @randomSeeds;
 
 % init seed of Mersenne-Twister RNG
@@ -32,65 +39,62 @@ rand('twister',10);
 
 if exist('initSeeds') & isa(initSeeds, 'function_handle'),
   [initSeeds, msg] = fcnchk(initSeeds);
-  S = initSeeds(nr, nc, ns(end));
+  S = initSeeds(nr, nc, endSeed);
 else
   error('initSeeds not defined or not a Function Handle');
 end
 
-nd = [ns(1), diff(ns)];
+% full algorithm
+tVDf = zeros(size(nsf));
+for i=1:length(nsf)
 
-tVDa = zeros(size(ns));
-tVDf = zeros(size(ns));
+  s = S([1:nsf(i)],:);
+  tStart = tic;
+  VDf = computeVDFast(nr, nc, s);
+  tVDf(i) = toc(tStart);
+  fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', ...
+	        size(s,1), 1, nsf(i), tVDf(i));
 
-% initial seeds
-s = S([1:ns(1)],:);
+  if 0
+  plot(nsf(1:i), tVDf(1:i));
+	drawnow
+	end
+
+end
 
 % incremental add
+nda = [nsa(1), diff(nsa)];
+tVDa = zeros(size(nsa));
+% initial seeds
+s = S([1:nsa(1)],:);
 tStart = tic;
 VDa = computeVD(nr, nc, s);
 tVDa(1) = toc(tStart);
-fprintf(1,'add    %4d seeds (%34:%4d) %8.1f s\n', size(s,1), 1, ns(1), tVDa(1));
+fprintf(1,'init   %4d seeds (%4d:%4d) %8.1f s\n', ...
+        size(s,1), 1, nsa(1), tVDa(1));
 
-% full 
-tStart = tic;
-VDf = computeVDFast(nr, nc, s);
-tVDf(1) = toc(tStart);
-fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', size(s,1), 1, ns(1), tVDf(1));
+for i=2:length(nsa)
 
-for i=2:length(ns)
-
-  % incremental add
-  s = S([ns(i-1)+1:ns(i)],:);
+  s = S([nsa(i-1)+1:nsa(i)],:);
   tStart = tic;
   for k = 1:length(s),
     VDa = addSeedToVD(VDa, s(k,:));
 	end
   tVDa(i) = toc(tStart);
   fprintf(1,'add    %4d seeds (%4d:%4d) %8.1f s\n', ...
-          size(s,1),ns(i-1)+1,ns(i),tVDa(i));
-  subplot(211)
-  plot(ns(1:i), tVDa(1:i)./nd(1:i));
-	drawnow
+          size(s,1), nsa(i-1)+1, nsa(i), tVDa(i));
 
-  % full
-  s = S([1:ns(i)],:);
-  tStart = tic;
-  VDf = computeVDFast(nr, nc, s);
-  tVDf(i) = toc(tStart);
-  fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', size(s,1), 1, ns(i), tVDf(i));
-
-  subplot(212)
-  plot(ns(1:i), tVDf(1:i));
+  if 0
+  plot(nsa(1:i), tVDa(1:i)./nda(1:i));
 	drawnow
+	end
 
 end
 
 % incremental remove
-nsr = ns(end:-1:1);
+nsr = nsa(end:-1:1);
 ndr = -diff(nsr);
-
 tVDr = zeros(size(nsr));
-
 VDr = VDa;
 for i=1:length(nsr)-1,
   
@@ -104,18 +108,21 @@ for i=1:length(nsr)-1,
   fprintf(1,'remove %4d seeds (%4d:%4d) %8.1f s\n', ...
 	        size(s,1), nsr(i), nsr(i+1)+1, tVDr(i));
 
+  if 0
   plot(nsr(1:i), tVDr(1:i)./ndr(1:i));
 	drawnow
+	end
+
 end
 nsr(end) = [];
 tVDr(end) = [];
 
-[ptVDa] = polyfit(ns, tVDa./nd, 1);
-[ptVDf] = polyfit(ns, tVDf, 2);
-[ptVDr] = polyfit(nsr, tVDr./ndr, 1);
+[ptVDf] = polyfit([0 nsf], [0 tVDf], 2);
+[ptVDa] = polyfit([0 nsa], [0 tVDa./nda], 1);
+[ptVDr] = polyfit([nsr 0], [tVDr./ndr 0], 1);
 
 subplot(211),
-plot(ns, [tVDa./nd; polyval(ptVDa,ns)], '-o', ...
+plot(nsa, [tVDa./nda; polyval(ptVDa,nsa)], '-o', ...
 		 nsr, [tVDr./ndr; polyval(ptVDr,nsr)], '-o');
 legend('Add','Add fit','Remove','Remove fit','location','northwest')
 xlabel('number of seeds')
@@ -123,13 +130,11 @@ ylabel('time [s]')
 title('Incremental VOISE')
 
 subplot(212),
-plot(ns, [tVDf; polyval(ptVDf,ns)], '-o');
+plot(nsf, [tVDf; polyval(ptVDf,nsf)], '-o');
 xlabel('number of seeds')
 ylabel('time [s]')
 title('Full VOISE')
 
 
-save VOISEtiming ns nd tVDa tVDf ptVDa ptVDf nsr ndr tVDr ptVDr
-
-
+save VOISEtiming nsf tVDf ptVDf nsa nda tVDa ptVDa nsr ndr tVDr ptVDr
 
