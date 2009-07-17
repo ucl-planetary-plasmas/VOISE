@@ -1,8 +1,8 @@
-function CVD = getCentroidVD(VD, params)
-% function CVD = getCentroidVD(VD, params)
+function VD = getCentroidVD(VD, params)
+% function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.7 2009/07/07 14:16:59 patrick Exp $
+% $Id: getCentroidVD.m,v 1.8 2009/07/17 22:17:29 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,106 +20,119 @@ function CVD = getCentroidVD(VD, params)
 % Public License for more details.
 %
 
+% do not attempt to regularise if regMaxIter < 1
 if params.regMaxIter < 1,
-  CVD = [];
   return;
+else
+  regMaxIter = params.regMaxIter;
 end
 
 if params.regAlgo == 2 & exist('VOISEtiming.mat','file'),
   timing = load('VOISEtiming.mat');
 end
 
-fprintf(1,'Computing Centroid Voronoi Diagram\n')
+fprintf(1,'Starting regularisation phase\n')
 
 nr = VD.nr;
 nc = VD.nc;
 ns = length(VD.Sk);
 
-% get centroid seeds
-Sc = zeros(0,2);
-Sk = [];
-for k = VD.Sk',
-  sc  = getCentroidSeed(VD, params, k);
-	if isempty(find(sc(1) == Sc(:,1) & sc(2) == Sc(:,2)))
-	  % in some cases two centroid seeds could be identical
-		% for example here
-		% o 1 1 
-    % 2 x 1
-		% 2 2 o
-    Sc = [[Sc(:,1); sc(1)],[Sc(:,2); sc(2)]];
-		Sk = [Sk; k];
-	end
-end
-%pause
-% compute centroid Voronoi Diagram 
-switch params.regAlgo,
-  case 0, % incremental
-    CVD = computeVD(nr, nc, Sc);
-	case 1, % full
-	  CVD = computeVDFast(nr, nc, Sc);
-	case 2, % timing based
-	  ns = size(Sc,1);
-    tf = polyval(timing.ptVDf, ns);
-	  ti = sum(polyval(timing.ptVDa,[1:ns]));
-		fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
-		        1, ns, 1, ns, tf, ti);
-		tStart = tic;
-		if tf < ti, % full faster than incremental
-		  CVD = computeVDFast(nr, nc, Sc);
-		else, % incremental faster full
-		  CVD = computeVD(nr, nc, Sc);
-		end
-		fprintf(1,'Used time %8.1f s\n', toc(tStart));
-end
+iReg = 1;
+stopReg = false;
+while ~stopReg, 
 
-iter = 1;
-
-dist = abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk));
-dist2 = sqrt((CVD.Sx(CVD.Sk)-VD.Sx(Sk)).^2 + (CVD.Sy(CVD.Sk)-VD.Sy(Sk)).^2);
-fprintf(1,'Iter %2d Maximum distance seed/centre-of-mass %.1f (%.1f)\n', ...
-        iter, max(dist), max(dist2));
-
-while max(dist) > 1e-2 & iter<params.regMaxIter, 
-  % copy CVD to old VD
-  VD = CVD;
+  % compute centre-of-mass of polygons
   Sc = zeros(0,2);
 	Sk = [];
   for k = VD.Sk',
     sc  = getCentroidSeed(VD, params, k);
 		if isempty(find(sc(1) == Sc(:,1) & sc(2) == Sc(:,2)))
 	    % in some cases two centroid seeds could be identical
+		  % for example here
+		  % o 1 1 
+      % 2 x 1
+		  % 2 2 o
       Sc = [[Sc(:,1); sc(1)],[Sc(:,2); sc(2)]];
 			Sk = [Sk; k];
 		end
   end
   %pause
+  dist = abs(Sc(:,1)-VD.Sx(Sk)) + abs(Sc(:,2)-VD.Sy(Sk));
+  dist2 = sqrt((Sc(:,1)-VD.Sx(Sk)).^2 + (Sc(:,2)-VD.Sy(Sk)).^2);
+  fprintf(1,'Maximum distance seed/centre-of-mass %.1f (%.1f)\n', ...
+	        max(dist), max(dist2));
 
-  switch params.regAlgo,
-	  case 0, % incremental
-		  CVD = computeVD(nr, nc, Sc);
-		case 1, % full
-		  CVD = computeVDFast(nr, nc, Sc);
-		case 2, % timing based
-		  ns = size(Sc,1);
-	    tf = polyval(timing.ptVDf, ns);
-		  ti = sum(polyval(timing.ptVDa,[1:ns]));
-		  fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
-		          1, ns, 1, ns, tf, ti);
-			tStart = tic;
-			if tf < ti, % full faster than incremental
-			  CVD = computeVDFast(nr, nc, Sc);
-			else, % incremental faster full
-			  CVD = computeVD(nr, nc, Sc);
-			end
-			fprintf(1,'Used time %8.1f s\n', toc(tStart));
+  % save center-of-mass and indices
+	regSc{iReg} = Sc;
+	regDist{iReg} = dist;
+	regDist2{iReg} = dist2;
+
+  if max(dist) > 1 & iReg<=params.regMaxIter, 
+    fprintf(1,'Iter %2d Computing regularised Voronoi Diagram for %d seeds\n',...
+		        iReg, size(Sc,1));
+    switch params.regAlgo,
+	    case 0, % incremental
+		    VD = computeVD(nr, nc, Sc);
+		  case 1, % full
+		    VD = computeVDFast(nr, nc, Sc);
+		  case 2, % timing based
+		    ns = size(Sc,1);
+	      tf = polyval(timing.ptVDf, ns);
+		    ti = sum(polyval(timing.ptVDa,[1:ns]));
+		    fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
+		            1, ns, 1, ns, tf, ti);
+			  tStart = tic;
+			  if tf < ti, % full faster than incremental
+			    VD = computeVDFast(nr, nc, Sc);
+			  else, % incremental faster full
+			    VD = computeVD(nr, nc, Sc);
+			  end
+			  fprintf(1,'Used time %8.1f s\n', toc(tStart));
+	  end
+    params = plotCurrentVD(VD, params, iReg);
+	  iReg = iReg + 1;
+		if iReg>params.regMaxIter, stopReg = true; end
+		%fprintf(1,'Voronoi Diagram computed\n');
+	else
+	  stopReg = true;
 	end
-	iter = iter + 1;
-
-  dist = abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk));
-  dist2 = sqrt((CVD.Sx(CVD.Sk)-VD.Sx(Sk)).^2 + (CVD.Sy(CVD.Sk)-VD.Sy(Sk)).^2);
-  fprintf(1,'Iter %2d Maximum distance seed/centre-of-mass %.1f (%.1f)\n', ...
-	        iter, max(dist), max(dist2));
-
 end
-fprintf(1,'Centroid Voronoi Diagram computed\n')
+
+fprintf(1,'Regularisation phase completed.\n')
+
+VD.regSc = regSc;
+VD.regDist = regDist;
+VD.regDist2 = regDist2;
+
+
+function params = plotCurrentVD(VD, params, iReg)
+
+VDW = getVDOp(VD, params.W, @(x) median(x));
+
+clf
+subplot(111),
+imagesc(VDW),
+axis xy,
+axis equal
+axis off
+set(gca,'clim',params.Wlim);
+%colorbar
+set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+
+hold on
+[vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
+plot(vx,vy,'-k','LineWidth',0.5)
+hold off
+
+title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iReg))
+
+drawnow
+
+if params.regExport,
+  exportfig(gcf,[params.oDir 'reg' num2str(iReg) '.eps'], 'color','cmyk');
+end
+
+if params.movDiag,
+  params.mov = addframe(params.mov, getframe(gcf,[0 0 params.movPos(3:4)]));
+end
 
