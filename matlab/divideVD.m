@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.4 2009/07/07 14:16:59 patrick Exp $
+% $Id: divideVD.m,v 1.5 2009/07/17 09:32:30 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -93,7 +93,7 @@ while ~stopDiv,
 			  tf = polyval(timing.ptVDf, ns+nSa);
 				ti = sum(polyval(timing.ptVDa, ns+[0:nSa-1]));
 				fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
-				        1, ns+nSa, ns, ns+nSa, tf, ti);
+				        1, ns+nSa, ns+1, ns+nSa, tf, ti);
 				tStart = tic;
 				if tf < ti, % full faster than incremental
 			    for k = 1:size(S,1),

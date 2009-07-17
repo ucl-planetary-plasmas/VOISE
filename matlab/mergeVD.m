@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.5 2009/07/07 14:16:59 patrick Exp $
+% $Id: mergeVD.m,v 1.6 2009/07/17 09:32:30 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -176,7 +176,7 @@ while ~stopMerge,
 			  tf = polyval(timing.ptVDf, ns-nSr);
 				ti = sum(polyval(timing.ptVDr,ns-[0:nSr-1]));
 				fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
-				        1, ns-nSr, ns, ns-nSr, tf, ti);
+				        1, ns-nSr, ns-1, ns-nSr, tf, ti);
 				tStart = tic;
 				if tf < ti, % full faster than incremental
 				  Skeep = setdiff(VD.Sk,Sk);
