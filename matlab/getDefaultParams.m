@@ -2,7 +2,7 @@ function params = getDefaultParams
 % function params = getDefaultParams
 
 %
-% $Id: getDefaultParams.m,v 1.2 2009/07/07 14:12:15 patrick Exp $
+% $Id: getDefaultParams.m,v 1.3 2009/07/17 22:03:42 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -63,6 +63,7 @@ params.oMatFile = 'voise';
 % Export to eps divide/merge
 params.divideExport = false;
 params.mergeExport = false;
+params.regExport = false;
 % Movie parameters
 params.movDiag = false;
 params.movPos = [600 50 1300 1050]; % movie window size
