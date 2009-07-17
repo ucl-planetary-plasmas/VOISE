@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.5 2009/07/17 09:32:30 patrick Exp $
+% $Id: divideVD.m,v 1.6 2009/07/17 22:01:58 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,6 +31,7 @@ if params.divideAlgo == 2 & exist('VOISEtiming.mat','file'),
   timing = load('VOISEtiming.mat');
 end
 
+fprintf(1,'Starting dividing phase\n')
 
 iDiv = 1;
 stopDiv = false;
@@ -114,10 +115,10 @@ while ~stopDiv,
     end
 	  params = plotCurrentVD(VD, params, iDiv);
 	  iDiv = iDiv+1;
+    %fprintf(1,'Voronoi Diagram computed\n');
   else
     stopDiv = true;
   end
-  fprintf(1,'Voronoi Diagram computed\n')
 	if 0, % diagnostic plot
     drawVD(VD);
     %pause
@@ -127,6 +128,7 @@ end
 VD.divSHC = divSHC;
 VD.divHCThreshold = divHCThreshold;
 
+fprintf(1,'Dividing phase completed\n')
 
 function params = plotCurrentVD(VD, params, iDiv)
 

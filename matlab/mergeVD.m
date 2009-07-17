@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.6 2009/07/17 09:32:30 patrick Exp $
+% $Id: mergeVD.m,v 1.7 2009/07/17 22:01:58 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -35,6 +35,8 @@ end
 dmu = params.dmu;
 % non homogeneous neighbours vertices length to circumference max ratio
 thresHoldLength = params.thresHoldLength;
+
+fprintf(1,'Starting merging phase\n')
 
 iMerge = 1;
 stopMerge = false;
@@ -190,11 +192,13 @@ while ~stopMerge,
 		end
     params = plotCurrentVD(VD, params, iMerge);
 	  iMerge = iMerge+1;
-		fprintf(1,'Voronoi Diagram computed\n')
+		%fprintf(1,'Voronoi Diagram computed\n');
   else
     stopMerge = true;
   end
 end
+
+fprintf(1,'Merging phase completed.\n')
 
 VD.mergeSHC = mergeSHC;
 VD.mergeHCThreshold = mergeHCThreshold;
