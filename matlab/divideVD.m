@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.6 2009/07/17 22:01:58 patrick Exp $
+% $Id: divideVD.m,v 1.7 2009/07/18 10:34:48 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,7 +31,7 @@ if params.divideAlgo == 2 & exist('VOISEtiming.mat','file'),
   timing = load('VOISEtiming.mat');
 end
 
-fprintf(1,'Starting dividing phase\n')
+fprintf(1,'*** Starting dividing phase\n')
 
 iDiv = 1;
 stopDiv = false;
@@ -93,7 +93,7 @@ while ~stopDiv,
 			  ns = length(VD.Sk);
 			  tf = polyval(timing.ptVDf, ns+nSa);
 				ti = sum(polyval(timing.ptVDa, ns+[0:nSa-1]));
-				fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
+				fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s ', ...
 				        1, ns+nSa, ns+1, ns+nSa, tf, ti);
 				tStart = tic;
 				if tf < ti, % full faster than incremental
@@ -111,7 +111,7 @@ while ~stopDiv,
 						end
 					end
 				end
-				fprintf(1,'Used time %8.1f s\n', toc(tStart));
+				fprintf(1,'(Used %6.1f s)\n', toc(tStart));
     end
 	  params = plotCurrentVD(VD, params, iDiv);
 	  iDiv = iDiv+1;
@@ -128,7 +128,7 @@ end
 VD.divSHC = divSHC;
 VD.divHCThreshold = divHCThreshold;
 
-fprintf(1,'Dividing phase completed\n')
+fprintf(1,'*** Dividing phase completed\n')
 
 function params = plotCurrentVD(VD, params, iDiv)
 

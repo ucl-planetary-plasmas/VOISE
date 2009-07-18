@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.8 2009/07/17 22:17:29 patrick Exp $
+% $Id: getCentroidVD.m,v 1.9 2009/07/18 10:34:48 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -79,7 +79,7 @@ while ~stopReg,
 		    ns = size(Sc,1);
 	      tf = polyval(timing.ptVDf, ns);
 		    ti = sum(polyval(timing.ptVDa,[1:ns]));
-		    fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s\n', ...
+		    fprintf(1,'Est. time full(%4d:%4d)/inc(%4d:%4d) %6.1f/%6.1f s ', ...
 		            1, ns, 1, ns, tf, ti);
 			  tStart = tic;
 			  if tf < ti, % full faster than incremental
@@ -87,7 +87,7 @@ while ~stopReg,
 			  else, % incremental faster full
 			    VD = computeVD(nr, nc, Sc);
 			  end
-			  fprintf(1,'Used time %8.1f s\n', toc(tStart));
+			  fprintf(1,'(Used %6.1f s)\n', toc(tStart));
 	  end
     params = plotCurrentVD(VD, params, iReg);
 	  iReg = iReg + 1;
