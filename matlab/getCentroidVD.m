@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.9 2009/07/18 10:34:48 patrick Exp $
+% $Id: getCentroidVD.m,v 1.10 2009/07/18 12:05:55 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,7 +31,7 @@ if params.regAlgo == 2 & exist('VOISEtiming.mat','file'),
   timing = load('VOISEtiming.mat');
 end
 
-fprintf(1,'Starting regularisation phase\n')
+fprintf(1,'*** Starting regularisation phase\n')
 
 nr = VD.nr;
 nc = VD.nc;
@@ -98,7 +98,7 @@ while ~stopReg,
 	end
 end
 
-fprintf(1,'Regularisation phase completed.\n')
+fprintf(1,'*** Regularisation phase completed.\n')
 
 VD.regSc = regSc;
 VD.regDist = regDist;
