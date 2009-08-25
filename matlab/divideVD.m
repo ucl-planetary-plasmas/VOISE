@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.7 2009/07/18 10:34:48 patrick Exp $
+% $Id: divideVD.m,v 1.8 2009/08/25 15:23:06 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -123,6 +123,12 @@ while ~stopDiv,
     drawVD(VD);
     %pause
 	end
+
+  if 0, % NEEDS WORK does not seem to converge
+	% compute centre-of-mass of polygons
+	p = params; p.regMaxIter = 1;
+	VD = getCentroidVD(VD, p);
+  end
 end
 
 VD.divSHC = divSHC;
