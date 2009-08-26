@@ -2,7 +2,7 @@ function S = getCentroidSeed(VD, params, k)
 % function S = getCentroidSeed(VD, params, k)
 
 %
-% $Id: getCentroidSeed.m,v 1.8 2009/08/25 15:41:59 patrick Exp $
+% $Id: getCentroidSeed.m,v 1.9 2009/08/26 08:33:37 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,12 +26,13 @@ function S = getCentroidSeed(VD, params, k)
 x = jj;
 y = ii;
 
+if 1,
 % uniform weight
 w = ones(size(params.W(ij)));
 S = round([mean(x), mean(y)]);
-
+else, 
 % image intensity weight
-if 0, % NEEDS WORK!
+% Be careful when weight < 0 !
 w = params.W(ij);
 if ~any(w), % all weight equal zero
 w = ones(size(params.W(ij)));
@@ -47,7 +48,9 @@ fprintf(1, 'Seed %3d = (%3d, %3d), Centroid Seed = (%3d, %3d)\n', ...
 imagesc(params.W)
 axis xy
 hold on
-scatter(x,y,1,0.5*w);
+%scatter(x,y,1,-Inf*0.5*w);
+plot(x,y,'w.','markersize',5);
+plot(VD.Sx(k),VD.Sy(k),'kx',S(1),S(2),'ko','markersize',5)
 hold off
 pause
 end
