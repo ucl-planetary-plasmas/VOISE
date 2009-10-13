@@ -7,7 +7,7 @@ function testEllipseFit(ns,pc,p,p0)
 %
 
 %
-% $Id: testEllipseFit.m,v 1.1 2009/10/13 15:25:48 patrick Exp $
+% $Id: testEllipseFit.m,v 1.2 2009/10/13 16:06:41 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -60,6 +60,8 @@ Sy = Yc + a*(1+pc*(0.5-rand(1,ns))).*cosd(t)*sind(t0)+...
           b*(1+pc*(0.5-rand(1,ns))).*sind(t)*cosd(t0);
 
 %plot(Sx0,Sy0,'x',Sx,Sy,'o');
+
+fprintf(1,'seeds # %d,  pc %f\n', ns, pc);
 
 LSS = 2*sqrt((Sx0-Sx).^2+(Sy0-Sy).^2);
 fprintf(1,'LSS min %f max %f\n', [min(LSS), max(LSS)]);
