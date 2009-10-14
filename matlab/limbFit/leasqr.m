@@ -321,12 +321,17 @@ if (verbose(1)),
   disp(p')
   disp(' Correlation matrix of parameters estimated')
   disp(corp)
-  disp(' Covariance matrix of Residuals' )
-  disp(covr)
-  disp(' Correlation Coefficient R^2')
-  disp(r2)
-  sprintf(' 95%% conf region: F(0.05)(%.0f,%.0f)>= delta_pvec''*Z*delta_pvec',n,m-n)
-  Z
+  disp(' Covariance matrix of parameters estimated')
+  disp(covp)
+%  disp(' Covariance matrix of Residuals' )
+%  disp(covr)
+%  disp(' Correlation Coefficient R^2')
+%  disp(r2)
+  
+  disp([' ' ...
+  sprintf('95%% conf region: F(0.05)(%.0f,%.0f)>= delta_pvec''*Z*delta_pvec',...
+	        n,m-n)])
+  disp(Z)
 %   runs test according to Bard. p 201.
   n1 = sum((f-y) < 0);
   n2 = sum((f-y) > 0);
@@ -342,4 +347,5 @@ if (verbose(1)),
       disp([num2str(prob),'% chance of greater than ',num2str(nrun),' runs.']);
     end;
   end;
+	disp(' ');
 end;
