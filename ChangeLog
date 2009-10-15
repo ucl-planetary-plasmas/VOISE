@@ -1,3 +1,38 @@
+2009-10-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/filterImage.m:
+	Function to filter an image (given as a matrix) using either a given
+	(statistical) function or a discrete kernel for spatial convolution.
+
+2009-10-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/getEllipseParams.m:
+	Fixed calculation of tilt angle using semi-major and semi-minor axes for
+	any quadrant.
+
+2009-10-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/: getCircleParams.m, getDiscCenter.m,
+	  getEllipseParams.m:
+	Functions to get interactively an estimate of circle parameters, disc
+	center and ellipse parameters.
+
+2009-10-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/leasqr.m:
+	Added report of covariance matrix for estimated parameters and remove
+	report of covariance matrix of residuals when verbose(1) is true.
+
+2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/histEq.m:
+	Function to do histogram equalisation of an image to improve contrast.
+
+2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/testEllipseFit.m:
+	Added minor stdout report.
+
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/: fitCircle.m, testCircleFit.m:
