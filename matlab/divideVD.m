@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.8 2009/08/25 15:23:06 patrick Exp $
+% $Id: divideVD.m,v 1.9 2009/10/16 13:46:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -134,7 +134,7 @@ end
 VD.divSHC = divSHC;
 VD.divHCThreshold = divHCThreshold;
 
-fprintf(1,'*** Dividing phase completed\n')
+fprintf(1,'*** Dividing phase completed.\n')
 
 function params = plotCurrentVD(VD, params, iDiv)
 
