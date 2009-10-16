@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.5 2009/07/18 10:34:48 patrick Exp $
+% $Id: VOISE.m,v 1.6 2009/10/16 13:46:32 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -68,7 +68,7 @@ switch params.divideAlgo,
 		end
 		fprintf(1,'(Used %6.1f s)\n', toc(tStart));
 end
-fprintf(1,'*** Initialising completed\n')
+fprintf(1,'*** Initialising completed.\n')
 
 % save 
 save([params.oDir params.oMatFile], '-append', 'IVD'); 
@@ -101,8 +101,10 @@ CVD = getCentroidVD(MVD, params);
 save([params.oDir params.oMatFile], '-append', 'CVD');
 % plot
 params = plotVOISE(CVD, params, 3);
+if 0, 
 % do not plot Voronoi diagram 
 params = plotVOISE(CVD, params, 4);
+end
 
 % if movie on close movie
 if params.movDiag,
