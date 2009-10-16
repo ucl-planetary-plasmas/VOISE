@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.7 2009/10/16 13:48:38 patrick Exp $
+% $Id: VOISE.m,v 1.8 2009/10/16 16:34:19 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -23,6 +23,8 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 
 %[s,w] = unix(['rm -f ' params.oDir '*.eps']);
+
+printVOISEsetup(params);
 
 % save image parameters
 save([params.oDir params.oMatFile], 'params'); 
