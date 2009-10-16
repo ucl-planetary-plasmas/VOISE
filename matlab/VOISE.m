@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.6 2009/10/16 13:46:32 patrick Exp $
+% $Id: VOISE.m,v 1.7 2009/10/16 13:48:38 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -98,6 +98,7 @@ if ~params.movDiag, vdc = figure; end
 % Regularisation phase
 CVD = getCentroidVD(MVD, params);
 % save
+fprintf(1,'*** Saving VOISE results in %s\n', [params.oDir params.oMatFile]);
 save([params.oDir params.oMatFile], '-append', 'CVD');
 % plot
 params = plotVOISE(CVD, params, 3);
