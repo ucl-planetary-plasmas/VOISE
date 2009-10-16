@@ -1,4 +1,4 @@
-VOISEtiming.mat
 Makefile
 Makefile.in
-
+printVOISEsetup.m
+VOISEtiming.mat
