@@ -1,3 +1,64 @@
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac:
+	Generate matlab/printVOISEsetup.m from input file
+	matlab/printVOISEsetup.m.in.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/printVOISEsetup.m.in:
+	Added function to print VOISE setup with version.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/testLimbFit.m:
+	Test driver for limb fit model.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/filterImage.m:
+	Added some help information.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitLimb.m:
+	Generic nonlinear fitting of a limb to a set of points in cartesian
+	coordinates.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/getDefaultFitParams.m:
+	Default "constructor" for limb fit structure.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/: jacLimbModel.m, limbModel.m:
+	Wrapper function for limb model to call either ellipse or circle depending
+	on the number of parameters (3 parameters for circle and 5 parameters for
+	ellipse). New limb models could be added here without altering the structure
+	of the code.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/: circle.m, dcircle.m, dellipse.m, ellipse.m:
+	Cleaned code.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m:
+	Added report about saved VOISE result file.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m:
+	Commented plot of segmented image without superposition of VD.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/dfdp.m:
+	Numerical partial derivatives (Jacobian) df/dp for use with leasqr when no
+	explicit Jacobian function is provided.
+
 2009-10-15  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/filterImage.m:
