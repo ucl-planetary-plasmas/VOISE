@@ -33,4 +33,6 @@ AC_MSG_NOTICE
 dnl Generate Makefiles
 AC_CONFIG_FILES([Makefile matlab/Makefile share/Makefile])
 
+AC_CONFIG_FILES([matlab/printVOISEsetup.m:matlab/printVOISEsetup.m.in], [])
+
 AC_OUTPUT
