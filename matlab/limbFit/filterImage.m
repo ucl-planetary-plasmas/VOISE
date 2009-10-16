@@ -1,16 +1,27 @@
 function Y = filterImage(X,winSize,op,varargin)
 % function Y = filterImage(X,winSize,op,varargin)
 % 
-% op is either a function or a discrete kernel 
+%  X       : image
+%  winSize : size of (pixel-centred) kernel (should be odd in both dims)
+%  op      : either a function or a discrete kernel 
+%  varargin: optional arguments for function op
 % 
 % Examples of kernels 
-% 3x3 Laplacian :
-%                [ 0 -1  0;-1  4 -1;  0 -1  0]
-%                [-1 -1 -1;-1  8 -1; -1 -1 -1]
+%
+%                3x3 Laplacian
+%                -------------
+%
+%                [0,  1,  0; ...
+%                 1, -4,  1; ...
+%                 0,  1,  0];
+%
+%                [1/sqrt(2),  1,  1/sqrt(2); ...
+%                 1        , -8,          1; ...
+%                 1/sqrt(2),  1,  1/sqrt(2)];
 
 
 %
-% $Id: filterImage.m,v 1.1 2009/10/15 09:35:22 patrick Exp $
+% $Id: filterImage.m,v 1.2 2009/10/16 14:12:52 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
