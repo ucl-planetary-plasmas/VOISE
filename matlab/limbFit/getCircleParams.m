@@ -2,7 +2,7 @@ function p = getCircleParams()
 % function p = getCircleParams()
 
 %
-% $Id: getCircleParams.m,v 1.1 2009/10/14 15:16:55 patrick Exp $
+% $Id: getCircleParams.m,v 1.2 2009/10/16 14:00:49 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,12 +20,12 @@ function p = getCircleParams()
 % Public License for more details.
 %
 
-fprintf(1,'\nSelect approximate disc centre and press mouse button\n ');
+fprintf(1,'\nSelect approximate disc centre and press mouse button\n');
 [xc, yc] = ginput(1);
 
 fprintf(1,'xc = %.1f yc = %.1f\n', xc, yc);
 
-fprintf(1,'\nSelect approximate radius and press mouse button\n ');
+fprintf(1,'\nSelect approximate radius and press mouse button\n');
 [xa, ya] = ginput(1);
 
 r0 = sqrt((xc-xa).^2+(yc-ya).^2);
