@@ -1,3 +1,33 @@
+2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/plotSelectedSeeds.m:
+	Display the processed image used by VOISE instead of the raw image.
+
+2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/selectSeeds.m:
+	Added seeds selection test by angles.
+
+2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/getDefaultFitParams.m:
+	Added function allAngles as the default selectAngles function handler.
+
+2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/allAngles.m:
+	Default function to select all available angles.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/: getLimb.m, plotSelectedSeeds.m, selectSeeds.m:
+	Functions to select seeds, plot those seeds and fit the limb.
+
+2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m:
+	Added printing of VOISE setup.
+
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* configure.ac:
