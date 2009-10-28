@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.1 2009/10/16 16:38:05 patrick Exp $
+% $Id: selectSeeds.m,v 1.2 2009/10/28 14:39:19 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -54,8 +54,15 @@ Y = -ya*(Sx-xc) + xa*(Sy-yc);
 % canonical form of ellipse (X/a)^2+(Y/b)^2=1
 ellipseEq = X.^2/a^2+Y.^2/b^2;
 
+% angle
+T = 180/pi*atan2(Y./b, X./a);
+if isa(fit.selectAngles,'char') | isa(fit.selectAngles,'function_handle'),
+      [selectAngles, msg] = fcnchk(fit.selectAngles);
+end
+
 % selection of seeds criteria 
-iSelect = find(Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2);
+iSelect = find(Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2 &  ...
+               selectAngles(T));
 fprintf(1,'Total number of seeds: %d\n', length(Sls));
 fprintf(1,'Number Seeds on limb : %d\n', length(iSelect))
 
