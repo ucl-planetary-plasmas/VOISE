@@ -2,7 +2,7 @@ function fit = getDefaultFitParams(p0)
 % function fit = getDefaultFitParams(p0)
 
 %
-% $Id: getDefaultFitParams.m,v 1.1 2009/10/16 14:00:24 patrick Exp $
+% $Id: getDefaultFitParams.m,v 1.2 2009/10/28 14:37:39 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,22 +20,25 @@ function fit = getDefaultFitParams(p0)
 % Public License for more details.
 %
 
-fit.p0       = p0(:);
+% initial parameters
+fit.p0             = p0(:);
+% default selection function for angles
+fit.selectAngles   = @allAngles;
 
 % leasqr control parameters
 
 % scalar tolerance on fractional improvement in
 % scalar sum of squares = sum((wt.*(y-f))^2); 
-fit.stol     = 1e-6;
+fit.stol           = 1e-6;
 
 % scalar maximum number of iterations
-fit.niter    = 50;
+fit.niter          = 50;
 
 % desired fractional precision in parameter estimates
-fit.fracprec = zeros(length(p0), 1);
+fit.fracprec       = zeros(length(p0), 1);
 
 % maximum fractional step change in parameter vector
-fit.fracchg  = Inf*ones(length(p0), 1);
+fit.fracchg        = Inf*ones(length(p0), 1);
 
 % fractional increment of p for numerical partial derivatives
 % i.e. when Jacobian not explicitly provided 
@@ -44,17 +47,17 @@ fit.fracchg  = Inf*ones(length(p0), 1);
 % dp(i) 0 holds p(j) fixed
 % Here jacobian of function 'limbModel' is provided by 'jacLimbModel' so that
 % dp(i) != 0 means parameter fitted
-fit.dp       =  ones(length(p0), 1);
+fit.dp             =  ones(length(p0), 1);
 
 % fit verbosity
 % verbose(1): output progress report from leasqr (0: no, 1: yes)
 % verbose(2): plot   progress report from leasqr (0: no, 1: yes)
 % verbose(3): output from limb and derivative functions  (0: no, 1: yes)
-fit.verbose  = [0 0 0];
+fit.verbose        = [0 0 0];
 
 % largest seed scale length to be considered for the fit of the limb
 % *must* be initialised but no default value
-fit.LSmax = [];
+fit.LSmax          = [];
 
 % These values are used to select seeds for the fit of the limb
 % the limb (as given by an ellipse/circle) is written in
@@ -62,6 +65,6 @@ fit.LSmax = [];
 % x^2/a^2 + y^2/b^2 = 1
 % The selected seeds must lie within the corona defined by 
 % x^2/a^2 + y^2/b^2 >= Rmin^2 and x^2/a^2 + y^2/b^2 <= Rmax^2
-fit.Rmin = 0.9;
-fit.Rmax = 1.1;
+fit.Rmin           = 0.9;
+fit.Rmax           = 1.1;
 
