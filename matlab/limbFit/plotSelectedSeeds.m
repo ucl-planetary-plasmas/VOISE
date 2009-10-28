@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.1 2009/10/16 16:38:05 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.2 2009/10/28 14:40:20 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,7 +32,8 @@ LSmax = fit.LSmax;
 Rmin  = fit.Rmin;
 Rmax  = fit.Rmax;
 
-imagesc(params.xlim,params.ylim,params.Wo);
+%imagesc(params.xlim,params.ylim,params.Wo);
+imagesc(params.xlim,params.ylim,params.W);
 axis xy
 axis equal
 axis tight
