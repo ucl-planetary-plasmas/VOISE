@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.2 2009/10/28 14:40:20 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.3 2009/11/01 22:04:25 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -66,7 +66,7 @@ if length(p) == 3,
 
 elseif length(p) == 5,
 
-  title(sprintf('d_m=%d X_c=(%.0f,%.0f) a=%.0f b=%.0f tilt=%.0f',LSmax,p));
+  title(sprintf('LS_M=%d C=(%.0f,%.0f) a=%.0f b=%.0f \\theta=%.0f',LSmax,p));
 
 end
 
