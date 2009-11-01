@@ -2,7 +2,7 @@ function dr=dellipse(t,r,p,dp,func)
 % function dr=dellipse(t,r,p,dp,func)
 
 %
-% $Id: dellipse.m,v 1.2 2009/10/16 13:52:56 patrick Exp $
+% $Id: dellipse.m,v 1.3 2009/11/01 22:01:27 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -51,7 +51,7 @@ drs = [xs./rs ...
        (xs.*ct*cosd(t0) + ys.*ct*sind(t0))./rs ...
        (-xs.*st*sind(t0) + ys.*st*cosd(t0))./rs ...
        (xs.*(-a*ct*sind(t0)-b*st*cosd(t0))+ ...
-       ys.*(a*ct*cosd(t0)+b*st*sind(t0)))*(pi/180)./rs];
+        ys.*(a*ct*cosd(t0)-b*st*sind(t0)))./rs];
 
 dr = zeros(length(t),5);
 % "interpolate" dr(t) from drs(thetas)
