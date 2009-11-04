@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.2 2009/10/28 14:39:19 patrick Exp $
+% $Id: selectSeeds.m,v 1.3 2009/11/04 14:17:28 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -61,10 +61,16 @@ if isa(fit.selectAngles,'char') | isa(fit.selectAngles,'function_handle'),
 end
 
 % selection of seeds criteria 
-iSelect = find(Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2 &  ...
-               selectAngles(T));
+iSelect = find(Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2);
 fprintf(1,'Total number of seeds: %d\n', length(Sls));
 fprintf(1,'Number Seeds on limb : %d\n', length(iSelect))
+
+% finally angle selection
+withinAngularSpec = selectAngles(T(iSelect));
+if any(withinAngularSpec == false),
+  iSelect(withinAngularSpec == false) = [];
+  fprintf(1,'Number Seeds on limb : %d\n', length(iSelect))
+end
 
 % embed selected seeds in fit structure
 fit.iSelect = iSelect;
