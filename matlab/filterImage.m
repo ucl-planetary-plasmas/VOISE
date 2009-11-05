@@ -21,7 +21,7 @@ function Y = filterImage(X,winSize,op,varargin)
 
 
 %
-% $Id: filterImage.m,v 1.2 2009/10/16 14:12:52 patrick Exp $
+% $Id: filterImage.m,v 1.1 2009/11/05 17:37:59 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>

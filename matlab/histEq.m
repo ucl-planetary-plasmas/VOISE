@@ -2,7 +2,7 @@ function [Y,xbins,cdf] = histEq(X,nbins)
 % function [Y,xbins,cdf] = histEq(X,nbins)
 
 %
-% $Id: histEq.m,v 1.1 2009/10/13 16:10:05 patrick Exp $
+% $Id: histEq.m,v 1.1 2009/11/05 17:37:59 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
