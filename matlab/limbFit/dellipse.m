@@ -2,7 +2,7 @@ function dr=dellipse(t,r,p,dp,func)
 % function dr=dellipse(t,r,p,dp,func)
 
 %
-% $Id: dellipse.m,v 1.3 2009/11/01 22:01:27 patrick Exp $
+% $Id: dellipse.m,v 1.4 2009/11/06 17:13:42 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,7 +22,7 @@ function dr=dellipse(t,r,p,dp,func)
 
 global verbose
 
-if verbose(3),
+if ~isempty(verbose) & verbose(3),
   fprintf(1,'calling dellipse (xc,yc,a,b,t0)=(%.1f,%.1f,%.1f,%.1f,%.0f)\n',...
           p(1:5));
 end

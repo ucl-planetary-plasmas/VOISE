@@ -2,7 +2,7 @@ function r=ellipse(t,p)
 % function r=ellipse(t,p)
 
 %
-% $Id: ellipse.m,v 1.2 2009/10/16 13:52:56 patrick Exp $
+% $Id: ellipse.m,v 1.3 2009/11/06 17:13:42 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,7 +22,7 @@ function r=ellipse(t,p)
 
 global verbose
 
-if verbose(3)
+if ~isempty(verbose) & verbose(3),
   fprintf(1,'calling ellipse (xc,yc,a,b,t0)=(%.1f,%.1f,%.1f,%.1f,%.0f)\n',...
           p(1:5));
 end

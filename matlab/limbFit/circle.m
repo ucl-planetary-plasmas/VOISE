@@ -2,7 +2,7 @@ function r=circle(t,p)
 % function r=circle(t,p)
 
 %
-% $Id: circle.m,v 1.2 2009/10/16 13:52:34 patrick Exp $
+% $Id: circle.m,v 1.3 2009/11/06 17:13:42 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,7 +22,7 @@ function r=circle(t,p)
 
 global verbose
 
-if verbose(3)
+if ~isempty(verbose) & verbose(3)
   fprintf(1,'calling circle (xc,yc,r)=(%.1f,%.1f,%.1f)\n', p(1:3));
 end
 
