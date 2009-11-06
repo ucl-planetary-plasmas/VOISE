@@ -1,3 +1,32 @@
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/: 28jn014s.fits, alljup_UT1013.fits:
+	IR images of Jupiter from Hawaii Observatory kindly provided by
+	Makenzie Lystrup <lystrup@lasp.colorado.edu>.
+
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/: ex2Angles.m, limbFitEx1.m, limbFitEx2.m,
+	  plotLimbFit.m:
+	Files necessary for two limb fitting examples with Jupiter IR images
+	provided by Makenzie Lystrup <lystrup@lasp.colorado.edu>.
+
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/: circle.m, dcircle.m, dellipse.m, ellipse.m:
+	Check whether global verbose is not empty before query it.
+
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: testVOISE.m, testVOISE1.m:
+	Added initialisation of params structure using getDefaultVOISEParams
+	function.
+
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: getDefaultParams.m, getDefaultVOISEParams.m:
+	Renamed getDefaultParams into getDefaultVOISEParams.
+
 2009-11-05  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/: filterImage.m, histEq.m, limbFit/filterImage.m,
