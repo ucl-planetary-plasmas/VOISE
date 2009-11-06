@@ -5,7 +5,7 @@ function [params,IVD,DVD,MVD,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
 % [params,IVD,DVD,MVD,CVD] = testVOISE(100,100,12,@randomSeeds)
 
 %
-% $Id: testVOISE.m,v 1.4 2009/03/18 17:04:00 patrick Exp $
+% $Id: testVOISE.m,v 1.5 2009/11/06 15:43:15 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -50,6 +50,10 @@ y = linspace(-1,2,nr);
 
 load ../share/testImage
 
+% load default parameters
+params = getDefaultVOISEParams;
+
+% set image, axes and related
 params.W = Z;
 params.Wlim = [min(params.W(:)) max(params.W(:))];
 params.x = x;
