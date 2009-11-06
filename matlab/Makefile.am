@@ -1,5 +1,5 @@
 
 matlabdir = $(prefix)/matlab
-matlab_DATA = *.m limbFit/*.m
+matlab_DATA = *.m limbFit/*.m VOISEtiming.mat
 
 EXTRA_DIST = $(matlab_DATA)
