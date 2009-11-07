@@ -2,7 +2,11 @@ function VDexample
 % function VDexample
 
 % init seed of Mersenne-Twister RNG
-rand('twister',30);
+if exist('RandStream','file') == 2,
+  RandStream.setDefaultStream(RandStream('mt19937ar','seed',30)));
+else
+  rand('twister',30);
+end
 
 x = round(100*rand(8,1))+1;
 y = round(100*rand(8,1))+1;
@@ -31,9 +35,8 @@ set(gca,'xlim',100*[-.5 1.5],'ylim',100*[-.5 1.5]);
 axis equal
 
 %orient tall
-exportfig(gcf,'../agu2008/fig1.eps','color','cmyk');
+%exportfig(gcf,'../agu2008/fig1.eps','color','cmyk');
 %opts = struct('color','cmyk','bounds','tight');
 %opts = struct('color','cmyk','bounds','tight','linestylemap','bw');
 %exportfig(gcf,'../agu2008/fig1.eps',opts);
 %savefig('fig1.eps',gcf,'eps','-cmyk','-crop');
-
