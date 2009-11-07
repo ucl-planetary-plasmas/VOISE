@@ -1,3 +1,14 @@
+2009-11-07  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VDexample.m:
+	Added support for random generator seeding via RandStream new class
+	available from Matlab version 7.7.
+
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/Makefile.am:
+	Do not forget to export VOISEtiming.mat file.
+
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* share/Makefile.am:
