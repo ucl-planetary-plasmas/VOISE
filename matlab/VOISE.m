@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.8 2009/10/16 16:34:19 patrick Exp $
+% $Id: VOISE.m,v 1.9 2009/11/10 17:12:29 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -23,6 +23,9 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 
 %[s,w] = unix(['rm -f ' params.oDir '*.eps']);
+
+% total time to run VOISE
+t = cputime;
 
 printVOISEsetup(params);
 
@@ -114,3 +117,6 @@ if params.movDiag,
   params.mov = close(params.mov);
 end
 
+t = cputime-t;
+fprintf(1,'*** Total elapsed time %2d:%2d:%2d [hh:mm:ss].\n', ...
+        floor(t/3600), floor(mod(t,3600)/60), floor(mod(mod(t,3660),60)));
