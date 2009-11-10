@@ -1,5 +1,56 @@
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/: testVOISE.m, testVOISE1.m:
+	Updated to latest enhancements.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m:
+	Added total timer.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: imageUtils/startup.m, limbFit/startup.m:
+	Default Matlab startup for VOISE.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/startup.m:
+	Default Matlab startup for VOISE.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac:
+	Removed generation of printVOISEsetup.m.
+	Changed filename startup.m* into start_VOISE.m*.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: printVOISEsetup.m, printVOISEsetup.m.in:
+	Removed unecessary generation of printVOISEsetup.m from template file
+	printVOISEsetup.m.in.
+	All informations concerning VOISe are in the global structure voise.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: start_VOISE.m.in, startup.m.in:
+	Renamed startup.m.in into start_VOISE.m.in.
+	Added global structure voise to contain VOISE informations such as root,
+	version.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/: boardSeeds.m, poissonSeeds.m, randomSeeds.m,
+	  uniformSeeds.m, fig4Seeds.m:
+	Replaced expected optional argument parsing by use of parseArgs function.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/parseArgs.m:
+	Utility function to parse list of arguments.
+
+2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/startup.m.in:
 	Replaced relative path by absolute path when calling addpath.
 
