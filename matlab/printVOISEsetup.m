@@ -1,9 +1,8 @@
 function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
-% @configure_input@
 %
-% $Id: printVOISEsetup.m.in,v 1.3 2009/11/10 12:19:23 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.1 2009/11/10 15:49:10 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,7 +20,9 @@ function printVOISEsetup(params)
 % Public License for more details.
 %
 
-header = sprintf('VOISE Set Up -- version %s', '@VERSION@');
+global voise
+
+header = sprintf('VOISE Set Up -- version %s', voise.version);
 line = sprintf('%s', char('*'*ones(length(header),1)));
 
 
