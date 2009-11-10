@@ -34,5 +34,6 @@ dnl Generate Makefiles
 AC_CONFIG_FILES([Makefile matlab/Makefile share/Makefile])
 
 AC_CONFIG_FILES([matlab/printVOISEsetup.m:matlab/printVOISEsetup.m.in], [])
+AC_CONFIG_FILES([matlab/startup.m:matlab/startup.m.in], [])
 
 AC_OUTPUT
