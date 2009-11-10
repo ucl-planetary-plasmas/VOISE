@@ -1,8 +1,12 @@
-function S = randomSeeds(nr,nc,ns,pc)
-% function S = randomSeeds(nr,nc,ns,pc)
+function S = randomSeeds(nr,nc,ns,varargin)
+% function S = randomSeeds(nr,nc,ns,['pc',value])
+% 
+% string 'pc' followed by a value is an optional argument.
+% pc is a percentage to indicate the relative fluctuation introduced
+% in the randomisation of the regular tesselation (default pc = 0.02)
 
 %
-% $Id: randomSeeds.m,v 1.2 2009/07/04 17:21:34 patrick Exp $
+% $Id: randomSeeds.m,v 1.3 2009/11/10 14:52:31 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,12 +24,10 @@ function S = randomSeeds(nr,nc,ns,pc)
 % Public License for more details.
 %
 
+pc = getfield(parseArgs(struct('pc',0.02), varargin{:}),'pc');
+
 % initialise array S(ns,2) 
 % seed s has coordinates (x,y) = S(s, 1:2) 
-
-if ~exist('pc','var'),
-	pc = 0.02;
-end
 
 % no seeds in the 100*pc % from the boundary of the image
 S = round([(nc-2*pc*nc)*(rand(ns,1))+pc*nc, ...

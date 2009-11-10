@@ -1,8 +1,15 @@
-function S = boardSeeds(nr,nc,ns,pc1,pc2)
-% function S = boardSeeds(nr,nc,ns,pc1,pc2)
+function S = boardSeeds(nr,nc,ns,varargin)
+% function S = boardSeeds(nr,nc,ns,['pc1',value],['pc2',value])
+% 
+% string 'pc1' followed by a value and string pc2 followed by 
+% a value are optional arguments.
+% pc1 is a percentage that indicate the size of regular tesselation
+% ns = size(pc1*nr,pc1*nc) (default pc1 = 0.1)
+% pc2 is a percentage to indicate the relative fluctuation introduced
+% in the randomisation of the regular tesselation (default pc2 = 0.075)
 
 %
-% $Id: boardSeeds.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: boardSeeds.m,v 1.2 2009/11/10 14:52:31 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,28 +27,22 @@ function S = boardSeeds(nr,nc,ns,pc1,pc2)
 % Public License for more details.
 %
 
-% initialise array S(ns,2) 
-% seed s has coordinates (x,y) = S(s, 1:2) 
 
-if ~exist('pc1','var'),
-	pc1 = 0.1;
-end
+pc1 = getfield(parseArgs(struct('pc1',0.1)  , varargin{:}),'pc1');
+pc2 = getfield(parseArgs(struct('pc2',0.075), varargin{:}),'pc2');
 
 % regular tesselation with ns = pc1*nr x pc1*nc
 xi = round(linspace(pc1/2*nc,(1-pc1/2)*nc, 2*round(nc*pc1)-1));
 yi = round(linspace(pc1/2*nr,(1-pc1/2)*nr, 2*round(nr*pc1)-1));
 
-
 [x, y] = meshgrid(xi,yi);
 x = x(:);
 y = y(:);
 
+% initialise array S(ns,2) 
+% seed s has coordinates (x,y) = S(s, 1:2) 
 S = [x([1:2:end]), y([1:2:end])];
 ns = size(S,1);
-
-if ~exist('pc2','var'),
-	pc2 = 0.075;
-end
 
 if pc2, % random fluctuation of 100*pc2 % of distance between seeds
   r = round([pc2*nc/4*(2*rand(ns,1)-1), pc2*nr/4*(2*rand(ns,1)-1)]);
