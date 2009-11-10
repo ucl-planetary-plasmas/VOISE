@@ -1,7 +1,10 @@
-% startup
-
 %
-% $Id: startup.m.in,v 1.1 2009/11/10 11:41:00 patrick Exp $
+% VOISE (version @VERSION@) startup 
+%
+
+% @configure_input@
+%
+% $Id: startup.m.in,v 1.2 2009/11/10 12:19:03 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,6 +24,9 @@
 
 fprintf('Setting up VOISE -- version %s\n', '@VERSION@');
 
-addpath('./limbFit');
-addpath('./imageUtils');
+addpath('@abs_top_srcdir@/share');
+addpath('@abs_top_srcdir@/matlab');
+addpath('@abs_top_srcdir@/matlab/limbFit');
+addpath('@abs_top_srcdir@/matlab/imageUtils');
+
 
