@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.9 2009/11/10 17:12:29 patrick Exp $
+% $Id: VOISE.m,v 1.10 2009/11/11 14:37:05 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,9 +22,13 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
 % Public License for more details.
 %
 
-%[s,w] = unix(['rm -f ' params.oDir '*.eps']);
+if params.logVOISE, % init diary to log VOISE run
+  unix(['rm -f ' params.oDir params.oLogFile]);
+  diary([params.oDir params.oLogFile])
+	diary('on')
+end
 
-% total time to run VOISE
+% start time for total time measurement of VOISE run
 t = cputime;
 
 printVOISEsetup(params);
@@ -37,7 +41,7 @@ params = plotVOISE([], params, -1);
 if params.movDiag, % init movie
   set(gcf,'position',params.movPos);
 	set(gcf,'DoubleBuffer','on');
-	params.mov = avifile([params.oDir 'voise.avi'],'fps',2);
+	params.mov = avifile([params.oDir params.oMovFile],'fps',2);
 end
 
 [nr, nc] = size(params.W);
@@ -120,3 +124,7 @@ end
 t = cputime-t;
 fprintf(1,'*** Total elapsed time %2d:%2d:%2d [hh:mm:ss].\n', ...
         floor(t/3600), floor(mod(t,3600)/60), floor(mod(mod(t,3660),60)));
+
+if params.logVOISE,
+	diary('off')
+end

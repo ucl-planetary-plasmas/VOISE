@@ -2,7 +2,7 @@ function params = getDefaultVOISEParams
 % function params = getDefaultVOISEParams
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.1 2009/11/06 15:39:09 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.2 2009/11/11 14:37:05 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -57,14 +57,19 @@ params.regMaxIter = 1;
 % 2 timing based
 params.regAlgo    = 2;
 
-% inputs/output 
-params.iFile    = [];      % input image file 
-params.oDir     = [];      % output directory
-params.oMatFile = 'voise'; % output mat-file name
+% inputs/output paths
+params.iFile    = [];               % input image file 
+params.oDir     = [];               % output directory
+params.oMatFile = 'voise.mat';      % output mat filename
+params.oLogFile = 'voise.log';      % log filename
+params.oMovFile = 'voise.avi';      % movie filename
 
-% Diagnostics parameters
+% Diagnostics/Report parameters
 %
-% Export to eps divide/merge
+% log output of VOISE run
+params.logVOISE     = true;
+%
+% Export divide/merge/reg plot to eps
 params.divideExport = false;
 params.mergeExport  = false;
 params.regExport    = false;
