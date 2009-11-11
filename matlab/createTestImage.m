@@ -2,7 +2,7 @@ function createTestImage
 % function createTestImage
 
 %
-% $Id: createTestImage.m,v 1.1 2009/02/08 21:07:18 patrick Exp $
+% $Id: createTestImage.m,v 1.2 2009/11/11 15:26:04 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,27 +20,54 @@ function createTestImage
 % Public License for more details.
 %
 
-x = linspace(-1,1,200);
-y = linspace(-1,1,200);
-[X,Y]=meshgrid(x,y);
+% number of rows
+nr = 200;
+% number of columns
+nc = 200;
 
-Z = 10*zeros(200,200);
+% x = linspace(-2, 1, nc);
+% y = linspace(-1, 2, nr);
+% [X,Y] = meshgrid(x,y);
+% then 
+% [X(1,1)    , Y(1,1)    ] = -2  -1
+% [X(1,end)  , Y(1,end)  ] =  1  -1
+% [X(end,1)  , Y(end,1)  ] = -2   2
+% [X(end,end), Y(end,end)] =  1   2
 
+% number of cols in image corresponds to x coordinate
+x     = linspace(-1, 1, nc);
+% number of rows in image corresponds to y coordinate
+y     = linspace(-1, 1, nr);
+
+[X,Y] = meshgrid(x, y);
+
+% background level of 10
+Z     = 10*zeros(nr,nc);
+
+% large ellipse 
 a = 3/4; b = 3/4;
 Z(X.^2/a^2+Y.^2/b^2 <= 1) = 20;
 
+% smaller ellipse
 a = 1/2; b = 2/3;
 Z(X.^2/a^2+Y.^2/b^2 < 1) = 30;
 
+% further smaller ellipse
 a = 1/3; b = 1/4;
 Z(X.^2/a^2+Y.^2/b^2 < 1) = 20;
 
+% normal RNG seeding 
 randn('state', 10);
 
-Z = Z + randn(200,200);
+% add normal noise
+Z = Z + randn(nr, nc);
 
+% normalise levels between 1 to 256
 Z = fix(255*(Z-min(Z(:)))/(max(Z(:))-min(Z(:))))+1;
 
-imagesc(Z)
+imagesc(x,y,Z)
+axis xy
+colorbar
 
-save ../share/testImage x y Z
+global voise 
+save([voise.root '/share/testImage.mat'], 'x', 'y', 'Z');
