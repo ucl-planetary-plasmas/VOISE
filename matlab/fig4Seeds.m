@@ -1,12 +1,12 @@
-function S = fig4Seeds(nr,nc,ns,varargin)
-% function S = fig4Seeds(nr,nc,ns,['pc',value])
+function [S,pc] = fig4Seeds(nr,nc,ns,varargin)
+% function [S,pc] = fig4Seeds(nr,nc,ns,['pc',pc])
 %
-% string 'pc' followed by a value is an optional argument.
+% string 'pc' followed by a value for pc is optional.
 % pc is a percentage to indicate the relative fluctuation introduced
 % in the randomisation of the regular tesselation (default pc = 0.25)
 
 %
-% $Id: fig4Seeds.m,v 1.2 2009/11/10 14:53:06 patrick Exp $
+% $Id: fig4Seeds.m,v 1.3 2009/11/11 17:44:02 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -37,7 +37,6 @@ S = [[x(1:3); x([1 3]); x(1:3); x(2)], ...
      [y(3)*ones(3,1); y(2)*ones(2,1); y(1)*ones(3,1); y(2)]];
 
 pc = getfield(parseArgs(struct('pc',0.25), varargin{:}),'pc');
-
 
 if pc, % random fluctuation of 100*pc % of distance between seeds
   r = round([pc*nc/4*(2*rand(ns,1)-1), pc*nr/4*(2*rand(ns,1)-1)]);

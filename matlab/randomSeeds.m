@@ -1,12 +1,12 @@
-function S = randomSeeds(nr,nc,ns,varargin)
-% function S = randomSeeds(nr,nc,ns,['pc',value])
+function [S,pc] = randomSeeds(nr,nc,ns,varargin)
+% function [S,pc] = randomSeeds(nr,nc,ns,['pc',pc])
 % 
-% string 'pc' followed by a value is an optional argument.
+% string 'pc' followed by a value for pc is optional.
 % pc is a percentage to indicate the relative fluctuation introduced
 % in the randomisation of the regular tesselation (default pc = 0.02)
 
 %
-% $Id: randomSeeds.m,v 1.3 2009/11/10 14:52:31 patrick Exp $
+% $Id: randomSeeds.m,v 1.4 2009/11/11 17:44:02 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>

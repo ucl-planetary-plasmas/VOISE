@@ -1,15 +1,14 @@
-function S = uniformSeeds(nr,nc,ns,varargin)
-% function S = uniformSeeds(nr,nc,ns,['pc1',value],['pc2',value])
+function [S,pc] = uniformSeeds(nr,nc,ns,varargin)
+% function [S,pc] = uniformSeeds(nr,nc,ns,['pc',pc])
 % 
-% string 'pc1' followed by a value and string pc2 followed by 
-% a value are optional arguments.
-% pc1 is a percentage that indicate the size of regular tesselation
-% ns = size(pc1*nr,pc1*nc) (default pc1 = 0.1)
-% pc2 is a percentage to indicate the relative fluctuation introduced
-% in the randomisation of the regular tesselation (default pc2 = 0.075)
+% string 'pc' followed by a value for (two element array) pc is optional.
+% pc(1) is a percentage that indicate the size of regular tesselation
+% ns = size(pc(1)*nr,pc(1)*nc) (default pc(1) = 0.1)
+% pc(2) is a percentage to indicate the relative fluctuation introduced
+% in the randomisation of the regular tesselation (default pc(2) = 0.075)
 
 %
-% $Id: uniformSeeds.m,v 1.2 2009/11/10 14:52:31 patrick Exp $
+% $Id: uniformSeeds.m,v 1.3 2009/11/11 17:44:02 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -27,13 +26,11 @@ function S = uniformSeeds(nr,nc,ns,varargin)
 % Public License for more details.
 %
 
+pc = getfield(parseArgs(struct('pc',[0.1,0.075]) , varargin{:}),'pc');
 
-pc1 = getfield(parseArgs(struct('pc1',0.1)  , varargin{:}),'pc1');
-pc2 = getfield(parseArgs(struct('pc2',0.075), varargin{:}),'pc2');
-
-% regular tesselation with ns = 100*pc1*nr x 100pc1*nc
-xi = round(linspace(pc1/2*nc,(1-pc1/2)*nc, round(nc*pc1)));
-yi = round(linspace(pc1/2*nr,(1-pc1/2)*nr, round(nr*pc1)));
+% regular tesselation with ns = 100*pc(1)*nr x 100pc(1)*nc
+xi = round(linspace(pc(1)/2*nc,(1-pc(1)/2)*nc, round(nc*pc(1))));
+yi = round(linspace(pc(1)/2*nr,(1-pc(1)/2)*nr, round(nr*pc(1))));
 
 [x, y] = meshgrid(xi,yi);
 
@@ -42,8 +39,8 @@ yi = round(linspace(pc1/2*nr,(1-pc1/2)*nr, round(nr*pc1)));
 S = [x(:), y(:)];
 ns = length(x(:));
 
-if pc2, % random fluctuation of 100*pc2 % of distance between seeds
-  r = round([pc2*nc/4*(2*rand(ns,1)-1), pc2*nr/4*(2*rand(ns,1)-1)]);
+if pc(2), % random fluctuation of 100*pc(2) % of distance between seeds
+  r = round([pc(2)*nc/4*(2*rand(ns,1)-1), pc(2)*nr/4*(2*rand(ns,1)-1)]);
   S = S + r;
 end
 
