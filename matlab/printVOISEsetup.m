@@ -2,7 +2,7 @@ function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
 %
-% $Id: printVOISEsetup.m,v 1.1 2009/11/10 15:49:10 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.2 2009/11/11 13:38:39 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,17 +31,20 @@ fprintf(1,'\n%s\n%s\n%s\n\n', line, header, line);
 fprintf(1,' * Dividing parameters\n');
 fprintf(1,'   -------------------\n\n');
 fprintf(1,'   p_D             = %.1f\n', params.dividePctile);
-fprintf(1,'   d^2_m           = %.1f\n\n', params.d2Seeds);
+fprintf(1,'   d^2_m           = %.1f\n', params.d2Seeds);
+fprintf(1,'   algo            = %d\n\n', params.divideAlgo);
 
 fprintf(1,' * Merging parameters\n');
 fprintf(1,'   -------------------\n\n');
 fprintf(1,'   p_M             = %.1f\n', params.mergePctile);
 fprintf(1,'   dmu             = %.1f\n', params.dmu);
-fprintf(1,'   thresHoldLength = %.1f\n\n', params.thresHoldLength);
+fprintf(1,'   thresHoldLength = %.1f\n', params.thresHoldLength);
+fprintf(1,'   algo            = %d\n\n', params.mergeAlgo);
 
 fprintf(1,' * Regularising parameters\n');
 fprintf(1,'   -----------------------\n\n');
-fprintf(1,'   regMaxIter      = %d\n', params.regAlgo);
+fprintf(1,'   regMaxIter      = %d\n'  , params.regMaxIter);
+fprintf(1,'   algo            = %d\n\n', params.regAlgo);
 
 fprintf(1,'\n%s\n', line);
 
