@@ -7,7 +7,7 @@ function [params,IVD,DVD,MVD,CVD] = testVOISE1(nr,nc,ns,initSeeds,varargin)
 %                            'dividePctile',90)
 
 %
-% $Id: testVOISE1.m,v 1.5 2009/11/10 17:14:05 patrick Exp $
+% $Id: testVOISE1.m,v 1.6 2009/11/11 13:36:30 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -49,7 +49,7 @@ params = getDefaultVOISEParams;
 
 % VOISE algorithm parameters
 % Dividing
-params.dividePctile    = 80;
+params.dividePctile    = 95;
 params.d2Seeds         = 4;
 % Merging
 params.mergePctile     = 60;
