@@ -2,7 +2,7 @@ function [VD, params] = mergeVDFast(VD, params)
 % function [VD, params] = mergeVDFast(VD, params)
 
 %
-% $Id: mergeVDFast.m,v 1.3 2009/07/04 21:17:11 patrick Exp $
+% $Id: mergeVDFast.m,v 1.4 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -199,7 +199,7 @@ title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iMerge))
 drawnow 
 
 if params.mergeExport,
-  exportfig(gcf,[params.oDir 'merge' num2str(iMerge) '.eps'],'color','cmyk');
+  printFigure(gcf,[params.oDir 'merge' num2str(iMerge) '.eps']);
 end
 
 if params.movDiag,

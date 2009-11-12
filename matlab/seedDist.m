@@ -2,7 +2,7 @@ function seedDist(VD,params)
 % function seedDist(VD,params)
 
 %
-% $Id: seedDist.m,v 1.1 2009/02/08 21:07:15 patrick Exp $
+% $Id: seedDist.m,v 1.2 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,7 +32,7 @@ xlabel('x [R_J]')
 ylabel('y [R_J]')
 title('Seeds spatial distribution')
 
-exportfig(gcf,[params.oDir 'seeddist1.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'seeddist1.eps']);
 
 R = sqrt(X.^2+Y.^2);
 T = atan2(Y,X)*180/pi;
@@ -58,11 +58,11 @@ for i=1:length(ti)-1,
 	end
 end
 
-exportfig(gcf,[params.oDir 'seeddist2.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'seeddist2.eps']);
 
 return
 
-exportfig(gcf,[params.oDir 'seeddist.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'seeddist.eps']);
 
 return 
 

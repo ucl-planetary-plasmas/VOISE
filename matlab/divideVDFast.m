@@ -2,7 +2,7 @@ function [VD, params]  = divideVDFast(VD, params)
 % function [VD,params] = divideVDFast(VD, params)
 
 %
-% $Id: divideVDFast.m,v 1.3 2009/07/02 11:21:24 patrick Exp $
+% $Id: divideVDFast.m,v 1.4 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -110,7 +110,7 @@ title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iDiv))
 drawnow
  
 if params.divideExport,
-  exportfig(gcf,[params.oDir 'div' num2str(iDiv) '.eps'], 'color','cmyk');
+  printFigure(gcf,[params.oDir 'div' num2str(iDiv) '.eps']);
 end
 
 if params.movDiag,

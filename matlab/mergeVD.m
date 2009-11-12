@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.8 2009/07/18 10:34:48 patrick Exp $
+% $Id: mergeVD.m,v 1.9 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -227,7 +227,7 @@ title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iMerge))
 drawnow 
 
 if params.mergeExport,
-  exportfig(gcf,[params.oDir 'merge' num2str(iMerge) '.eps'],'color','cmyk');
+  printFigure(gcf,[params.oDir 'merge' num2str(iMerge) '.eps']);
 end
 
 if params.movDiag,

@@ -2,7 +2,7 @@ function params = plotVOISE(VD, params, ic)
 % function params = plotVOISE(VD, params, ic)
 
 %
-% $Id: plotVOISE.m,v 1.2 2009/03/18 17:03:05 patrick Exp $
+% $Id: plotVOISE.m,v 1.3 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -53,10 +53,10 @@ end
 
 if isempty(VD), % original image
   title('Original image')
-  exportfig(gcf,[params.oDir 'orig.eps'],'color','cmyk');
+  printFigure(gcf,[params.oDir 'orig.eps']);
 else
   title(sprintf('card(S) = %d', length(VD.Sk)))
-  exportfig(gcf,[params.oDir 'phase' num2str(ic) '.eps'],'color','cmyk');
+  printFigure(gcf,[params.oDir 'phase' num2str(ic) '.eps']);
 end
 
 if params.movDiag,

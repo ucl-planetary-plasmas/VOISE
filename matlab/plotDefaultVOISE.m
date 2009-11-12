@@ -2,7 +2,7 @@ function params = plotDefaultVOISE(VD, params, info)
 % function params = plotDefaultVOISE(VD, params, info)
 
 %
-% $Id: plotDefaultVOISE.m,v 1.1 2009/07/04 13:23:24 patrick Exp $
+% $Id: plotDefaultVOISE.m,v 1.2 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -42,8 +42,7 @@ title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), info.iter))
 drawnow
 
 if params.divideExport,
-  exportfig(gcf,[params.oDir info.name num2str(info.iter) '.eps'], ...
-            'color','cmyk');
+  printFigure(gcf,[params.oDir info.name num2str(info.iter) '.eps']);
 end
 
 if params.movDiag,

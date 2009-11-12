@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.10 2009/07/18 12:05:55 patrick Exp $
+% $Id: getCentroidVD.m,v 1.11 2009/11/12 15:46:46 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -129,7 +129,7 @@ title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iReg))
 drawnow
 
 if params.regExport,
-  exportfig(gcf,[params.oDir 'reg' num2str(iReg) '.eps'], 'color','cmyk');
+  printFigure(gcf,[params.oDir 'reg' num2str(iReg) '.eps']);
 end
 
 if params.movDiag,
