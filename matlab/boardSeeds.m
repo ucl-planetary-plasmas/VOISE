@@ -1,5 +1,5 @@
-function [S,pc] = boardSeeds(nr,nc,ns,varargin)
-% function [S,pc] = boardSeeds(nr,nc,ns,['pc',pc])
+function [S,varargout] = boardSeeds(nr,nc,ns,varargin)
+% function [S[,pc]] = boardSeeds(nr,nc,ns[,'pc',pc])
 % 
 % string 'pc' followed by a (2 element) vector pc is optional.
 % pc(1) is a percentage that indicate the size of regular tesselation
@@ -8,7 +8,7 @@ function [S,pc] = boardSeeds(nr,nc,ns,varargin)
 % in the randomisation of the regular tesselation (default pc(2) = 0.075)
 
 %
-% $Id: boardSeeds.m,v 1.3 2009/11/11 17:44:02 patrick Exp $
+% $Id: boardSeeds.m,v 1.4 2009/11/12 15:10:29 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -46,4 +46,6 @@ if pc(2), % random fluctuation of 100*pc(2) % of distance between seeds
   S = S + r;
 end
 
-
+if nargout > 1,
+  varargout{1} = pc;
+end

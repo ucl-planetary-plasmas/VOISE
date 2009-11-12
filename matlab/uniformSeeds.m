@@ -1,5 +1,5 @@
-function [S,pc] = uniformSeeds(nr,nc,ns,varargin)
-% function [S,pc] = uniformSeeds(nr,nc,ns,['pc',pc])
+function [S,varargout] = uniformSeeds(nr,nc,ns,varargin)
+% function [S[,pc]] = uniformSeeds(nr,nc,ns[,'pc',pc])
 % 
 % string 'pc' followed by a value for (two element array) pc is optional.
 % pc(1) is a percentage that indicate the size of regular tesselation
@@ -8,7 +8,7 @@ function [S,pc] = uniformSeeds(nr,nc,ns,varargin)
 % in the randomisation of the regular tesselation (default pc(2) = 0.075)
 
 %
-% $Id: uniformSeeds.m,v 1.3 2009/11/11 17:44:02 patrick Exp $
+% $Id: uniformSeeds.m,v 1.4 2009/11/12 15:10:29 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>

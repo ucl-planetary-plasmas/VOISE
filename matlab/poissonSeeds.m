@@ -1,12 +1,12 @@
-function [S,pc] = poissonSeeds(nr,nc,ns,varargin)
-% function [S,pc] = poissonSeeds(nr,nc,ns,['pc',pc])
+function [S,varargout] = poissonSeeds(nr,nc,ns,varargin)
+% function [S[,pc]] = poissonSeeds(nr,nc,ns[,'pc',pc])
 %
 % string 'pc' followed by a value for pc is optional.
 % pc is a percentage to indicate the relative fluctuation introduced
 % in the randomisation of the regular tesselation (default pc = 0.02)
 
 %
-% $Id: poissonSeeds.m,v 1.3 2009/11/11 17:44:02 patrick Exp $
+% $Id: poissonSeeds.m,v 1.4 2009/11/12 15:10:29 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -35,3 +35,7 @@ S = round([(nc-2*pc*nc)*(rand(ns,1))) + pc*nc, ...
 
 randraw('po',nc,[ns,1]);
 randraw('po',nr,[ns,1]);
+
+if nargout > 1,
+  varargout{1} = pc;
+end
