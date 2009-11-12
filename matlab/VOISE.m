@@ -1,10 +1,10 @@
-function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
-% function [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin)
+function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
+% function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.10 2009/11/11 14:37:05 patrick Exp $
+% $Id: VOISE.m,v 1.11 2009/11/12 15:14:54 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -33,8 +33,6 @@ t = cputime;
 
 printVOISEsetup(params);
 
-% save image parameters
-save([params.oDir params.oMatFile], 'params'); 
 % plot image
 params = plotVOISE([], params, -1);
 
@@ -45,10 +43,14 @@ if params.movDiag, % init movie
 end
 
 [nr, nc] = size(params.W);
+ns       = params.iNumSeeds;
 
-if exist('initSeeds') & isa(initSeeds, 'function_handle'),
-	[initSeeds, msg] = fcnchk(initSeeds);
-  S = initSeeds(nr, nc, ns, varargin{:});
+% init seed of Mersenne-Twister RNG
+rand('twister', params.RNGiseed);
+
+if isa(params.initSeeds, 'char') | isa(params.initSeeds, 'function_handle'),
+	[initSeeds, msg] = fcnchk(params.initSeeds);
+  [S,params.pc] = initSeeds(nr, nc, params.iNumSeeds, varargin{:});
 else
   error('initSeeds not defined or not a Function Handle');
 end
@@ -56,6 +58,9 @@ end
 if params.divideAlgo == 2 & exist('VOISEtiming.mat','file'),
   timing = load('VOISEtiming.mat');
 end
+
+% save image parameters
+save([params.oDir params.oMatFile], 'params'); 
 
 % Initialise VD
 fprintf(1,'*** Initialising VOISE\n')
