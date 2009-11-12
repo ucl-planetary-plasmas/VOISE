@@ -1,13 +1,14 @@
-function [params,IVD,DVD,MVD,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
-% function [params,IVD,DVD,MVD,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
+function [params,IVD,DVD,MVD,CVD] = testVOISE(varargin)
+% function [params,IVD,DVD,MVD,CVD] = testVOISE([optional args])
 %
+% optional arguments are any of the fieds
 % examples:
-% [params,IVD,DVD,MVD,CVD] = testVOISE(100,100,12,@randomSeeds)
-% [params,IVD,DVD,MVD,CVD] = testVOISE(100,100,12,@randomSeeds,...
-%                            'dividePctile',90)
+% [params,IVD,DVD,MVD,CVD] = testVOISE()
+% [params,IVD,DVD,MVD,CVD] = testVOISE('initSeeds',@uniformSeeds,...
+%                                      'dividePctile',90)
 
 %
-% $Id: testVOISE.m,v 1.6 2009/11/10 17:14:05 patrick Exp $
+% $Id: testVOISE.m,v 1.7 2009/11/12 15:16:14 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -27,27 +28,16 @@ function [params,IVD,DVD,MVD,CVD] = testVOISE(nr,nc,ns,initSeeds,varargin)
 
 start_VOISE
 
+% miscellaneous information about VOISE
 global voise
 
-% number of rows in image corresponds to y coordinate
-if ~exist('nr'),
-  nr = 100;
-end
-
-% number of cols in image corresponds to x coordinate
-if ~exist('nc'),
-  nc = 100;
-end
-
-% number of seeds 
-if ~exist('ns'),
-  ns = 40;
-end
-
-% load default parameters
+% load default VOISE parameters
 params = getDefaultVOISEParams;
 
-% VOISE algorithm parameters
+% modify some parameters
+
+% initialising
+params.iNumSeeds       = 12;
 % Dividing
 params.dividePctile    = 80;
 params.d2Seeds         = 4;
@@ -57,30 +47,20 @@ params.dmu             = 0.2;
 params.thresHoldLength = 0.3;
 % Regularise
 params.regMaxIter      = 1;
-
 % I/O parameters
 params.iFile           = [voise.root '/share/testImage.mat'];
 params.oDir            = [voise.root '/share/testImage/'];
 params.oMatFile        = 'voise';
-
 % diagnostics parameters
 params.divideExport    = false;
 params.mergeExport     = false;
 params.movDiag         = false;
 params.movPos          = [600 50 1300 1050]; % movie window size
 
+% allow command line modifications
 params = parseArgs(params, varargin{:});
 
-x = linspace(-2,1,nc);
-y = linspace(-1,2,nr);
-
-[X,Y] = meshgrid(x,y);
-
-% [X(1,1)    , Y(1,1)    ] = -2  -1
-% [X(1,end)  , Y(1,end)  ] =  1  -1
-% [X(end,1)  , Y(end,1)  ] = -2   2
-% [X(end,end), Y(end,end)] =  1   2
-
+% load file
 try
   load(params.iFile)
 catch
@@ -90,20 +70,19 @@ end
 
 % set image, axes and related
 params.W    = Z;
-params.Wlim = [min(params.W(:)) max(params.W(:))];
 params.x    = x;
-params.xlim = [min(params.x) max(params.x)];
 params.y    = y;
+
+params.Wlim = [min(params.W(:)) max(params.W(:))];
+params.xlim = [min(params.x) max(params.x)];
 params.ylim = [min(params.y) max(params.y)];
 
+% create directory if necessary
 if ~exist(params.oDir,'dir')
   unix(['mkdir -p ' params.oDir]);
 end
 
 
-% init seed of Mersenne-Twister RNG
-rand('twister',10);
-
 % run VOISE
-[params,IVD,DVD,MVD,CVD] = VOISE(params, ns, initSeeds, varargin{:});
+[params,IVD,DVD,MVD,CVD] = VOISE(params, varargin{:});
 
