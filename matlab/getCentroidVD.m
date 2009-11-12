@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.11 2009/11/12 15:46:46 patrick Exp $
+% $Id: getCentroidVD.m,v 1.12 2009/11/12 16:03:17 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -133,6 +133,6 @@ if params.regExport,
 end
 
 if params.movDiag,
-  params.mov = addframe(params.mov, getframe(gcf,[0 0 params.movPos(3:4)]));
+  movieHandler(params,'addframe');
 end
 

@@ -2,7 +2,7 @@ function params = plotDefaultVOISE(VD, params, info)
 % function params = plotDefaultVOISE(VD, params, info)
 
 %
-% $Id: plotDefaultVOISE.m,v 1.2 2009/11/12 15:46:46 patrick Exp $
+% $Id: plotDefaultVOISE.m,v 1.3 2009/11/12 16:03:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -46,6 +46,6 @@ if params.divideExport,
 end
 
 if params.movDiag,
-  params.mov = addframe(params.mov, getframe(gcf,[0 0 params.movPos(3:4)]));
+  movieHandler(params,'addframe');
 end
 

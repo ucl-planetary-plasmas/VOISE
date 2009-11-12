@@ -2,7 +2,7 @@ function [VD, params]  = divideVDFast(VD, params)
 % function [VD,params] = divideVDFast(VD, params)
 
 %
-% $Id: divideVDFast.m,v 1.4 2009/11/12 15:46:46 patrick Exp $
+% $Id: divideVDFast.m,v 1.5 2009/11/12 16:03:17 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -114,6 +114,6 @@ if params.divideExport,
 end
 
 if params.movDiag,
-  params.mov = addframe(params.mov, getframe(gcf,[0 0 params.movPos(3:4)]));
+  movieHandler(params, 'addframe');
 end
 

@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.11 2009/11/12 15:14:54 patrick Exp $
+% $Id: VOISE.m,v 1.12 2009/11/12 16:03:17 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -37,9 +37,7 @@ printVOISEsetup(params);
 params = plotVOISE([], params, -1);
 
 if params.movDiag, % init movie
-  set(gcf,'position',params.movPos);
-	set(gcf,'DoubleBuffer','on');
-	params.mov = avifile([params.oDir params.oMovFile],'fps',2);
+  movieHandler(params, 'init');
 end
 
 [nr, nc] = size(params.W);
@@ -123,7 +121,7 @@ end
 
 % if movie on close movie
 if params.movDiag,
-  params.mov = close(params.mov);
+  movieHandler(params, 'close');
 end
 
 t = cputime-t;

@@ -2,7 +2,7 @@ function params = plotVOISE(VD, params, ic)
 % function params = plotVOISE(VD, params, ic)
 
 %
-% $Id: plotVOISE.m,v 1.3 2009/11/12 15:46:46 patrick Exp $
+% $Id: plotVOISE.m,v 1.4 2009/11/12 16:03:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -60,6 +60,6 @@ else
 end
 
 if params.movDiag,
-  params.mov = addframe(params.mov, getframe(gcf,[0 0 params.movPos(3:4)]));
+  movieHandler(params,'addframe');
 end
 

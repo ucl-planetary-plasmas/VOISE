@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.9 2009/11/12 15:46:46 patrick Exp $
+% $Id: mergeVD.m,v 1.10 2009/11/12 16:03:17 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -231,6 +231,6 @@ if params.mergeExport,
 end
 
 if params.movDiag,
-  params.mov = addframe(params.mov, getframe(gcf,[0 0 params.movPos(3:4)]));
+  movieHandler(params, 'addframe');
 end
 
