@@ -1,5 +1,5 @@
-function [varargout] = limbFitEx2(action)
-% function varargout = limbFitEx2(action)
+function [varargout] = limbFitEx2(action,varargin)
+% function varargout = limbFitEx2(action,[optional args])
 %
 % where action is any of 'clean', 'VOISE' and 'limbFit'
 %
@@ -8,7 +8,7 @@ function [varargout] = limbFitEx2(action)
 % [params,fit1,fit2] = limbFitEx2('limbFit')
 
 %
-% $Id: limbFitEx2.m,v 1.1 2009/11/06 17:15:23 patrick Exp $
+% $Id: limbFitEx2.m,v 1.2 2009/11/12 17:13:52 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,25 +26,42 @@ function [varargout] = limbFitEx2(action)
 % Public License for more details.
 %
 
+start_VOISE
+
+% miscellaneous information about VOISE
+global voise
+
 switch lower(action),
 
    case 'clean',
 
-	   unix('rm -rf ../../share/28jn014s');
+	   unix(['rm -rf ' voise.root '/share/28jn014s']);
 
    case 'voise',
-
-     % initial number of seeds
-     ns = 30;
 
      % load default parameters
      params = getDefaultVOISEParams;
 
-     % set image filename
-     params.iFile = '../../share/28jn014s.fits';
+     % VOISE parameters
+		 params.iNumSeeds       = 30;
+     params.dividePctile    = 98;
+     params.d2Seeds         = 4;
+     params.mergePctile     = 50;
+     params.dmu             = 0.2;
+     params.thresHoldLength = 0.3;
+     params.regMaxIter      = 2;
+     % report parameters
+     params.divideExport = false;
+     params.mergeExport  = false;
+     params.movDiag      = false;
 
+     % allow command line modifications
+		 params = parseArgs(params, varargin{:});
+
+     % set image filename
+     params.iFile = [voise.root '/share/28jn014s.fits'];
      % set output parameters
-     params.oDir = '../../share/28jn014s/';
+     params.oDir = [voise.root '/share/28jn014s/'];
      params.oMatFile = 'voise';
 
      % load image from fits file
@@ -59,8 +76,6 @@ switch lower(action),
      [params.W,xbins,cdf] = histEq(params.W,256);
 
      % set axes limits
-     params.Wlim = [min(params.W(:)) max(params.W(:))];
-
      if 0,
 		   imagesc(params.W)
 			 axis xy
@@ -71,48 +86,29 @@ switch lower(action),
 			 params.y0 = 161.5;
 		 end
      params.x = [1:size(params.W,2)]-params.x0;
-     params.xlim = [min(params.x) max(params.x)];
-
      params.y = [1:size(params.W,1)]-params.y0;
+
+     params.Wlim = [min(params.W(:)) max(params.W(:))];
+     params.xlim = [min(params.x) max(params.x)];
      params.ylim = [min(params.y) max(params.y)];
 
      if ~exist(params.oDir,'dir')
        unix(['mkdir ' params.oDir]);
      end
 
-     % VOISE parameters
-     params.dividePctile    = 98;
-     params.d2Seeds         = 4;
-     params.mergePctile     = 50;
-     params.dmu             = 0.2;
-     params.thresHoldLength = 0.3;
-     params.regMaxIter      = 2;
-
-     % report parameters
-     params.divideExport = false;
-     params.mergeExport  = false;
-     params.movDiag      = false;
-
-     % init seed of Mersenne-Twister RNG
-     rand('twister',10);
-
      close all
 
-     t = cputime;
-     [params,IVD,DVD,MVD,CVD] = VOISE(params, ns, @randomSeeds);
-     t = cputime-t;
-     fprintf(1,'Elapsed time %2d:%2d:%2d\n', floor(t/3600), ...
-             floor(mod(t,3600)/60), floor(mod(mod(t,3660),60)));
+     [params,IVD,DVD,MVD,CVD] = VOISE(params);
 
-		 varargout{1} = {params};
-		 varargout{2} = {IVD};
-		 varargout{3} = {DVD};
-		 varargout{4} = {MVD};
-		 varargout{5} = {CVD};
+		 varargout{1} = params;
+		 varargout{2} = IVD;
+		 varargout{3} = DVD;
+		 varargout{4} = MVD;
+		 varargout{5} = CVD;
 
    case 'limbfit',
 
-	   path = '../../share/28jn014s/';
+	   path = [voise.root '/share/28jn014s/'];
 		 data = 'voise';
 		 fprintf(1,'Opening %s%s\n',path,data);
 		 eval(['load ' path data]);
@@ -120,6 +116,8 @@ switch lower(action),
 
 		 VD = DVD;
 		 vdtype = 'DVD';
+
+		 close all
 
      % initial guess
 		 if 0
@@ -137,6 +135,9 @@ switch lower(action),
 		 fit1.Rmax = 1.1;
 		 fit1.VD = vdtype;
 		 fit1.selectAngles = @ex2Angles;
+		 % allow command line modifications
+		 fit1 = parseArgs(fit1, varargin{:});
+
 		 fit1 = getLimb(CVD, params, fit1);
 
 		 % try again with better selected seeds
@@ -146,21 +147,25 @@ switch lower(action),
 		 fit2.Rmax = 1.05;
 		 fit2.VD = vdtype;
 		 fit2.selectAngles = @ex2Angles;
+
+		 % allow command line modifications
+		 fit2 = parseArgs(fit2, varargin{:});
+
+		 close all
+
 		 fit2 = getLimb(CVD, params, fit2);
 
 		 orient landscape, set(gcf,'PaperOrientation','portrait');
-		 exportfig(gcf,[path '/select.eps'],...
-		               'color','cmyk','boundscode','mcode','LockAxes',0);
+		 printFigure(gcf,[path '/select.eps']);
 
      subplot(111)
 		 plotLimbFit(params,fit1,fit2);
 
 		 orient landscape, set(gcf,'PaperOrientation','portrait');
-		 exportfig(gcf,[path '/fit.eps'],...
-		           'color','cmyk','boundscode','mcode','LockAxes',0);
+		 printFigure(gcf,[path '/fit.eps']);
 
-		 varargout{1} = {params};
-		 varargout{2} = {fit1};
-		 varargout{3} = {fit2};
+		 varargout{1} = params;
+		 varargout{2} = fit1;
+		 varargout{3} = fit2;
 
 end
