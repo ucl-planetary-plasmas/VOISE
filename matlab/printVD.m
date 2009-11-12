@@ -2,7 +2,7 @@ function varargout = printVD(fid, VD)
 % function varargout = printVD(fid, VD)
 
 %
-% $Id: printVD.m,v 1.1 2009/02/08 21:07:16 patrick Exp $
+% $Id: printVD.m,v 1.2 2009/11/12 17:32:28 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -43,7 +43,7 @@ if ~isempty(fid),
 end
 
 if nargout>0,
-	varargout(1) = {s};
+	varargout(1) = s;
 end
 
 
