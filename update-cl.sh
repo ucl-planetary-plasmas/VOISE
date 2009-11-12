@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: update-cl.sh,v 1.2 2009/07/01 13:29:33 patrick Exp $
+# $Id: update-cl.sh,v 1.3 2009/11/12 15:00:21 patrick Exp $
 #
 # Copyright (c) 2009
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,4 +21,5 @@
 
 which cvs2cl &> /dev/null || exit 1
 
-cvs2cl --prune --no-times --no-wrap --accum -U $HOME/CVSROOT/users
+cvs2cl --prune --no-times --show-dead --no-common-dir --accum --revisions \
+  --usermap zuserver1.star.ucl.ac.uk:/home/patrick/src/master/CVSROOT/users

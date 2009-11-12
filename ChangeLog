@@ -1,730 +1,793 @@
 2009-11-11  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: boardSeeds.m, fig4Seeds.m, poissonSeeds.m,
-	  randomSeeds.m, uniformSeeds.m:
-	Reduce the optional argument(s) to a simple parameter vector.
-	Added the parameter vector as a returned argument.
+	* matlab/boardSeeds.m (1.3), matlab/fig4Seeds.m (1.3),
+	  matlab/poissonSeeds.m (1.3), matlab/randomSeeds.m (1.4),
+	  matlab/uniformSeeds.m (1.3):
+	  Reduce the optional argument(s) to a simple parameter vector.
+	  Added the parameter vector as a returned argument.
 
 2009-11-11  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/parseArgs.m:
-	Added a requirement for the new value to be of the same size as the old
-	value if the value of the field is a numerical array.
+	* matlab/parseArgs.m (1.2):
+	  Added a requirement for the new value to be of the same size as
+	  the old value if the value of the field is a numerical array.
 
 2009-11-11  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/createTestImage.m:
-	Updated to latest enhancements.
+	* matlab/createTestImage.m (1.2):
+	  Updated to latest enhancements.
 
 2009-11-11  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: VOISE.m, getDefaultVOISEParams.m:
-	Added log report facility through Matlab 'diary' command.
+	* matlab/VOISE.m (1.10), matlab/getDefaultVOISEParams.m (1.2):
+	  Added log report facility through Matlab 'diary' command.
 
 2009-11-11  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/printVOISEsetup.m:
-	Small fix to what is reported.
+	* matlab/printVOISEsetup.m (1.2):
+	  Small fix to what is reported.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: testVOISE.m, testVOISE1.m:
-	Updated to latest enhancements.
+	* matlab/testVOISE.m (1.6), matlab/testVOISE1.m (1.5):
+	  Updated to latest enhancements.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VOISE.m:
-	Added total timer.
+	* matlab/VOISE.m (1.9):
+	  Added total timer.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: imageUtils/startup.m, limbFit/startup.m:
-	Default Matlab startup for VOISE.
+	* matlab/imageUtils/startup.m (1.1), matlab/limbFit/startup.m
+	  (1.1):
+	  Default Matlab startup for VOISE.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/startup.m:
-	Default Matlab startup for VOISE.
+	* matlab/startup.m (1.1):
+	  Default Matlab startup for VOISE.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* configure.ac:
-	Removed generation of printVOISEsetup.m.
-	Changed filename startup.m* into start_VOISE.m*.
+	* configure.ac (1.4):
+	  Removed generation of printVOISEsetup.m.  Changed filename
+	  startup.m* into start_VOISE.m*.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: printVOISEsetup.m, printVOISEsetup.m.in:
-	Removed unecessary generation of printVOISEsetup.m from template file
-	printVOISEsetup.m.in.
-	All informations concerning VOISe are in the global structure voise.
+	* matlab/printVOISEsetup.m (1.1), matlab/printVOISEsetup.m.in
+	  (1.4[DEAD]):
+	  Removed unecessary generation of printVOISEsetup.m from template
+	  file printVOISEsetup.m.in.  All informations concerning VOISe are
+	  in the global structure voise.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: start_VOISE.m.in, startup.m.in:
-	Renamed startup.m.in into start_VOISE.m.in.
-	Added global structure voise to contain VOISE informations such as root,
-	version.
+	* matlab/start_VOISE.m.in (1.1), matlab/startup.m.in (1.3[DEAD]):
+	  Renamed startup.m.in into start_VOISE.m.in.  Added global
+	  structure voise to contain VOISE informations such as root,
+	  version.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: boardSeeds.m, poissonSeeds.m, randomSeeds.m,
-	  uniformSeeds.m, fig4Seeds.m:
-	Replaced expected optional argument parsing by use of parseArgs function.
+	* matlab/boardSeeds.m (1.2), matlab/poissonSeeds.m (1.2),
+	  matlab/randomSeeds.m (1.3), matlab/uniformSeeds.m (1.2),
+	  matlab/fig4Seeds.m (1.2):
+	  Replaced expected optional argument parsing by use of parseArgs
+	  function.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/parseArgs.m:
-	Utility function to parse list of arguments.
+	* matlab/parseArgs.m (1.1):
+	  Utility function to parse list of arguments.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/startup.m.in:
-	Replaced relative path by absolute path when calling addpath.
+	* matlab/startup.m.in (1.2):
+	  Replaced relative path by absolute path when calling addpath.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/Makefile.am:
-	Added imageUtils directory to be dist'ed.
+	* matlab/Makefile.am (1.4):
+	  Added imageUtils directory to be dist'ed.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* configure.ac:
-	Added generation of VOISE matlab main start up file from input file
-	startup.m.in
+	* configure.ac (1.3):
+	  Added generation of VOISE matlab main start up file from input
+	  file startup.m.in
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/startup.m.in:
-	Added input file to generate Matlab start up file for VOISE.
+	* matlab/startup.m.in (1.1):
+	  Added input file to generate Matlab start up file for VOISE.
 
 2009-11-10  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: filterImage.m, histEq.m, imageUtils/filterImage.m,
-	  imageUtils/histEq.m:
-	Moved histEq and filterImage functions into newly created subdirectory
-	imageUtils.
+	* matlab/filterImage.m (1.2[DEAD]), matlab/histEq.m (1.2[DEAD]),
+	  matlab/imageUtils/filterImage.m (1.1), matlab/imageUtils/histEq.m
+	  (1.1):
+	  Moved histEq and filterImage functions into newly created
+	  subdirectory imageUtils.
 
 2009-11-07  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VDexample.m:
-	Added support for random generator seeding via RandStream new class
-	available from Matlab version 7.7.
+	* matlab/VDexample.m (1.2):
+	  Added support for random generator seeding via RandStream new
+	  class available from Matlab version 7.7.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/Makefile.am:
-	Do not forget to export VOISEtiming.mat file.
+	* matlab/Makefile.am (1.3):
+	  Do not forget to export VOISEtiming.mat file.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* share/Makefile.am:
-	Added two fits files to distribute.
+	* share/Makefile.am (1.2):
+	  Added two fits files to distribute.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/Makefile.am:
-	Added limbFit directory for distribution.
+	* matlab/Makefile.am (1.2):
+	  Added limbFit directory for distribution.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* share/: 28jn014s.fits, alljup_UT1013.fits:
-	IR images of Jupiter from Hawaii Observatory kindly provided by
-	Makenzie Lystrup <lystrup@lasp.colorado.edu>.
+	* share/28jn014s.fits (1.1), share/alljup_UT1013.fits (1.1):
+	  IR images of Jupiter from Hawaii Observatory kindly provided by
+	  Makenzie Lystrup <lystrup@lasp.colorado.edu>.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: ex2Angles.m, limbFitEx1.m, limbFitEx2.m,
-	  plotLimbFit.m:
-	Files necessary for two limb fitting examples with Jupiter IR images
-	provided by Makenzie Lystrup <lystrup@lasp.colorado.edu>.
+	* matlab/limbFit/ex2Angles.m (1.1), matlab/limbFit/limbFitEx1.m
+	  (1.1), matlab/limbFit/limbFitEx2.m (1.1),
+	  matlab/limbFit/plotLimbFit.m (1.1):
+	  Files necessary for two limb fitting examples with Jupiter IR
+	  images provided by Makenzie Lystrup <lystrup@lasp.colorado.edu>.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: circle.m, dcircle.m, dellipse.m, ellipse.m:
-	Check whether global verbose is not empty before query it.
+	* matlab/limbFit/circle.m (1.3), matlab/limbFit/dcircle.m (1.3),
+	  matlab/limbFit/dellipse.m (1.4), matlab/limbFit/ellipse.m (1.3):
+	  Check whether global verbose is not empty before query it.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: testVOISE.m, testVOISE1.m:
-	Added initialisation of params structure using getDefaultVOISEParams
-	function.
+	* matlab/testVOISE.m (1.5), matlab/testVOISE1.m (1.4):
+	  Added initialisation of params structure using
+	  getDefaultVOISEParams function.
 
 2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: getDefaultParams.m, getDefaultVOISEParams.m:
-	Renamed getDefaultParams into getDefaultVOISEParams.
+	* matlab/getDefaultParams.m (1.4[DEAD]),
+	  matlab/getDefaultVOISEParams.m (1.1):
+	  Renamed getDefaultParams into getDefaultVOISEParams.
 
 2009-11-05  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: filterImage.m, histEq.m, limbFit/filterImage.m,
-	  limbFit/histEq.m:
-	Moved filterImage.m histEq.m one level up in the main matlab VOISE
-	directory.
+	* matlab/filterImage.m (1.1), matlab/histEq.m (1.1),
+	  matlab/limbFit/filterImage.m (1.3[DEAD]), matlab/limbFit/histEq.m
+	  (1.2[DEAD]):
+	  Moved filterImage.m histEq.m one level up in the main matlab
+	  VOISE directory.
 
 2009-11-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/printVOISEsetup.m.in:
-	Force cast to char when creating the line of asterisks.
+	* matlab/printVOISEsetup.m.in (1.2):
+	  Force cast to char when creating the line of asterisks.
 
 2009-11-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/selectSeeds.m:
-	Perform specific angle selection after the selection based on seed distance
-	and polygon scale length.
+	* matlab/limbFit/selectSeeds.m (1.3):
+	  Perform specific angle selection after the selection based on
+	  seed distance and polygon scale length.
 
 2009-11-01  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/plotSelectedSeeds.m:
-	Cosmetic change in plot title.
+	* matlab/limbFit/plotSelectedSeeds.m (1.3):
+	  Cosmetic change in plot title.
 
 2009-11-01  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/dellipse.m:
-	Fixed error in expression for derivative drs/dt0.
+	* matlab/limbFit/dellipse.m (1.3):
+	  Fixed error in expression for derivative drs/dt0.
 
 2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/plotSelectedSeeds.m:
-	Display the processed image used by VOISE instead of the raw image.
+	* matlab/limbFit/plotSelectedSeeds.m (1.2):
+	  Display the processed image used by VOISE instead of the raw
+	  image.
 
 2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/selectSeeds.m:
-	Added seeds selection test by angles.
+	* matlab/limbFit/selectSeeds.m (1.2):
+	  Added seeds selection test by angles.
 
 2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/getDefaultFitParams.m:
-	Added function allAngles as the default selectAngles function handler.
+	* matlab/limbFit/getDefaultFitParams.m (1.2):
+	  Added function allAngles as the default selectAngles function
+	  handler.
 
 2009-10-28  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/allAngles.m:
-	Default function to select all available angles.
+	* matlab/limbFit/allAngles.m (1.1):
+	  Default function to select all available angles.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: getLimb.m, plotSelectedSeeds.m, selectSeeds.m:
-	Functions to select seeds, plot those seeds and fit the limb.
+	* matlab/limbFit/getLimb.m (1.1),
+	  matlab/limbFit/plotSelectedSeeds.m (1.1),
+	  matlab/limbFit/selectSeeds.m (1.1):
+	  Functions to select seeds, plot those seeds and fit the limb.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VOISE.m:
-	Added printing of VOISE setup.
+	* matlab/VOISE.m (1.8):
+	  Added printing of VOISE setup.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* configure.ac:
-	Generate matlab/printVOISEsetup.m from input file
-	matlab/printVOISEsetup.m.in.
+	* configure.ac (1.2):
+	  Generate matlab/printVOISEsetup.m from input file
+	  matlab/printVOISEsetup.m.in.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/printVOISEsetup.m.in:
-	Added function to print VOISE setup with version.
+	* matlab/printVOISEsetup.m.in (1.1):
+	  Added function to print VOISE setup with version.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/testLimbFit.m:
-	Test driver for limb fit model.
+	* matlab/limbFit/testLimbFit.m (1.1):
+	  Test driver for limb fit model.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/filterImage.m:
-	Added some help information.
+	* matlab/limbFit/filterImage.m (1.2):
+	  Added some help information.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/fitLimb.m:
-	Generic nonlinear fitting of a limb to a set of points in cartesian
-	coordinates.
+	* matlab/limbFit/fitLimb.m (1.1):
+	  Generic nonlinear fitting of a limb to a set of points in
+	  cartesian coordinates.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/getDefaultFitParams.m:
-	Default "constructor" for limb fit structure.
+	* matlab/limbFit/getDefaultFitParams.m (1.1):
+	  Default "constructor" for limb fit structure.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: jacLimbModel.m, limbModel.m:
-	Wrapper function for limb model to call either ellipse or circle depending
-	on the number of parameters (3 parameters for circle and 5 parameters for
-	ellipse). New limb models could be added here without altering the structure
-	of the code.
+	* matlab/limbFit/jacLimbModel.m (1.1), matlab/limbFit/limbModel.m
+	  (1.1):
+	  Wrapper function for limb model to call either ellipse or circle
+	  depending on the number of parameters (3 parameters for circle
+	  and 5 parameters for ellipse). New limb models could be added
+	  here without altering the structure of the code.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: circle.m, dcircle.m, dellipse.m, ellipse.m:
-	Cleaned code.
+	* matlab/limbFit/circle.m (1.2), matlab/limbFit/dcircle.m (1.2),
+	  matlab/limbFit/dellipse.m (1.2), matlab/limbFit/ellipse.m (1.2):
+	  Cleaned code.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VOISE.m:
-	Added report about saved VOISE result file.
+	* matlab/VOISE.m (1.7):
+	  Added report about saved VOISE result file.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VOISE.m:
-	Commented plot of segmented image without superposition of VD.
+	* matlab/VOISE.m (1.6):
+	  Commented plot of segmented image without superposition of VD.
 
 2009-10-16  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/dfdp.m:
-	Numerical partial derivatives (Jacobian) df/dp for use with leasqr when no
-	explicit Jacobian function is provided.
+	* matlab/limbFit/dfdp.m (1.1):
+	  Numerical partial derivatives (Jacobian) df/dp for use with
+	  leasqr when no explicit Jacobian function is provided.
 
 2009-10-15  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/filterImage.m:
-	Function to filter an image (given as a matrix) using either a given
-	(statistical) function or a discrete kernel for spatial convolution.
+	* matlab/limbFit/filterImage.m (1.1):
+	  Function to filter an image (given as a matrix) using either a
+	  given (statistical) function or a discrete kernel for spatial
+	  convolution.
 
 2009-10-14  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/getEllipseParams.m:
-	Fixed calculation of tilt angle using semi-major and semi-minor axes for
-	any quadrant.
+	* matlab/limbFit/getEllipseParams.m (1.2):
+	  Fixed calculation of tilt angle using semi-major and semi-minor
+	  axes for any quadrant.
 
 2009-10-14  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: getCircleParams.m, getDiscCenter.m,
-	  getEllipseParams.m:
-	Functions to get interactively an estimate of circle parameters, disc
-	center and ellipse parameters.
+	* matlab/limbFit/getCircleParams.m (1.1),
+	  matlab/limbFit/getDiscCenter.m (1.1),
+	  matlab/limbFit/getEllipseParams.m (1.1):
+	  Functions to get interactively an estimate of circle parameters,
+	  disc center and ellipse parameters.
 
 2009-10-14  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/leasqr.m:
-	Added report of covariance matrix for estimated parameters and remove
-	report of covariance matrix of residuals when verbose(1) is true.
+	* matlab/limbFit/leasqr.m (1.2):
+	  Added report of covariance matrix for estimated parameters and
+	  remove report of covariance matrix of residuals when verbose(1)
+	  is true.
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/histEq.m:
-	Function to do histogram equalisation of an image to improve contrast.
+	* matlab/limbFit/histEq.m (1.1):
+	  Function to do histogram equalisation of an image to improve
+	  contrast.
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/testEllipseFit.m:
-	Added minor stdout report.
+	* matlab/limbFit/testEllipseFit.m (1.2):
+	  Added minor stdout report.
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: fitCircle.m, testCircleFit.m:
-	Main function to fit a circle to a set of points (seeds) and test driver.
+	* matlab/limbFit/fitCircle.m (1.1), matlab/limbFit/testCircleFit.m
+	  (1.1):
+	  Main function to fit a circle to a set of points (seeds) and test
+	  driver.
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: circle.m, dcircle.m:
-	Functions to compute a circle in polar coordinates for given set of angles
-	and the partial derivatives with respect to parameters (xc,yc,r0).
+	* matlab/limbFit/circle.m (1.1), matlab/limbFit/dcircle.m (1.1):
+	  Functions to compute a circle in polar coordinates for given set
+	  of angles and the partial derivatives with respect to parameters
+	  (xc,yc,r0).
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: fitEllipse.m, testEllipseFit.m:
-	Main function to fit an ellipse to a set of points (seeds) and test driver.
+	* matlab/limbFit/fitEllipse.m (1.1),
+	  matlab/limbFit/testEllipseFit.m (1.1):
+	  Main function to fit an ellipse to a set of points (seeds) and
+	  test driver.
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/: dellipse.m, ellipse.m:
-	Functions to compute ellipse in polar coordinates for given set of angles
-	and the partial derivatives with respect to parameters (xc,yc,a,b,t0).
+	* matlab/limbFit/dellipse.m (1.1), matlab/limbFit/ellipse.m (1.1):
+	  Functions to compute ellipse in polar coordinates for given set
+	  of angles and the partial derivatives with respect to parameters
+	  (xc,yc,a,b,t0).
 
 2009-10-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/limbFit/leasqr.m:
-	Third-party import originally from Matlab central and later made available
-	for Octave as well.
+	* matlab/limbFit/leasqr.m (1.1):
+	  Third-party import originally from Matlab central and later made
+	  available for Octave as well.
 
 2009-08-26  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidSeed.m:
-	Fixed diagnostic.
+	* matlab/getCentroidSeed.m (1.9):
+	  Fixed diagnostic.
 
 2009-08-25  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidSeed.m:
-	Small fix of debugging tool.
+	* matlab/getCentroidSeed.m (1.8):
+	  Small fix of debugging tool.
 
 2009-08-25  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidSeed.m:
-	Simple calculation of centre-of-mass without any kind of weights.
+	* matlab/getCentroidSeed.m (1.7):
+	  Simple calculation of centre-of-mass without any kind of weights.
 
 2009-08-25  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/divideVD.m:
-	Added draft of a scheme involving regularisation interlaced to division but
-	there seems to be a cponvergence problem.
+	* matlab/divideVD.m (1.8):
+	  Added draft of a scheme involving regularisation interlaced to
+	  division but there seems to be a cponvergence problem.
 
 2009-07-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidVD.m:
-	Minor cosmetic change.
+	* matlab/getCentroidVD.m (1.10):
+	  Minor cosmetic change.
 
 2009-07-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: VOISE.m, divideVD.m, getCentroidVD.m, mergeVD.m:
-	Cosmetic changes in report/diagnostics.
+	* matlab/VOISE.m (1.5), matlab/divideVD.m (1.7),
+	  matlab/getCentroidVD.m (1.9), matlab/mergeVD.m (1.8):
+	  Cosmetic changes in report/diagnostics.
 
 2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidVD.m:
-	Changed control structure to conform to dividing and merging phases.
-	Added similar diagnostic as dividing and merging phases.
+	* matlab/getCentroidVD.m (1.8):
+	  Changed control structure to conform to dividing and merging
+	  phases.  Added similar diagnostic as dividing and merging phases.
 
 2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getDefaultParams.m:
-	Added flag for exporting figures during regularisation phase.
+	* matlab/getDefaultParams.m (1.3):
+	  Added flag for exporting figures during regularisation phase.
 
 2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: divideVD.m, mergeVD.m:
-	Cosmetic changes in standard output report.
+	* matlab/divideVD.m (1.6), matlab/mergeVD.m (1.7):
+	  Cosmetic changes in standard output report.
 
 2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: divideVD.m, mergeVD.m:
-	Fixed report of start index for incremental algorithm.
+	* matlab/divideVD.m (1.5), matlab/mergeVD.m (1.6):
+	  Fixed report of start index for incremental algorithm.
 
 2009-07-07  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: VOISE.m, divideVD.m, getCentroidVD.m, mergeVD.m:
-	Added code to use the parameters divideAlgo, mergeAlgo and regAlgo to
-	indicate which algorithm to use when computing the Voronoi region (full algo,
-	incremental algos, full/incremental depending on execution time estimates
-	generated by benchVD).
+	* matlab/VOISE.m (1.4), matlab/divideVD.m (1.4),
+	  matlab/getCentroidVD.m (1.7), matlab/mergeVD.m (1.5):
+	  Added code to use the parameters divideAlgo, mergeAlgo and
+	  regAlgo to indicate which algorithm to use when computing the
+	  Voronoi region (full algo, incremental algos, full/incremental
+	  depending on execution time estimates generated by benchVD).
 
 2009-07-07  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getDefaultParams.m:
-	Added default parameters divideAlgo, mergeAlgo and regAlgo that describe
-	the algorithm to use (full/inc/heuristic based on timing).
+	* matlab/getDefaultParams.m (1.2):
+	  Added default parameters divideAlgo, mergeAlgo and regAlgo that
+	  describe the algorithm to use (full/inc/heuristic based on
+	  timing).
 
 2009-07-07  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/benchVD.m:
-	COsmetic changes.
+	* matlab/benchVD.m (1.7):
+	  COsmetic changes.
 
 2009-07-07  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/benchVD.m:
-	Separated list of seeds for full algorithm of VD and inc/dec algorithm.
-	Added point (0,0) when calling polyfit function.
+	* matlab/benchVD.m (1.6):
+	  Separated list of seeds for full algorithm of VD and inc/dec
+	  algorithm.  Added point (0,0) when calling polyfit function.
 
 2009-07-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVRMinAngle.m:
-	Added function to compute the minimum interior angle of a Voronoi polygon.
+	* matlab/getVRMinAngle.m (1.1):
+	  Added function to compute the minimum interior angle of a Voronoi
+	  polygon.
 
 2009-07-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVRMaxAngle.m:
-	Completed and tested code.
+	* matlab/getVRMaxAngle.m (1.2):
+	  Completed and tested code.
 
 2009-07-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* share/: testImage.mat, testPic.mat:
-	Added test images to be used with matlab test files.
+	* share/testImage.mat (1.1), share/testPic.mat (1.1):
+	  Added test images to be used with matlab test files.
 
 2009-07-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* AUTHORS, Makefile.am, NEWS, README, configure.ac,
-	  matlab/Makefile.am, share/Makefile.am:
-	Added basic autoconf tools for easy distribution capability.
+	* AUTHORS (1.1), Makefile.am (1.1), NEWS (1.1), README (1.1),
+	  configure.ac (1.1), matlab/Makefile.am (1.1), share/Makefile.am
+	  (1.1):
+	  Added basic autoconf tools for easy distribution capability.
 
 2009-07-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/benchVD.m:
-	Cosmetic change in the output format.
+	* matlab/benchVD.m (1.5):
+	  Cosmetic change in the output format.
 
 2009-07-05  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/benchVD.m:
-	Added bench for incremental remove.
-	Fixed use of incremental benchmark data.
+	* matlab/benchVD.m (1.3):
+	  Added bench for incremental remove.  Fixed use of incremental
+	  benchmark data.
 
 2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: getVRvertices.m, mergeVD.m, mergeVDFast.m:
-	Fixed the way to close the neighbour list so that the list of vertices V of
-	the Voronoi region corresponds to the neighbours list and also with the way
-	the edgeLength variable is computed in the functions for the merging phase.
+	* matlab/getVRvertices.m (1.2), matlab/mergeVD.m (1.4),
+	  matlab/mergeVDFast.m (1.3):
+	  Fixed the way to close the neighbour list so that the list of
+	  vertices V of the Voronoi region corresponds to the neighbours
+	  list and also with the way the edgeLength variable is computed in
+	  the functions for the merging phase.
 
-	Added visual diagnostics to check the correspondance between the vertices
-	and the neighbours through the direct and reverse indices I and reV
+	  Added visual diagnostics to check the correspondance between the
+	  vertices and the neighbours through the direct and reverse
+	  indices I and reV
 
-	Fixed a bug in the merging phase to pick up correctly the length of the
-	vertices of the non homogeneous neighbours.
-
-2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
-
-	* matlab/randomSeeds.m:
-	Add an iteration loop to ensure unicity of seeds.
+	  Fixed a bug in the merging phase to pick up correctly the length
+	  of the vertices of the non homogeneous neighbours.
 
 2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/benchVD.m:
-	Added fit to parabola and save fit result in VOISEtiming.mat.
+	* matlab/randomSeeds.m (1.2):
+	  Add an iteration loop to ensure unicity of seeds.
 
 2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/plotDefaultVOISE.m:
-	Generic diagnostic function for VOISE.
+	* matlab/benchVD.m (1.2):
+	  Added fit to parabola and save fit result in VOISEtiming.mat.
 
 2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/benchVD.m:
-	Function to bench incremental VD versus full VD.
+	* matlab/plotDefaultVOISE.m (1.1):
+	  Generic diagnostic function for VOISE.
 
 2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVRMaxAngle.m:
-	Function to calculate the max angle of Voronoi regions. Work to be done!
+	* matlab/benchVD.m (1.1):
+	  Function to bench incremental VD versus full VD.
+
+2009-07-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getVRMaxAngle.m (1.1):
+	  Function to calculate the max angle of Voronoi regions. Work to
+	  be done!
 
 2009-07-03  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getFiniteVR.m:
-	Compute a binary image of a VD where 1 means finite Voronoi region and 0
-	means infinite (open) Voronoi region.
+	* matlab/getFiniteVR.m (1.1):
+	  Compute a binary image of a VD where 1 means finite Voronoi
+	  region and 0 means infinite (open) Voronoi region.
 
 2009-07-03  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/divideVD.m:
-	Embed homogeneity histograms and threshold in VD structure at the end of
-	the division process.
+	* matlab/divideVD.m (1.3):
+	  Embed homogeneity histograms and threshold in VD structure at the
+	  end of the division process.
 
 2009-07-03  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/computeVDFast.m:
-	Fixed a bug when accessing non infinite vertices.
+	* matlab/computeVDFast.m (1.4):
+	  Fixed a bug when accessing non infinite vertices.
 
 2009-05-15  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidVD.m:
-	Added report on distance between seed and centre-of-mass of VR's.
+	* matlab/getCentroidVD.m (1.6):
+	  Added report on distance between seed and centre-of-mass of VR's.
 
 2009-05-15  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/mergeVD.m:
-	Fixed horizcat of variables in print statement.
+	* matlab/mergeVD.m (1.3):
+	  Fixed horizcat of variables in print statement.
 
 2009-04-07  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVRPerimeter.m:
-	New function to compute the perimeter of a Voronoi polygon.
+	* matlab/getVRPerimeter.m (1.1):
+	  New function to compute the perimeter of a Voronoi polygon.
 
 2009-04-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVRArea.m:
-	New function to compute the area of a Voronoi polygon.
+	* matlab/getVRArea.m (1.1):
+	  New function to compute the area of a Voronoi polygon.
 
 2009-04-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: addSeedToVD.m, removeSeedFromVD.m:
-	Put in comment some diagnostics.
+	* matlab/addSeedToVD.m (1.2), matlab/removeSeedFromVD.m (1.2):
+	  Put in comment some diagnostics.
 
 2009-04-06  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/addSeedsToVR.m:
-	Added fields ws and wv in params structure to set the seed and vertex
-	weights when calculating position of added seeds.
+	* matlab/addSeedsToVR.m (1.3):
+	  Added fields ws and wv in params structure to set the seed and
+	  vertex weights when calculating position of added seeds.
 
 2009-03-31  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/addSeedsToVR.m:
-	Added some comments to the split algorithm.
+	* matlab/addSeedsToVR.m (1.2):
+	  Added some comments to the split algorithm.
 
 2009-03-26  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: cmpVDalgo.m, plotVDOp.m, testIncVD.m, testVD2CVD.m:
-	Renamed function plotVDop() into plotVDOp().
+	* matlab/cmpVDalgo.m (1.3), matlab/plotVDOp.m (1.2),
+	  matlab/testIncVD.m (1.2), matlab/testVD2CVD.m (1.3):
+	  Renamed function plotVDop() into plotVDOp().
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidSeed.m:
-	Added code for weighted centroid with image intensity.
+	* matlab/getCentroidSeed.m (1.4):
+	  Added code for weighted centroid with image intensity.
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/testVD2CVD.m:
-	Embedbed image into params structure.
-	Provided regMaxIter into params structure.
+	* matlab/testVD2CVD.m (1.2):
+	  Embedbed image into params structure.  Provided regMaxIter into
+	  params structure.
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: getCentroidVD.m, getCentroidVDFast.m:
-	Removed unused argument maxIter.
+	* matlab/getCentroidVD.m (1.5), matlab/getCentroidVDFast.m (1.3):
+	  Removed unused argument maxIter.
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/computeVDFast.m:
-	Improved code for building neighbour list.
+	* matlab/computeVDFast.m (1.3):
+	  Improved code for building neighbour list.
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/cmpVDalgo.m:
-	Added additional equality check of (lambda,v) matrices.
+	* matlab/cmpVDalgo.m (1.2):
+	  Added additional equality check of (lambda,v) matrices.
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: getCentroidSeed.m, getCentroidVD.m, getCentroidVDFast.m:
-	Added params as an argument in order to access the image as potential
-	weight ffunction to calculate the centroid Voronoi diagram.
+	* matlab/getCentroidSeed.m (1.3), matlab/getCentroidVD.m (1.4),
+	  matlab/getCentroidVDFast.m (1.2):
+	  Added params as an argument in order to access the image as
+	  potential weight ffunction to calculate the centroid Voronoi
+	  diagram.
 
 2009-03-23  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/plotDT.m:
-	Added alternative code using DelaunayTri and triplot functions.
+	* matlab/plotDT.m (1.2):
+	  Added alternative code using DelaunayTri and triplot functions.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/mergeVDFast.m:
-	Report mergeSHC and mergeHCThreshold history in the VD structure before
-	exiting the function since computeVDFast overwrite the VD structure at each
-	iteration.
+	* matlab/mergeVDFast.m (1.2):
+	  Report mergeSHC and mergeHCThreshold history in the VD structure
+	  before exiting the function since computeVDFast overwrite the VD
+	  structure at each iteration.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/divideVDFast.m:
-	Report divSHC and divHCThreshold history in the VD structure before exiting
-	the function since computeVDFast overwrite the VD structure at each
-	iteration.
+	* matlab/divideVDFast.m (1.2):
+	  Report divSHC and divHCThreshold history in the VD structure
+	  before exiting the function since computeVDFast overwrite the VD
+	  structure at each iteration.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: VOISEf.m, divideVDFast.m, getCentroidVDFast.m,
-	  mergeVDFast.m:
-	Added `faster' code that compute the entire Voronoi diagram uusing the
-	Matlab voronoin function and update the different necessary structures of
-	neighbours and (lambda,v).
+	* matlab/VOISEf.m (1.1), matlab/divideVDFast.m (1.1),
+	  matlab/getCentroidVDFast.m (1.1), matlab/mergeVDFast.m (1.1):
+	  Added `faster' code that compute the entire Voronoi diagram
+	  uusing the Matlab voronoin function and update the different
+	  necessary structures of neighbours and (lambda,v).
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/cmpVDalgo.m:
-	Test code for comparison of computeVD and computeVDFast functions.
+	* matlab/cmpVDalgo.m (1.1):
+	  Test code for comparison of computeVD and computeVDFast
+	  functions.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getClosedVDOp.m:
-	New function to calculate the value of the operator over the closed
-	Voronoi diagram.
+	* matlab/getClosedVDOp.m (1.1):
+	  New function to calculate the value of the operator over the
+	  closed Voronoi diagram.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVDOp.m:
-	Improved code comment.
+	* matlab/getVDOp.m (1.3):
+	  Improved code comment.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidVD.m:
-	Replace call to function getCentroidSeed instead of inlined code.
+	* matlab/getCentroidVD.m (1.3):
+	  Replace call to function getCentroidSeed instead of inlined code.
 
 2009-03-20  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidSeed.m:
-	Commented report for seed and centroid positions.
+	* matlab/getCentroidSeed.m (1.2):
+	  Commented report for seed and centroid positions.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/H.m:
-	Added some comments.
+	* matlab/H.m (1.2):
+	  Added some comments.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: testVOISE.m, testVOISE1.m:
-	Fixed functions help according to new output arguments.
+	* matlab/testVOISE.m (1.4), matlab/testVOISE1.m (1.3):
+	  Fixed functions help according to new output arguments.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/plotVOISE.m:
-	Fixed bug in title for original image.
+	* matlab/plotVOISE.m (1.2):
+	  Fixed bug in title for original image.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: testVOISE.m, testVOISE1.m:
-	Fixed the output of VOISE that now contain the Voronoi diagram for the
-	initialisation (IVD), dividing (DVD), merging (MVD) and regularisation
-	(CVD) phases.
+	* matlab/testVOISE.m (1.3), matlab/testVOISE1.m (1.2):
+	  Fixed the output of VOISE that now contain the Voronoi diagram
+	  for the initialisation (IVD), dividing (DVD), merging (MVD) and
+	  regularisation (CVD) phases.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/plotVOISE.m:
-	External default diagnostic function for the VOISE algorithm.
+	* matlab/plotVOISE.m (1.1):
+	  External default diagnostic function for the VOISE algorithm.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VOISE.m:
-	Renamed and moved out internal diagnostic function plotCurrentVD() into
-	external function plotVOISE().
-	Removed length scale diagnostic.
-	Cleaned and commented the VOISE algorithm structure.
+	* matlab/VOISE.m (1.3):
+	  Renamed and moved out internal diagnostic function
+	  plotCurrentVD() into external function plotVOISE().  Removed
+	  length scale diagnostic.  Cleaned and commented the VOISE
+	  algorithm structure.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getVDOp.m:
-	Points exactly on the edges of the Voronoi diagram have their value set
-	to NaN independently of the operator.
+	* matlab/getVDOp.m (1.2):
+	  Points exactly on the edges of the Voronoi diagram have their
+	  value set to NaN independently of the operator.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getCentroidVD.m:
-	Added regMaxIter check: if negative just return.
+	* matlab/getCentroidVD.m (1.2):
+	  Added regMaxIter check: if negative just return.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/mergeVD.m:
-	Added mergePctile check: if negative just return.
+	* matlab/mergeVD.m (1.2):
+	  Added mergePctile check: if negative just return.
 
 2009-03-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/divideVD.m:
-	Added dividePctile check: if negative just return.
+	* matlab/divideVD.m (1.2):
+	  Added dividePctile check: if negative just return.
 
 2009-03-12  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/plotDT.m: Plot function of Delaunay triangulation.
+	* matlab/plotDT.m (1.1): Plot function of Delaunay triangulation.
 
 2009-02-18  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/getDefaultParams.m:
-	Create default template parameters.
+	* matlab/getDefaultParams.m (1.1):
+	  Create default template parameters.
 
 2009-02-17  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/VOISE.m:
-	Do not remove eps files in oDir automatically, let the user do it.
+	* matlab/VOISE.m (1.2):
+	  Do not remove eps files in oDir automatically, let the user do
+	  it.
 
 2009-02-08  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/computeVDFast.m: Added code to compute neighbour and (lambda,v) structures using Matlab voronoin() function
+	* matlab/computeVDFast.m (1.1): Added code to compute neighbour and
+	  (lambda,v) structures using Matlab voronoin() function
 
 2009-02-08  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: H.m, VOISE.m, boardSeeds.m, divideVD.m, drawVD.m,
-	  fig4Seeds.m, getCentroidVD.m, getVRvertices.m, isXinW.m,
-	  mergeVD.m, printSet.m, seedDist.m, testIncVD.m, testVD2CVD.m,
-	  testVOISE.m, VDexample.m, getVDOp.m, getVRclosure.m, isXinC.m,
-	  plotVDOp.m, poissonSeeds.m, printVD.m, randomSeeds.m,
-	  removeSeedFromVD.m, removeSeedFromVDFast.m, uniformSeeds.m,
-	  addSeedsToVR.m, checkVD.m, computeHCThreshold.m, initVD.m,
-	  prctile.m, updateNeighboursListsFromVoronoin.m, addSeedToVD.m,
-	  addSeedToVDFast.m, computeVD.m, computeVDFast.m,
-	  createTestImage.m, getCentroidSeed.m, getEquidistantPoint.m,
-	  homogeneousCriteria.m: Imported stable basic routines for VOISE
+	* matlab/H.m (1.1.1.1), matlab/VOISE.m (1.1.1.1),
+	  matlab/boardSeeds.m (1.1.1.1), matlab/divideVD.m (1.1.1.1),
+	  matlab/drawVD.m (1.1.1.1), matlab/fig4Seeds.m (1.1.1.1),
+	  matlab/getCentroidVD.m (1.1.1.1), matlab/getVRvertices.m
+	  (1.1.1.1), matlab/isXinW.m (1.1.1.1), matlab/mergeVD.m (1.1.1.1),
+	  matlab/printSet.m (1.1.1.1), matlab/seedDist.m (1.1.1.1),
+	  matlab/testIncVD.m (1.1.1.1), matlab/testVD2CVD.m (1.1.1.1),
+	  matlab/testVOISE.m (1.1.1.1), matlab/VDexample.m (1.1.1.1),
+	  matlab/getVDOp.m (1.1.1.1), matlab/getVRclosure.m (1.1.1.1),
+	  matlab/isXinC.m (1.1.1.1), matlab/plotVDOp.m (1.1.1.1),
+	  matlab/poissonSeeds.m (1.1.1.1), matlab/printVD.m (1.1.1.1),
+	  matlab/randomSeeds.m (1.1.1.1), matlab/removeSeedFromVD.m
+	  (1.1.1.1), matlab/removeSeedFromVDFast.m (1.1.1.1),
+	  matlab/uniformSeeds.m (1.1.1.1), matlab/addSeedsToVR.m (1.1.1.1),
+	  matlab/checkVD.m (1.1.1.1), matlab/computeHCThreshold.m
+	  (1.1.1.1), matlab/initVD.m (1.1.1.1), matlab/prctile.m (1.1.1.1),
+	  matlab/updateNeighboursListsFromVoronoin.m (1.1.1.1),
+	  matlab/addSeedToVD.m (1.1.1.1), matlab/addSeedToVDFast.m
+	  (1.1.1.1), matlab/computeVD.m (1.1.1.1), matlab/computeVDFast.m
+	  (1.1.1.1), matlab/createTestImage.m (1.1.1.1),
+	  matlab/getCentroidSeed.m (1.1.1.1), matlab/getEquidistantPoint.m
+	  (1.1.1.1), matlab/homogeneousCriteria.m (1.1.1.1): Imported
+	  stable basic routines for VOISE
 
 2009-02-08  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* matlab/: H.m, VOISE.m, boardSeeds.m, divideVD.m, drawVD.m,
-	  fig4Seeds.m, getCentroidVD.m, getVRvertices.m, isXinW.m,
-	  mergeVD.m, printSet.m, seedDist.m, testIncVD.m, testVD2CVD.m,
-	  testVOISE.m, VDexample.m, getVDOp.m, getVRclosure.m, isXinC.m,
-	  plotVDOp.m, poissonSeeds.m, printVD.m, randomSeeds.m,
-	  removeSeedFromVD.m, removeSeedFromVDFast.m, uniformSeeds.m,
-	  addSeedsToVR.m, checkVD.m, computeHCThreshold.m, initVD.m,
-	  prctile.m, updateNeighboursListsFromVoronoin.m, addSeedToVD.m,
-	  addSeedToVDFast.m, computeVD.m, createTestImage.m,
-	  getCentroidSeed.m, getEquidistantPoint.m, homogeneousCriteria.m: Initial revision
+	* matlab/H.m (1.1), matlab/VOISE.m (1.1), matlab/boardSeeds.m
+	  (1.1), matlab/divideVD.m (1.1), matlab/drawVD.m (1.1),
+	  matlab/fig4Seeds.m (1.1), matlab/getCentroidVD.m (1.1),
+	  matlab/getVRvertices.m (1.1), matlab/isXinW.m (1.1),
+	  matlab/mergeVD.m (1.1), matlab/printSet.m (1.1),
+	  matlab/seedDist.m (1.1), matlab/testIncVD.m (1.1),
+	  matlab/testVD2CVD.m (1.1), matlab/testVOISE.m (1.1),
+	  matlab/VDexample.m (1.1), matlab/getVDOp.m (1.1),
+	  matlab/getVRclosure.m (1.1), matlab/isXinC.m (1.1),
+	  matlab/plotVDOp.m (1.1), matlab/poissonSeeds.m (1.1),
+	  matlab/printVD.m (1.1), matlab/randomSeeds.m (1.1),
+	  matlab/removeSeedFromVD.m (1.1), matlab/removeSeedFromVDFast.m
+	  (1.1), matlab/uniformSeeds.m (1.1), matlab/addSeedsToVR.m (1.1),
+	  matlab/checkVD.m (1.1), matlab/computeHCThreshold.m (1.1),
+	  matlab/initVD.m (1.1), matlab/prctile.m (1.1),
+	  matlab/updateNeighboursListsFromVoronoin.m (1.1),
+	  matlab/addSeedToVD.m (1.1), matlab/addSeedToVDFast.m (1.1),
+	  matlab/computeVD.m (1.1), matlab/createTestImage.m (1.1),
+	  matlab/getCentroidSeed.m (1.1), matlab/getEquidistantPoint.m
+	  (1.1), matlab/homogeneousCriteria.m (1.1): Initial revision
 
