@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.12 2009/11/12 16:03:17 patrick Exp $
+% $Id: getCentroidVD.m,v 1.13 2009/11/12 17:33:39 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,6 +20,9 @@ function VD = getCentroidVD(VD, params)
 % Public License for more details.
 %
 
+% miscellaneous information about VOISE
+global voise
+
 % do not attempt to regularise if regMaxIter < 1
 if params.regMaxIter < 1,
   return;
@@ -27,8 +30,8 @@ else
   regMaxIter = params.regMaxIter;
 end
 
-if params.regAlgo == 2 & exist('VOISEtiming.mat','file'),
-  timing = load('VOISEtiming.mat');
+if params.regAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
+  timing = load([voise.root '/share/VOISEtiming.mat']);
 end
 
 fprintf(1,'*** Starting regularisation phase\n')

@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.10 2009/11/12 16:03:17 patrick Exp $
+% $Id: mergeVD.m,v 1.11 2009/11/12 17:33:39 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,6 +20,9 @@ function [VD, params] = mergeVD(VD, params)
 % Public License for more details.
 %
 
+% miscellaneous information about VOISE
+global voise
+
 % do not attempt to merge if mergePctile < 0
 if params.mergePctile<0,
   return;
@@ -27,8 +30,8 @@ else
   mergePctile = params.mergePctile;
 end
 
-if params.mergeAlgo == 2 & exist('VOISEtiming.mat','file'),
-  timing = load('VOISEtiming.mat');
+if params.mergeAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
+  timing = load([voise.root '/share/VOISEtiming.mat']);
 end
 
 % Similarity parameters |\mu_i-\mu_j|< dmu \mu_i

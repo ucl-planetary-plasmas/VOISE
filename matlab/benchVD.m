@@ -2,7 +2,7 @@ function benchVD
 % function benchVD
 
 %
-% $Id: benchVD.m,v 1.7 2009/07/07 14:10:45 patrick Exp $
+% $Id: benchVD.m,v 1.8 2009/11/12 17:33:39 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -139,5 +139,6 @@ ylabel('time [s]')
 title('Full VOISE')
 
 
-save VOISEtiming nsf tVDf ptVDf nsa nda tVDa ptVDa nsr ndr tVDr ptVDr
+save([voise.root '/share/VOISEtiming.mat'],'nsf','tVDf','ptVDf', ...
+     'nsa','nda','tVDa','ptVDa','nsr','ndr','tVDr','ptVDr');
 

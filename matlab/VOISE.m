@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.12 2009/11/12 16:03:17 patrick Exp $
+% $Id: VOISE.m,v 1.13 2009/11/12 17:33:39 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,6 +21,9 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+
+% miscellaneous information about VOISE
+global voise
 
 if params.logVOISE, % init diary to log VOISE run
   unix(['rm -f ' params.oDir params.oLogFile]);
@@ -53,8 +56,8 @@ else
   error('initSeeds not defined or not a Function Handle');
 end
 
-if params.divideAlgo == 2 & exist('VOISEtiming.mat','file'),
-  timing = load('VOISEtiming.mat');
+if params.divideAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
+  timing = load([voise.root '/share/VOISEtiming.mat']);
 end
 
 % save image parameters
