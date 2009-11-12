@@ -2,7 +2,7 @@ function printFigure(hf,filename)
 % function printFigure(hf,filename)
 
 %
-% $Id: printFigure.m,v 1.1 2009/11/12 15:45:55 patrick Exp $
+% $Id: printFigure.m,v 1.2 2009/11/12 17:33:04 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,7 +21,7 @@ function printFigure(hf,filename)
 %
 
 if exist('exportfig','file') == 2,
-  exportfig(hf, filename, 'color', 'cmyk');
+  exportfig(hf, filename, 'color', 'cmyk', 'boundscode','mcode','LockAxes',0);
 else
   print(hf, '-depsc', filename);
 end
