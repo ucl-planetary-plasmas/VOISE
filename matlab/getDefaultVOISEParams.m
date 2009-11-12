@@ -2,7 +2,7 @@ function params = getDefaultVOISEParams
 % function params = getDefaultVOISEParams
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.2 2009/11/11 14:37:05 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.3 2009/11/12 15:13:00 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -24,12 +24,16 @@ function params = getDefaultVOISEParams
 params.W    = [];
 params.x    = [];
 params.y    = [];
-% 
+%  
 params.Wlim = [];
 params.xlim = [];
 params.ylim = [];
 
 % VOISE algorithm parameters 
+% Initialise
+params.initSeeds = @randomSeeds;
+params.iNumSeeds = 12;
+params.RNGiseed  = 10;
 % Dividing
 params.dividePctile = 80;
 params.d2Seeds      = 4;
