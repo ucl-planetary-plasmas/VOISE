@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.13 2009/11/12 17:33:39 patrick Exp $
+% $Id: VOISE.m,v 1.14 2009/11/13 14:46:43 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -65,7 +65,7 @@ save([params.oDir params.oMatFile], 'params');
 
 % Initialise VD
 fprintf(1,'*** Initialising VOISE\n')
-switch params.divideAlgo,
+switch params.initAlgo,
   case 0, % incremental
     IVD = computeVD(nr, nc, S);
 	case 1, % full
