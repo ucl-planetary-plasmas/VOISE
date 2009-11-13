@@ -72,7 +72,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.4 2009/11/13 11:51:29 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.5 2009/11/13 14:46:56 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -91,28 +91,28 @@ function params = getDefaultVOISEParams()
 %
 
 % Image parameters
-params.W    = [];
-params.x    = [];
-params.y    = [];
+params.W               = [];
+params.x               = [];
+params.y               = [];
 %  
-params.Wlim = [];
-params.xlim = [];
-params.ylim = [];
+params.Wlim            = [];
+params.xlim            = [];
+params.ylim            = [];
 
 % VOISE algorithm parameters 
 % Initialise
-params.initSeeds = @randomSeeds;
-params.iNumSeeds = 12;
-params.RNGiseed  = 10;
-params.initAlgo  = 2;
+params.initSeeds       = @randomSeeds;
+params.iNumSeeds       = 12;
+params.RNGiseed        = 10;
+params.initAlgo        = 2;
 % Dividing
-params.dividePctile = 80;
-params.d2Seeds      = 4;
+params.dividePctile    = 80;
+params.d2Seeds         = 4;
 % divideAlgo choice
 % 0 incremental 
 % 1 full
 % 2 timing based
-params.divideAlgo   = 2;
+params.divideAlgo      = 2;
 
 % Merging
 params.mergePctile     = 60;
@@ -125,31 +125,31 @@ params.thresHoldLength = 0.3;
 params.mergeAlgo       = 2;
 
 % Regularise
-params.regMaxIter = 1;
+params.regMaxIter      = 1;
 % regAlgo choice
 % 0 incremental 
 % 1 full
 % 2 timing based
-params.regAlgo    = 2;
+params.regAlgo         = 2;
 
 % inputs/output paths
-params.iFile    = [];               % input image file 
-params.oDir     = [];               % output directory
-params.oMatFile = 'voise.mat';      % output mat filename
-params.oLogFile = 'voise.log';      % log filename
-params.oMovFile = 'voise.avi';      % movie filename
+params.iFile           = [];               % input image file 
+params.oDir            = [];               % output directory
+params.oMatFile        = 'voise.mat';      % output mat filename
+params.oLogFile        = 'voise.log';      % log filename
+params.oMovFile        = 'voise.avi';      % movie filename
 
 % Diagnostics/Report parameters
 %
 % log output of VOISE run
-params.logVOISE     = true;
+params.logVOISE        = true;
 %
 % Export divide/merge/reg plot to eps
-params.divideExport = false;
-params.mergeExport  = false;
-params.regExport    = false;
+params.divideExport    = false;
+params.mergeExport     = false;
+params.regExport       = false;
 %
 % Movie parameters
-params.movDiag      = false;
-params.movPos       = [600 50 1300 1050]; % movie window size
+params.movDiag         = false;
+params.movPos          = [600 50 1300 1050]; % movie window size
 
