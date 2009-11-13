@@ -1,8 +1,13 @@
-function benchVD
-% function benchVD
+function benchVD()
+% function benchVD()
+% 
+% Create a VOISE timing file 'VOISEtiming.mat'
+%
+% Note that it can takes VERY long time since a very large number of 
+% Voronoi diagrams are built with large number numbers of seeds.
 
 %
-% $Id: benchVD.m,v 1.8 2009/11/12 17:33:39 patrick Exp $
+% $Id: benchVD.m,v 1.9 2009/11/13 12:05:51 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
