@@ -1,8 +1,78 @@
-function params = getDefaultVOISEParams
-% function params = getDefaultVOISEParams
+function params = getDefaultVOISEParams()
+% function params = getDefaultVOISEParams()
+%
+% Returns a default VOISE parameters structure params. 
+%
+% For further details on the VOISE algorithm parameters see the paper
+% The VOISE Algorithm: a Versatile Tool for Automatic
+% Segmentation of Astronomical Images, Guio and Achilleos,
+% 398, 1254-1262, 2009 (doi 10.1111/j.1365-2966.2009.15218.x).
+%
+% Following is a list of all available fields (with default value in
+% parentheses).
+%
+% * Images parameters
+%
+%   W              : image (matrix with size nr x nc)        (empty)
+%   x              : x-axis of image (vector with length nc) (empty)
+%   y              : y-axis of image (vector with length nr) (empty)
+%
+%   Wlim           : image intensity range for diagnostics   (empty)
+%   xlim           : x-axis range for diagnostics            (empty)
+%   ylim           : y-axis range for diagnostics            (empty)
+%
+% * VOISE initial phase parameters
+%
+%   initSeeds      : function (string or handle) to draw initial seeds
+%                                                            (@randomSeeds)
+%   iNumSeeds      : number of initial seeds                 (12)
+%   RNGiseed       : initial value for Random Number Generator
+%                                                            (10)
+%   initAlgo       : Voronoi algorithm (0 incremental, 1 full, 2 optimal)
+%                                                            (2)
+%
+% * VOISE dividing phase parameters
+%
+%   dividePctile   : percentile p_D for division             (80)
+%   d2Seeds        : square distance between seeds           (4)
+%   divideAlgo     : Voronoi algorithm (0 incremental, 1 full, 2 optimal)
+%                                                            (2)
+% 
+% * VOISE merging phase parameters
+%
+%   mergePctile    : percentile p_M for merging              (60)
+%   dmu            : maximum dissimilarity \Delta\mu         (0.2)
+%   thresHoldLength: max ratio non homogeneous/total length \mathcal{H}
+%                                                            (0.3)
+%   mergeAlgo      : Voronoi algorithm (0 incremental, 1 full, 2 optimal)
+%                                                            (2)
+%
+% * VOISE regularisation phase parameters
+%
+%   regMaxIter     : maximum numbers of iterations           (1)
+%   regAlgo        : Voronoi algorithm (0 incremental, 1 full, 2 optimal)
+%                                                            (2)
+%
+% * I/O data path and filename parameters
+% 
+%   iFile          : input image file                        (empty)
+%   oDir           : output directory                        (empty)
+%   oMatFile       : VOISE data output mat-filename          ('voise.mat')
+%   oLogFile       : VOISE log filename                      ('voise.log')
+%   oMovFile       : VOISE movie filename                    ('voise.avi')
+%
+% * Diagnostics/reporting parameters
+%
+%   logVOISE       : log flag                                (true)
+%   divideExport   : export all divide iterations            (false)
+%   mergeExport    : export all merge iterations             (false)
+%   regExport      : export all reg iterations               (false)
+%   movDiag        : create movie                            (false)
+%   movPos         : movie window size                       ([600 50 1300 1050])
+
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.3 2009/11/12 15:13:00 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.4 2009/11/13 11:51:29 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,6 +104,7 @@ params.ylim = [];
 params.initSeeds = @randomSeeds;
 params.iNumSeeds = 12;
 params.RNGiseed  = 10;
+params.initAlgo  = 2;
 % Dividing
 params.dividePctile = 80;
 params.d2Seeds      = 4;
