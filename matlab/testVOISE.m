@@ -1,14 +1,20 @@
 function [params,IVD,DVD,MVD,CVD] = testVOISE(varargin)
-% function [params,IVD,DVD,MVD,CVD] = testVOISE([optional args])
+% function [params,IVD,DVD,MVD,CVD] = testVOISE([optional arguments])
 %
-% optional arguments are any of the fieds
-% examples:
-% [params,IVD,DVD,MVD,CVD] = testVOISE()
-% [params,IVD,DVD,MVD,CVD] = testVOISE('initSeeds',@uniformSeeds,...
-%                                      'dividePctile',90)
+% Examples:
+%
+% [params,IVD,DVD,MVD,CVD] = testVOISE();
+% [params,IVD,DVD,MVD,CVD] = testVOISE('d2Seeds',6)
+% 
+% Optional arguments are pairs of arguments, the first one is a string
+% representing a valid field of the VOISE parameter structure generated 
+% by the function getDefaultVOISEParams.
+% To get a list of these fields type the Matlab command
+% help getDefaultVOISEParams
+
 
 %
-% $Id: testVOISE.m,v 1.7 2009/11/12 15:16:14 patrick Exp $
+% $Id: testVOISE.m,v 1.8 2009/11/13 12:28:00 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
