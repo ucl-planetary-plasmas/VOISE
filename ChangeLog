@@ -1,5 +1,15 @@
 2009-11-13  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/getDefaultVOISEParams.m (1.5):
+	  Cosmetic changes.
+
+2009-11-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m (1.14):
+	  Replaced field divideAlgo by dedicated field initAlgo.
+
+2009-11-13  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/testVOISE.m (1.8), matlab/testVOISE1.m (1.8):
 	  Added some help.
 
