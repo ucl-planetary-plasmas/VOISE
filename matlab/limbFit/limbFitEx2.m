@@ -8,7 +8,7 @@ function [varargout] = limbFitEx2(action,varargin)
 % [params,fit1,fit2] = limbFitEx2('limbFit')
 
 %
-% $Id: limbFitEx2.m,v 1.2 2009/11/12 17:13:52 patrick Exp $
+% $Id: limbFitEx2.m,v 1.3 2009/12/02 21:46:05 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -128,8 +128,9 @@ switch lower(action),
 			 axis equal
 			 axis tight
 		   p0 = getCircleParams();
+		   [px, py] = getPolePos();
      end
-		 fit1 = getDefaultFitParams(p0);
+		 fit1 = getDefaultFitParams(p0,[px,py]);
 		 fit1.LSmax = 16;
 		 fit1.Rmin = 0.9;
 		 fit1.Rmax = 1.1;
@@ -141,7 +142,7 @@ switch lower(action),
 		 fit1 = getLimb(CVD, params, fit1);
 
 		 % try again with better selected seeds
-		 fit2 = getDefaultFitParams(fit1.p);
+		 fit2 = getDefaultFitParams(fit1.p,[px,py]);
 		 fit2.LSmax = 12;
 		 fit2.Rmin = 0.95;
 		 fit2.Rmax = 1.05;
