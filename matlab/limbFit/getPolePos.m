@@ -2,7 +2,7 @@ function [xp,yp] = getPolePos()
 % function [xp,yp] = getPolePos()
 
 %
-% $Id: getPolePos.m,v 1.1 2009/12/02 21:35:12 patrick Exp $
+% $Id: getPolePos.m,v 1.2 2009/12/02 22:25:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,7 +20,7 @@ function [xp,yp] = getPolePos()
 % Public License for more details.
 %
 
-fprintf(1,'\nSelect approximate pole position and press mouse button\n ');
+fprintf(1,'\nSelect approximate pole position and press mouse button\n');
 [xp, yp] = ginput(1);
 
 fprintf(1,'xp = %.1f yp = %.1f\n', xp, yp);

@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.4 2009/12/02 21:43:56 patrick Exp $
+% $Id: selectSeeds.m,v 1.5 2009/12/02 22:25:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -59,7 +59,8 @@ T = 180/pi*atan2(Y./b, X./a);
 % if pole position is not empty calculate the polar angle to the pole
 % and substract that value to the polar angle to the seeds
 if ~isempty(fit.polePos),
-  Tpole = 180/pi*atan2(fit.polePos(2)./b, fit.polePos(1)./a)
+  Tpole = 180/pi*atan2(fit.polePos(2)./b, fit.polePos(1)./a);
+	fprintf(1,'Pole polar angle %.0f deg\n', Tpole);
 	T = T - Tpole;
 end
 if isa(fit.selectAngles,'char') | isa(fit.selectAngles,'function_handle'),
