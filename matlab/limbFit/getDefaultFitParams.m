@@ -1,8 +1,8 @@
-function fit = getDefaultFitParams(p0)
-% function fit = getDefaultFitParams(p0)
+function fit = getDefaultFitParams(p0,polePos)
+% function fit = getDefaultFitParams(p0,polePos)
 
 %
-% $Id: getDefaultFitParams.m,v 1.2 2009/10/28 14:37:39 patrick Exp $
+% $Id: getDefaultFitParams.m,v 1.3 2009/12/02 21:37:19 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -24,6 +24,12 @@ function fit = getDefaultFitParams(p0)
 fit.p0             = p0(:);
 % default selection function for angles
 fit.selectAngles   = @allAngles;
+% allow to provide position of one of the poles
+if nargin>1,
+  fit.polePos      = polePos;
+else
+  fit.polePos      = [];
+end
 
 % leasqr control parameters
 
