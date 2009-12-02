@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.3 2009/11/04 14:17:28 patrick Exp $
+% $Id: selectSeeds.m,v 1.4 2009/12/02 21:43:56 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -56,6 +56,12 @@ ellipseEq = X.^2/a^2+Y.^2/b^2;
 
 % angle
 T = 180/pi*atan2(Y./b, X./a);
+% if pole position is not empty calculate the polar angle to the pole
+% and substract that value to the polar angle to the seeds
+if ~isempty(fit.polePos),
+  Tpole = 180/pi*atan2(fit.polePos(2)./b, fit.polePos(1)./a)
+	T = T - Tpole;
+end
 if isa(fit.selectAngles,'char') | isa(fit.selectAngles,'function_handle'),
       [selectAngles, msg] = fcnchk(fit.selectAngles);
 end
