@@ -2,7 +2,7 @@ function p = fitCircle(VD,params,LSS,Sx,Sy,ii,p0)
 % function p = fitCircle(VD,params,LSS,Sx,Sy,ii,p0)
 
 %
-% $Id: fitCircle.m,v 1.1 2009/10/13 16:04:59 patrick Exp $
+% $Id: fitCircle.m,v 1.2 2010/01/12 12:40:55 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -30,18 +30,29 @@ fracprec=[0; 0; 0;];
 fracchg=[Inf; Inf; Inf];
 options=[fracprec fracchg];
 
-stol = 1e-6;
+stol = 1e-8;
 niter=50;
 dp=[1 1 1];
 
 W = ones(size(R));
-W = (1./LSS(ii)').^2;
+W = (1./LSS(ii)');
 
 [f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss]=...
   leasqr(T, R, p0, 'circle', stol , niter, W, dp,...
 	  'dcircle',options);
-fprintf(1,'conv %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, ss);
-fprintf(1,'Xc(%.1f,%.1f) R=%.1f\n', p([1:3]));
+
+% degrees of freedom
+nu = length(f) - length(p(dp==1));
+% reduced chi2 statistic
+chi2 = ss/(nu-1);
+% standard deviation for estimated parameters 
+psd = zeros(size(p));
+sd = sqrt(diag(covp));
+psd(dp==1) = sd;
+
+fprintf(1,'conv %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, chi2);
+fprintf(1,'params est.: Xc(%.1f,%.1f) R=%.1f\n', p);
+fprintf(1,'stdev  est.: Xc(%.1f,%.1f) R=%.1f\n', psd);
 
 td = linspace(-180,180,50);
 
