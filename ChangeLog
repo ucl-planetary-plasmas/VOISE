@@ -1,3 +1,15 @@
+2010-01-12  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitCircle.m (1.2):
+	  Added diagnostic of normalised chi2 and parameters error
+	  estimates.  Fixed weight values.
+
+2010-01-12  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitEllipse.m (1.2):
+	  Added diagnostic of normalised chi2 and parameters error
+	  estimates.  Fixed weight values.
+
 2009-12-02  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/getPolePos.m (1.2), matlab/limbFit/selectSeeds.m
