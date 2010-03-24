@@ -1,3 +1,33 @@
+2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* README (1.3):
+	  Added license.
+
+2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* README (1.2):
+	  Added VOISE reference paper.
+
+2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.6):
+	  Added m-file and shell script relevant for Europlanet web demo.
+
+2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* package-demo.sh.in (1.1):
+	  Shell script to package the Europlanet web demo.
+
+2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/webDemoVOISE.m.in (1.1):
+	  Template for Europlanet web demo batch mode.
+
+2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/startup.m (1.2):
+	  Added check whether start_VOISE is in the Matlab path.
+
 2010-01-12  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/fitCircle.m (1.2):
