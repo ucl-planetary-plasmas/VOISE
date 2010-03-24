@@ -3,7 +3,7 @@
 %
 
 %
-% $Id: startup.m,v 1.1 2009/11/10 16:34:18 patrick Exp $
+% $Id: startup.m,v 1.2 2010/03/24 18:39:16 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -43,5 +43,7 @@ set(0,'DefaultSurfaceLineWidth',.65);
 clear all
 close all
 
-start_VOISE
+if exist('start_VOISE')==2,
+  start_VOISE,
+end
 
