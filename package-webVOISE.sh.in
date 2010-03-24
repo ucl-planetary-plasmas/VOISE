@@ -1,0 +1,48 @@
+#! @SHELL@
+# -*- sh -*-
+# @configure_input@
+
+#
+# $Id: package-webVOISE.sh.in,v 1.1 2010/03/24 18:41:41 patrick Exp $
+#
+# Copyright (c) 2010
+# Patrick Guio <p.guio@ucl.ac.uk>
+#
+# All Rights Reserved.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2.  of the License, or (at your
+# option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+# Public License for more details.
+#
+
+root=WebVOISE-@VERSION@
+rm -rf $root
+mkdir -p $root $root/matlab $root/share/input $root/share/output
+
+files="startup webDemoVOISE getDefaultVOISEParams VOISE \
+      printVOISEsetup plotVOISE printFigure printSet printVD \
+			randomSeeds parseArgs computeVD initVD isXinW addSeedToVD \
+			updateNeighboursListsFromVoronoin getVRclosure \
+			getVDOp divideVD computeHCThreshold homogeneousCriteria \
+			prctile addSeedsToVR getVRvertices getEquidistantPoint \
+			computeVDFast mergeVD removeSeedFromVD getCentroidVD \
+			getCentroidSeed seedDist benchVD"
+
+for f in $files ; do
+  echo $f
+	cp -p matlab/$f.m $root/matlab
+done
+
+cp -p $HOME/matlab/exportfig.m $root/matlab
+cp -p $HOME/research/publications/hst/matlab/plotHistHC.m $root/matlab
+cp -p share/VOISEtiming.mat $root/share
+cp -p share/north_proj.mat $root/share/input
+
+tar cvf $root.tar $root
+bzip2 -9 $root.tar
