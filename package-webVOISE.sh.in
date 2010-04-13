@@ -3,7 +3,7 @@
 # @configure_input@
 
 #
-# $Id: package-webVOISE.sh.in,v 1.3 2010/04/13 15:40:11 patrick Exp $
+# $Id: package-webVOISE.sh.in,v 1.4 2010/04/13 15:44:48 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,7 +32,7 @@ files="startup webDemoVOISE getDefaultVOISEParams VOISE \
 			getVDOp divideVD computeHCThreshold homogeneousCriteria \
 			prctile addSeedsToVR getVRvertices getEquidistantPoint \
 			computeVDFast mergeVD removeSeedFromVD getCentroidVD \
-			getCentroidSeed seedDist benchVD loadIMage"
+			getCentroidSeed seedDist benchVD loadImage"
 
 for f in $files ; do
   echo $f
