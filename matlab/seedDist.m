@@ -2,7 +2,7 @@ function seedDist(VD,params)
 % function seedDist(VD,params)
 
 %
-% $Id: seedDist.m,v 1.4 2010/04/14 06:43:18 patrick Exp $
+% $Id: seedDist.m,v 1.5 2010/04/14 07:24:19 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -37,7 +37,8 @@ printFigure(gcf,[params.oDir 'seeddist1.eps']);
 R = sqrt(X.^2+Y.^2);
 T = atan2(Y,X)*180/pi;
 
-subplot(121)
+clf 
+subplot(111)
 plot(R,T,'o')
 h=ylabel('\theta [deg]','VerticalAlignment','top');
 %set(h)
