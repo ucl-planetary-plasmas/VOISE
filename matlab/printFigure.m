@@ -2,7 +2,7 @@ function printFigure(hf,filename)
 % function printFigure(hf,filename)
 
 %
-% $Id: printFigure.m,v 1.2 2009/11/12 17:33:04 patrick Exp $
+% $Id: printFigure.m,v 1.3 2010/04/14 06:42:14 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,9 +20,14 @@ function printFigure(hf,filename)
 % Public License for more details.
 %
 
-if exist('exportfig','file') == 2,
+if exist('exportfig','file') == 2 & ...
+   ~strcmp(get(gcf,'XDisplay'),'nodisplay'), 
+
   exportfig(hf, filename, 'color', 'cmyk', 'boundscode','mcode','LockAxes',0);
+
 else
+
   print(hf, '-depsc', filename);
+
 end
 
