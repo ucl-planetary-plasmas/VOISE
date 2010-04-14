@@ -2,7 +2,7 @@ function seedDist(VD,params)
 % function seedDist(VD,params)
 
 %
-% $Id: seedDist.m,v 1.3 2010/04/13 15:39:25 patrick Exp $
+% $Id: seedDist.m,v 1.4 2010/04/14 06:43:18 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,7 +39,7 @@ T = atan2(Y,X)*180/pi;
 
 subplot(121)
 plot(R,T,'o')
-h=ylabel('\theta [deg]','VerticalAlignment','top')
+h=ylabel('\theta [deg]','VerticalAlignment','top');
 %set(h)
 xlabel('\rho [R_J]')
 title('Seeds spatial distribution')
