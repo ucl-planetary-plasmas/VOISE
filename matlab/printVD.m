@@ -2,7 +2,7 @@ function varargout = printVD(fid, VD)
 % function varargout = printVD(fid, VD)
 
 %
-% $Id: printVD.m,v 1.2 2009/11/12 17:32:28 patrick Exp $
+% $Id: printVD.m,v 1.3 2010/04/14 10:13:36 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -36,7 +36,8 @@ for i = 1:length(VD.Nk), % for all seeds that ever been registered
 	s1 = printSet([], VD.Nk{i}); s = [s s1];
   s = [s sprintf('\n')];
 end
-s = [s sprintf('**********************************\n\n')];
+
+s = [s sprintf('%s\n\n',s2)];
 
 if ~isempty(fid),
 	fprintf(fid, '%s', s);
