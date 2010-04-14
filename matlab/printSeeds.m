@@ -2,7 +2,7 @@ function varargout = printSeeds(fid, VD)
 % function varargout = printSeeds(fid, VD)
 
 %
-% $Id: printSeeds.m,v 1.1 2010/04/14 09:38:37 patrick Exp $
+% $Id: printSeeds.m,v 1.2 2010/04/14 10:06:18 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,10 +20,19 @@ function varargout = printSeeds(fid, VD)
 % Public License for more details.
 %
 
-s = [];
+% current time
+k = VD.k;
+
+s = sprintf('\n');
+
+s1 = sprintf('*** Voronoi Diagram Seeds Coordinates (sx,sy) k = %d ***', k);
+s2 = char('*'*ones(length(s1),1));
+
+s = [s sprintf('%s\n%s\n%s\n', s2, s1, s2)];
+
 
 for i = VD.Sk', % for all seeds at current time
-  s = [s sprintf('%3d %10d %10d', i, VD.Sx(i), VD.Sy(i))];
+  s = [s sprintf('%6d %6d %6d\n', i, VD.Sx(i), VD.Sy(i))];
 end
 
 if ~isempty(fid),
