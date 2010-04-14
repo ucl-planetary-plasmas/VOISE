@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.14 2009/11/13 14:46:43 patrick Exp $
+% $Id: VOISE.m,v 1.15 2010/04/14 09:26:12 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -128,7 +128,7 @@ if params.movDiag,
 end
 
 t = cputime-t;
-fprintf(1,'*** Total elapsed time %2d:%2d:%2d [hh:mm:ss].\n', ...
+fprintf(1,'*** Total elapsed time %02d:%02d:%02d [hh:mm:ss].\n', ...
         floor(t/3600), floor(mod(t,3600)/60), floor(mod(mod(t,3660),60)));
 
 if params.logVOISE,
