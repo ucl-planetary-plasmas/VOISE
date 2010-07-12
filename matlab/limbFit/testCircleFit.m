@@ -8,7 +8,7 @@ function testCircleFit(ns,pc,p,p0)
 
 
 %
-% $Id: testCircleFit.m,v 1.1 2009/10/13 16:04:59 patrick Exp $
+% $Id: testCircleFit.m,v 1.2 2010/07/12 16:27:54 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -61,7 +61,7 @@ Sy = Yc + r*(1+pc*(0.5-rand(1,ns))).*sind(t);
 
 fprintf(1,'seeds # %d,  pc %f\n', ns, pc);
 
-LSS = 2*sqrt((Sx0-Sx).^2+(Sy0-Sy).^2);
+LSS = sqrt((Sx0-Sx).^2+(Sy0-Sy).^2);
 fprintf(1,'LSS min %f max %f\n', [min(LSS), max(LSS)]);
 
 fp = fitCircle([],[],LSS,Sx,Sy,[1:length(LSS)],p0);
@@ -76,4 +76,27 @@ hold off
 h = get(gca,'children');
 legend(h([1 2 4 3]),'data','data+noise','initial','fitted')
 
+axis equal
+
+return
+% test
+
+[xc,yc,R,a] = circfit(Sx,Sy);
+fprintf(1,'circfit Xc(%.1f,%.1f) R=%.1f\n', xc,yc,R);
+
+
+Par = CircleFitByTaubin([Sx(:),Sy(:)]);
+fprintf(1,'circfit Xc(%.1f,%.1f) R=%.1f\n', Par);
+
+t = sort(t);
+x1 = xc + R*cosd(t);
+y1 = yc + R*sind(t);
+
+xc = Par(1); yc = Par(2); R = Par(3);
+x2 = xc + R*cosd(t);
+y2 = yc + R*sind(t);
+
+hold on
+plot(x1,y1,'o-',x2,y2,'o-');
+hold off
 

@@ -2,7 +2,7 @@ function p = fitEllipse(VD,params,LSS,Sx,Sy,ii,p0,dp)
 % function p = fitEllipse(VD,params,LSS,Sx,Sy,ii,p0,dp)
 
 %
-% $Id: fitEllipse.m,v 1.2 2010/01/12 12:36:41 patrick Exp $
+% $Id: fitEllipse.m,v 1.3 2010/07/12 16:25:48 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -121,7 +121,7 @@ Ye0 = r0.*sind(Ts);
 % initial guess and fitted 
 plot(Xe0,Ye0,'r--o', Xe,Ye, 'r-o','linewidth',1)
 % data points
-plot(Sx(ii), Sy(ii), 'go');
+plot(Sx(ii), Sy(ii), 'ko','markersize',3);
 
 if ~isempty(VD) & ~isempty(params),
   x = params.x;
