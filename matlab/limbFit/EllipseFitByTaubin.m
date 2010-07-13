@@ -1,4 +1,4 @@
-function A = EllipseFitByTaubin(XY);
+function [A,p] = EllipseFitByTaubin(XY)
 %
 %   Ellipse fit by Taubin's Method published in
 %      G. Taubin, "Estimation Of Planar Curves, Surfaces And Nonplanar
@@ -51,5 +51,72 @@ A6 = A(6)+A(1)*centroid(1)^2+A(3)*centroid(2)^2+...
 A(4) = A4;  A(5) = A5;  A(6) = A6;
 A = A/norm(A);
 
-end  %  Taubin
+%end  %  Taubin
+
+% Use Formulas from Mathworld (http://mathworld.wolfram.com/Ellipse.html)
+% to find semimajor_axis, semiminor_axis, x0, y0, and phi
+
+%Extract parameters from vector e
+a = A(1);
+b = 0.5*A(2);
+c = A(3);
+d = 0.5*A(4);
+f = 0.5*A(5);
+g = A(6);
+
+delta = det([a, b, d; b, c, f; d, f, g]);
+J = det([a, b;b, c]);
+I = a+c;
+
+if ~(delta ~= 0 & J > 0 & delta/I < 0),
+  delta,J,I
+  warning('coefficient not appropriate for ellipse')
+  p = [];
+  return
+end
+
+delta = b^2-a*c;
+
+x0 = (c*d - b*f)/delta;
+y0 = (a*f - b*d)/delta;
+
+
+num = 2 * (a*f^2 + c*d^2 + g*b^2 - 2*b*d*f - a*c*g);
+
+a_prime = sqrt(num/(delta*(sqrt((a-c)^2+4*b^2)-(c+a))));
+b_prime = sqrt(num/(delta*(-sqrt((a-c)^2+4*b^2)-(c+a))));
+
+if a < c,
+  if b==0,
+    phi = 0;
+  else
+    phi = 0.5 * acot((a-c)/(2*b));
+  end
+else,
+  if b==0,
+    phi = pi/2;
+  else
+    phi = pi/2 + 0.5 * acot((a-c)/(2*b));
+  end
+end
+
+if 0
+phi
+if a < c,
+phi = 0.5 * acot2(a-c,2*b);
+else
+phi = pi/2 + 0.5 * acot2(a-c,2*b);
+end
+phi
+end
+
+p = [x0,y0,a_prime,b_prime,phi];
+
+function a = acot2(y,x)
+
+if x*y<0,
+  a = -pi/2-atan2(y,x);
+else
+  a = pi/2-atan2(y,x);
+end
 
