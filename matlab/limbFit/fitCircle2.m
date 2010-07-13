@@ -2,9 +2,9 @@ function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 % function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 
 %
-% $Id: fitCircle2.m,v 1.1 2010/07/12 14:35:19 patrick Exp $
+% $Id: fitCircle2.m,v 1.2 2010/07/13 11:48:44 patrick Exp $
 %
-% Copyright (c) 2009 
+% Copyright (c) 2010 
 % Patrick Guio <p.guio@ucl.ac.uk>
 %
 % All Rights Reserved.

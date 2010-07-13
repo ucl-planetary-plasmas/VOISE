@@ -2,9 +2,9 @@ function r=circle2(xy,p)
 % function r=circle2(xy,p)
 
 %
-% $Id: circle2.m,v 1.2 2010/07/13 11:26:05 patrick Exp $
+% $Id: circle2.m,v 1.3 2010/07/13 11:48:44 patrick Exp $
 %
-% Copyright (c) 2009 
+% Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
 %
 % All Rights Reserved.
