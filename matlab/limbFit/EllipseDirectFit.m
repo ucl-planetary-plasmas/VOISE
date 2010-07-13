@@ -91,14 +91,16 @@ if a > c,
 	  phi = pi/2 + 0.5 * acot((a-c)/(2*b));
 	end
 end
-phi
 
+if 0
+phi
 if a < c,
 phi = 0.5 * acot2(a-c,2*b);
 else 
 phi = pi/2 + 0.5 * acot2(a-c,2*b);
 end
 phi
+end
 
 p = [x0,y0,a_prime,b_prime,phi];
 

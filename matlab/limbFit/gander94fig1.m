@@ -2,7 +2,7 @@ function gander94fig1
 % function gander94fig1
 
 %
-% $Id: gander94fig1.m,v 1.1 2010/07/13 11:26:43 patrick Exp $
+% $Id: gander94fig1.m,v 1.2 2010/07/13 15:33:03 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,10 +26,10 @@ y = [7, 6 , 8, 7, 5, 7]';
 
 [xc,yc,R,a] = circfit(x,y);
 fprintf(1,'z=(%.4f,%.4f) r=%.4f\n', xc,yc,R);
-[x1,y1] = ellipse(xc,yc,R);
+[x1,y1] = circle(xc,yc,R);
 
 Par = CircleFitByTaubin([x,y]);
-[x2,y2] = ellipse(Par(1),Par(2),Par(3));
+[x2,y2] = circle(Par(1),Par(2),Par(3));
 fprintf(1,'z=(%.4f,%.4f) r=%.4f\n', Par(1:3));
 
 
@@ -59,7 +59,7 @@ fprintf(1,'conv %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, chi2);
 fprintf(1,'params est.: Xc(%.1f,%.1f) R=%.1f\n', p(1:3));
 fprintf(1,'stdev  est.: Xc(%.1f,%.1f) R=%.1f\n', psd(1:3));
 
-[x3,y3] = ellipse(p(1),p(2),p(3));
+[x3,y3] = circle(p(1),p(2),p(3));
 
 fprintf(1,'z=(%.4f,%.4f) r=%.4f\n', p(1:3));
 
@@ -71,7 +71,7 @@ plot(xc,yc,'b+',x1,y1,'b-',...
 axis equal
 hold off
 
-function [x,y] = ellipse(xc,yc,R)
+function [x,y] = circle(xc,yc,R)
 
 t = linspace(0,2*pi,50)';
 
