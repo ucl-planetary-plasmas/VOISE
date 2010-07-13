@@ -45,16 +45,19 @@ A = A/norm(A);
 
 %end  %  EllipseDirectFit
 
+% Use Formulas from Mathworld (http://mathworld.wolfram.com/Ellipse.html)
+% to find semimajor_axis, semiminor_axis, x0, y0, and phi
+
 %Extract parameters from vector e
 a = A(1);
 b = 0.5*A(2);
 c = A(3);
 d = 0.5*A(4);
-f = A(5);
+f = 0.5*A(5);
 g = A(6);
 
-delta = det([a b d; b c f; d f g]);
-J = det([a b;b c]);
+delta = det([a, b, d; b, c, f; d, f, g]);
+J = det([a, b;b, c]);
 I = a+c;
 
 if ~(delta ~= 0 & J > 0 & delta/I < 0),
@@ -62,34 +65,48 @@ if ~(delta ~= 0 & J > 0 & delta/I < 0),
   error('coefficient not appropriate for ellipse')
 end
 
-%Use Formulas from Mathworld to find semimajor_axis, semiminor_axis, x0, y0
-%, and phi
-
 delta = b^2-a*c;
 
-x0 = 0.5*(c*d - b*f)/delta;
-y0 = 0.5*(a*f - b*d)/delta;
+x0 = (c*d - b*f)/delta;
+y0 = (a*f - b*d)/delta;
 
-phi = 0.5 * acot((c-a)/(2*b));
 
-nom = 2 * (a*f^2 + c*d^2 + g*b^2 - 2*b*d*f - a*c*g);
-s = sqrt(1 + (4*b^2)/(a-c)^2);
+num = 2 * (a*f^2 + c*d^2 + g*b^2 - 2*b*d*f - a*c*g);
 
-a_prime = sqrt(nom/(delta* ( (c-a)*s -(c+a))));
+a_prime = sqrt(num/(delta*(sqrt((a-c)^2+4*b^2)-(c+a))));
+b_prime = sqrt(num/(delta*(-sqrt((a-c)^2+4*b^2)-(c+a))));
 
-b_prime = sqrt(nom/(delta* ( (a-c)*s -(c+a))));
-
-semimajor_axis = max(a_prime, b_prime);
-semiminor_axis = min(a_prime, b_prime);
-
-if (a_prime < b_prime)
-    phi = pi/2 - phi;
+if a < c,
+  if b==0,
+	  phi = 0;
+	else
+    phi = 0.5 * acot((a-c)/(2*b));
+	end
 end
 
-% convert into degree and change sign
-phi = -phi*180/pi;
+if a > c,
+  if b==0,
+	  phi = pi/2;
+	else
+	  phi = pi/2 + 0.5 * acot((a-c)/(2*b));
+	end
+end
+phi
 
-p = [x0,y0,semimajor_axis,semiminor_axis,phi];
+if a < c,
+phi = 0.5 * acot2(a-c,2*b);
+else 
+phi = pi/2 + 0.5 * acot2(a-c,2*b);
+end
+phi
+
+p = [x0,y0,a_prime,b_prime,phi];
 
 
+function a = acot2(y,x)
 
+if x*y<0,
+  a = -pi/2-atan2(y,x);
+else
+  a = pi/2-atan2(y,x);
+end
