@@ -2,7 +2,7 @@ function dr=dcircle2(xy,f,p,dp,func)
 % function dr=dcircle2(xy,f,p,dp,func)
 
 %
-% $Id: dcircle2.m,v 1.3 2010/07/13 11:48:44 patrick Exp $
+% $Id: dcircle2.m,v 1.4 2010/07/13 15:11:01 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -43,7 +43,7 @@ y = yc + r0*sin(ti);
 S = diag(sin(ti));
 C = diag(cos(ti));
 
-% dr is [drs/dxc, drs/yc, drs/dr0, 
+% dr is [drs/dxc, drs/yc, drs/dr0,drs/dti....] 
 A = [ones(size(xi)),zeros(size(xi)),cos(ti)];
 B = [zeros(size(xi)),ones(size(xi)),sin(ti)];
 
