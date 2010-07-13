@@ -2,7 +2,7 @@ function gander94fig1
 % function gander94fig1
 
 %
-% $Id: gander94fig1.m,v 1.3 2010/07/13 17:04:15 patrick Exp $
+% $Id: gander94fig1.m,v 1.4 2010/07/13 17:08:23 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -36,11 +36,11 @@ fprintf(1,'z=(%.4f,%.4f) r=%.4f\n', Par(1:3));
 xy = [x;y];
 p0 = [xc,yc,R,atan2(y-yc,x-xc)']; 
 %p0 = [Par(1:3),atan2(y-Par(2),x-Par(1))']; 
-dp=[1 1 1, ones(1,length(x))];
+dp=[ones(1,3), ones(1,length(x))];
 dp = ones(size(dp));
 w = ones(size(xy));
-fracprec=[0; 0; 0; zeros(length(x),1)];
-fracchg=[Inf; Inf; Inf; Inf*ones(length(x),1)];
+fracprec=[zeros(3,1); zeros(length(x),1)];
+fracchg=[Inf*ones(3,1); Inf*ones(length(x),1)];
 options=[fracprec fracchg];
 stol = 1e-15;
 niter=100;
