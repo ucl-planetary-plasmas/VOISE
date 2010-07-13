@@ -2,7 +2,7 @@ function r=circle2(xy,p)
 % function r=circle2(xy,p)
 
 %
-% $Id: circle2.m,v 1.1 2010/07/12 14:35:19 patrick Exp $
+% $Id: circle2.m,v 1.2 2010/07/13 11:26:05 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,7 +22,7 @@ function r=circle2(xy,p)
 
 global verbose
 
-if ~isempty(verbose) & verbose(3)
+if ~isempty(verbose) & length(verbose)>2 & verbose(3)
   fprintf(1,'calling circle (xc,yc,r)=(%.1f,%.1f,%.1f)\n', p(1:3));
 end
 
@@ -40,39 +40,10 @@ yi = xy(ni2+1:ni);
 x = xc + r0*cos(ti);
 y = yc + r0*sin(ti);
 
-plot(xi,yi,'ro',x,y,'bo')
-drawnow
-
 r = [x;y];
 
-return 
-
-% sample a circle in parametric form
-ts = linspace(-180,180,7200)';
-xs = xc + r0*cosd(ts);
-ys = yc + r0*sind(ts);
-% and in polar coordinates
-rs = sqrt(xs.^2 + ys.^2);
-thetas = 180/pi*atan2(ys,xs);
-x = zeros(size(t));
-y = zeros(size(t));
-r = zeros(size(t));
-% "interpolate" r(t) from rs(thetas)
-% interp1 cannot be used since thetas is not strictly monotonic
-% instead find nearest approximation
-for i=1:length(t),
-  [d(i),imin] = min(abs(t(i)-thetas));
-	x(i) = xs(imin);
-	y(i) = ys(imin);
-	r(i) = rs(imin);
-end
-
-if 0,
-  subplot(211)
-	plot(x, y, 'o', r.*cosd(t), r.*sind(t), 'o')
-	legend('parametric','polar');
-	axis equal
-	subplot(212),
-	plot(t,r,'o');
+if 0
+plot(xi,yi,'ro',x,y,'bo')
+drawnow
 end
 

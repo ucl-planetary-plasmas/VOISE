@@ -2,7 +2,7 @@ function dr=dcircle2(xy,f,p,dp,func)
 % function dr=dcircle2(xy,f,p,dp,func)
 
 %
-% $Id: dcircle2.m,v 1.1 2010/07/12 14:35:19 patrick Exp $
+% $Id: dcircle2.m,v 1.2 2010/07/13 11:26:05 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,7 +22,7 @@ function dr=dcircle2(xy,f,p,dp,func)
 
 global verbose
 
-if ~isempty(verbose) & verbose(3),
+if ~isempty(verbose) & length(verbose)>2 & verbose(3),
   fprintf(1,'calling dcircle (xc,yc,r)=(%.1f,%.1f,%.1f\n', p(1:3));
 end
 
@@ -49,31 +49,5 @@ B = [zeros(size(xi)),ones(size(xi)),sin(ti)];
 
 dr = [A, -r0*S;...
       B, r0*C];
-
-
-return
-
-% sample a circle in parametric form
-ts = linspace(-180,180,7200)';
-ct = cosd(ts);
-st = sind(ts);
-xs = xc + r0*ct;
-ys = yc + r0*st;
-% and in polar coordinates
-rs = sqrt(xs.^2 + ys.^2);
-thetas = 180/pi*atan2(ys,xs);
-% drs is [drs/dxc, drs/yc, drs/dr0]
-drs = [xs./rs ...
-       ys./rs ...
-			 (xs.*ct + ys.*st)./rs];
-
-dr = zeros(length(t),3);
-% "interpolate" dr(t) from drs(thetas)
-% interp1 cannot be used since thetas is not monotonic
-% instead find nearest approximation
-for i=1:length(t),
-  [d(i),imin] = min(abs(t(i)-thetas));
-	dr(i,:) = drs(imin,:);
-end
 
 

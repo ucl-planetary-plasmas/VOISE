@@ -133,7 +133,7 @@ if (exist('OCTAVE_VERSION'))
   plotcmd='plot(x(:,1),y,"+;data;",x(:,1),f,";fit;");';
 end;
 
-if(exist('verbose')~=1), %If verbose undefined, print nothing
+if ~exist('verbose')|isempty(verbose), %If verbose undefined, print nothing
 	verbose(1)=0;    %This will not tell them the results
 	verbose(2)=0;    %This will not replot each loop
 end;
