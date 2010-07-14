@@ -2,7 +2,7 @@ function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 % function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 
 %
-% $Id: fitCircle2.m,v 1.2 2010/07/13 11:48:44 patrick Exp $
+% $Id: fitCircle2.m,v 1.3 2010/07/14 15:22:09 patrick Exp $
 %
 % Copyright (c) 2010 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,8 +26,6 @@ global datapath ploc
 R = sqrt(Sx(ii).^2+Sy(ii).^2)';
 T = 180/pi*atan2(Sy(ii),Sx(ii))';
 
-ni = length(R);
-
 % arrange as [X;Y]
 XY = [Sx(ii)'; Sy(ii)'];
 
@@ -36,7 +34,7 @@ fracprec=[0; 0; 0; zeros(length(ii),1)];
 fracchg=[Inf; Inf; Inf; Inf*ones(length(ii),1)];
 options=[fracprec fracchg];
 
-stol = 1e-8;
+stol = 1e-15;
 niter=100;
 dp=[1 1 1, ones(1,length(ii))];
 dp = ones(size(dp));
@@ -56,7 +54,6 @@ W = [(1./LSS(ii)');(1./LSS(ii)')];
 
 % degrees of freedom
 nu = length(f) - length(p(dp==1));
-%nu = length(f) - 3;
 % reduced chi2 statistic
 chi2 = ss/(nu-1);
 % standard deviation for estimated parameters 
