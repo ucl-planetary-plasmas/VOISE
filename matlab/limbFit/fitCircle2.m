@@ -2,7 +2,7 @@ function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 % function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 
 %
-% $Id: fitCircle2.m,v 1.3 2010/07/14 15:22:09 patrick Exp $
+% $Id: fitCircle2.m,v 1.4 2010/07/14 15:27:46 patrick Exp $
 %
 % Copyright (c) 2010 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -69,8 +69,6 @@ td = linspace(-180,180,50);
 
 r0 = circle(td,p0(1:3));
 r = circle(td,p(1:3));
-
-disp('ok')
 
 %subplot(212)
 clf
