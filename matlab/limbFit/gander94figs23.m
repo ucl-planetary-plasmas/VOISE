@@ -4,7 +4,7 @@ function gander94fig23
 % figure 3.1 and 3.2 from Gander et al., 1994
 
 %
-% $Id: gander94figs23.m,v 1.1 2010/07/14 15:46:32 patrick Exp $
+% $Id: gander94figs23.m,v 1.2 2010/07/15 17:02:39 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,4 +26,47 @@ function gander94fig23
 x = [1, 2, 5, 7, 9, 6, 3, 8]';
 y = [7, 6, 8, 7, 5, 7, 2, 4]';
 
+% rotation pi/4
+Q = 1/sqrt(2)*[1, -1; 1 1];
+
+% translation (-6,-6)
+T1 = [-6;-6];
+
+% translation (-4,4)
+T2 = [-4;4];
+
+x1 = zeros(size(x));
+y1 = zeros(size(y));
+x2 = zeros(size(x));
+y2 = zeros(size(y));
+for i=1:length(x),
+  xy = (T1+[x(i);y(i)]);
+	x1(i) = xy(1);
+	y1(i) = xy(2);
+  xy = Q*(T2+[x(i);y(i)]);
+	x2(i) = xy(1);
+	y2(i) = xy(2);
+end
+
+plot(x,y,'bo',x1,y1,'g+',x2,y2,'rd')
+hold on
+
+% Fit an ellipse using the Bookstein constraint (\lambda_1^2+\lambda_2^2=1)
+[zb, ab, bb, alphab] = fitellipse([x,y], 'linear','constraint','bookstein');
+plotellipse(zb, ab, bb, alphab, 'b-')
+[zb, ab, bb, alphab] = fitellipse([x1,y1], 'linear','constraint','bookstein');
+plotellipse(zb, ab, bb, alphab, 'g-')
+[zb, ab, bb, alphab] = fitellipse([x2,y2], 'linear','constraint','bookstein');
+plotellipse(zb, ab, bb, alphab, 'r-')
+
+% Fit an ellipse using the trace constraint (\lambda_1+\lambda_2=1)
+[zb, ab, bb, alphab] = fitellipse([x,y], 'linear','constraint','trace');
+plotellipse(zb, ab, bb, alphab, 'b--')
+[zb, ab, bb, alphab] = fitellipse([x1,y1], 'linear','constraint','trace');
+plotellipse(zb, ab, bb, alphab, 'g--')
+[zb, ab, bb, alphab] = fitellipse([x2,y2], 'linear','constraint','trace');
+plotellipse(zb, ab, bb, alphab, 'r--')
+
+
+hold off
 
