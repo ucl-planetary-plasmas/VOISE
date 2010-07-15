@@ -2,7 +2,7 @@ function p = fitEllipse2(VD,params,LSS,Sx,Sy,ii,p0,dp)
 % function p = fitEllipse2(VD,params,LSS,Sx,Sy,ii,p0,dp)
 
 %
-% $Id: fitEllipse2.m,v 1.1 2010/07/14 15:42:36 patrick Exp $
+% $Id: fitEllipse2.m,v 1.2 2010/07/15 17:02:59 patrick Exp $
 %
 % Copyright (c) 2010 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -69,8 +69,8 @@ fprintf(1,'stdev  est.: Xc(%.1f,%.1f) a=%.1f b=%.1f tilt=%.0f\n', psd(1:5));
 
 td = linspace(-180,180,50);
 
-r0 = ellipse(td,p0(1:5));
-r = ellipse(td,p(1:5));
+r0 = ellipse(td,[p0(1:4), 180/pi*p0(5)]);
+r = ellipse(td,[p(1:4); 180/pi*p(5)]);
 
 %subplot(212)
 clf
@@ -82,7 +82,7 @@ else
 end
 
 plot(T,R,'o',td,r0,'-',td,r,'-');
-set(gca,'ylim',[0 350],'xlim',[-180 180]);
+set(gca,'ylim',[0 400],'xlim',[-180 180]);
 xlabel('\theta [deg]');
 ylabel('\rho [pixels]')
 
