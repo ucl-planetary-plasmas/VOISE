@@ -2,7 +2,7 @@ function params = loadImage(params)
 % function params = loadImage(params)
 
 %
-% $Id: loadImage.m,v 1.1 2010/04/13 15:39:25 patrick Exp $
+% $Id: loadImage.m,v 1.2 2010/08/25 17:13:41 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,27 +20,47 @@ function params = loadImage(params)
 % Public License for more details.
 %
 
-% load file  (in this case this is a mat-file)
-%   north_proj.mat is a mat file containing a polar projection of Jupiter
-%   observed by HST
-%   Z           256x256            524288  double  image intensity
-%   x             1x256              2048  double  x-axis (nun cols in image)
-%   y           256x1                2048  double  y-axis (num rows in image)
-try
-  im = load(params.iFile);
-catch
-  error([params.iFile ' is not in your Matlab path\n' ...
-         'Try to run start_VOISE']);
+if strfind(params.iFile,'.mat'), % load mat-file
+  %   north_proj.mat is a mat file containing a polar projection of
+  %   Jupiter observed by HST:
+  %   Z           256x256         524288  double  image intensity
+  %   x             1x256           2048  double  x-axis (nun cols in image)
+  %   y           256x1             2048  double  y-axis (num rows in image)
+  try
+    im = load(params.iFile);
+  catch
+    error([params.iFile ' is not in your Matlab path\n' ...
+           'Try to run start_VOISE']);
+  end
+  % set image, axes and related
+  params.W = im.Z;
+  params.x = im.x;
+  params.y = im.y;
+
+  % set colour and axes limits
+  params.Wlim = [min(params.W(:)) max(params.W(:))];
+  params.xlim = [min(params.x) max(params.x)];
+  params.ylim = [min(params.y) max(params.y)];
+
+elseif strfind(params.iFile,'.fits'), % load fits-file
+
+  try
+    im = fitsread(params.iFile);
+  catch
+    error([params.iFile ' does not seem to exist']);
+  end
+  % set image, axes and related
+  params.W = im;
+  params.x = [1:size(im,2)];
+  params.y = [1:size(im,1)];
+
+  % set colour and axes limits
+  params.Wlim = [min(params.W(:)) max(params.W(:))];
+  params.xlim = [min(params.x) max(params.x)];
+  params.ylim = [min(params.y) max(params.y)];
+
 end
 
-% set image, axes and related
-params.W = im.Z;
-params.x = im.x;
-params.y = im.y;
 
-% set colour and axes limits
-params.Wlim = [min(params.W(:)) max(params.W(:))];
-params.xlim = [min(params.x) max(params.x)];
-params.ylim = [min(params.y) max(params.y)];
 
 
