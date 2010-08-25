@@ -1,3 +1,84 @@
+2010-08-25  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/loadImage.m (1.2):
+	  Added support to read image in fits format.
+
+2010-07-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/gander94figs23.m (1.2):
+	  Added code to generate fig 3.1.
+
+2010-07-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/gander94figs23.m (1.1):
+	  Initial version for figs 3.1 and 3.2 of Gander et al., 1994.
+
+2010-07-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/dellipse2.m (1.1), matlab/limbFit/ellipse2.m
+	  (1.1), matlab/limbFit/fitEllipse2.m (1.1),
+	  matlab/limbFit/gander94fig4.m (1.1),
+	  matlab/limbFit/testCircle2Fit.m (1.1),
+	  matlab/limbFit/testEllipse2Fit.m (1.1):
+	  Initial version of full nonlinear square fit of ellipse.
+
+2010-07-14  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitCircle2.m (1.3):
+	  Changed default tolerance to 1e-15.
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/gander94fig1.m (1.3):
+	  Corrected initial values for polar angles with vectors to origo.
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/EllipseFitByTaubin.m (1.2):
+	  Added calculation of parameters for polar parametrisation from
+	  algebraic polynomial coefficients.
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/EllipseFitByTaubin.m (1.1):
+	  IMported from Matlab central EllipseFitByTaubin.zip
+	  http://www.mathworks.com/matlabcentral/fileexchange/22683-ellipse-fit-taubin-method
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/EllipseDirectFit.m (1.2):
+	  Fixed bug in getting ellipse polar parameters from coefficients
+	  of algebraic polynomial equation.
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/EllipseDirectFit.m (1.1):
+	  Imported from Matlab central EllipseDirectFit.zip
+	  http://www.mathworks.de/matlabcentral/fileexchange/22684-ellipse-fit-direct-method
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/CircleFitByTaubin.m (1.1):
+	  Imported from matlab central CircleFitByTaubin.zip
+	  http://www.mathworks.com/matlabcentral/fileexchange/22678-circle-fit-taubin-method
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/circfit.m (1.1):
+	  Imported from matlab central circle_fit.zip:
+	  http://www.mathworks.co.uk/matlabcentral/fileexchange/5557
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/gander94fig1.m (1.1):
+	  Added test for figure 1 in Gander et al., 1994.
+
+2010-07-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/leasqr.m (1.3), matlab/limbFit/circle2.m (1.2),
+	  matlab/limbFit/dcircle2.m (1.2):
+	  Fixed a test on global variable verbose.
+
 2010-04-14  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/printSeeds.m (1.3), matlab/printVD.m (1.3):
