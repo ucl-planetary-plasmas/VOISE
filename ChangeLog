@@ -1,3 +1,32 @@
+2010-08-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.9):
+	  New version 1.0.0rc4.
+
+2010-08-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.8), package-demo.sh.in (1.7),
+	  matlab/webDemoVOISE2.m.in (1.1):
+	  Added webVOISE demo for test fits file provided by Tom Stallard.
+
+2010-08-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/webDemoVOISE.m.in (1.6):
+	  Fixed argument to pass to printSeeds function.
+
+2010-08-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/printSeeds.m (1.4):
+	  Added diagnostic for length scale and median intensity of the
+	  Voronoi regions.
+
+2010-08-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/mergeVD.m (1.12):
+	  Fixed the criteria for homogeneity to handle the situation where
+	  the median intensity is near zero and the relative error does not
+	  make sense.
+
 2010-08-25  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/loadImage.m (1.2):
