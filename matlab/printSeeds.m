@@ -1,8 +1,8 @@
-function varargout = printSeeds(fid, VD)
-% function varargout = printSeeds(fid, VD)
+function varargout = printSeeds(fid, VD, params)
+% function varargout = printSeeds(fid, VD, params)
 
 %
-% $Id: printSeeds.m,v 1.3 2010/04/14 10:13:36 patrick Exp $
+% $Id: printSeeds.m,v 1.4 2010/08/31 17:36:20 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -23,18 +23,28 @@ function varargout = printSeeds(fid, VD)
 % current time
 k = VD.k;
 
+% compute scale length in pixels unit
+[WLS,SLS] = getVDOp(VD, params.W, @(x) sqrt(length(x)));
+
+% compute median intensity
+[WDM,SIM] = getVDOp(VD, params.W, @(x) median(x));
+
 s = sprintf('\n');
 
-s1 = sprintf('*** Voronoi Diagram Seeds Coordinates (sx,sy) k = %d ***', k);
-s2 = char('*'*ones(length(s1),1));
+s1 = sprintf('***             Voronoi Diagram k = %4d         ***', k);
+s2 = sprintf('*** index      sx      sy         ls         mi  ***');
+s3 = char('*'*ones(length(s1),1));
 
-s = [s sprintf('%s\n%s\n%s\n', s2, s1, s2)];
+s = [s sprintf('%s\n%s\n%s\n', s3, s1, s2, s3)];
 
+j = 1;
 for i = VD.Sk', % for all seeds at current time
-  s = [s sprintf('%6d %6d %6d\n', i, VD.Sx(i), VD.Sy(i))];
+  s = [s sprintf('%9d %7d %7d %10.3g %10.3g\n', ...
+                 i, VD.Sx(i), VD.Sy(i), SLS(j), SIM(j))];
+	j = j +1;
 end
 
-s = [s sprintf('%s\n\n',s2)];
+s = [s sprintf('%s\n\n',s3)];
 
 if ~isempty(fid),
 	fprintf(fid, '%s', s);
