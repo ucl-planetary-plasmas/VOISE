@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.11 2009/11/12 17:33:39 patrick Exp $
+% $Id: mergeVD.m,v 1.12 2010/08/31 17:35:19 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,7 +34,9 @@ if params.mergeAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
   timing = load([voise.root '/share/VOISEtiming.mat']);
 end
 
-% Similarity parameters |\mu_i-\mu_j|< dmu \mu_i
+% Similarity parameters 
+% |\mu_i-\mu_j|< dmu |\mu_i| (for \mu_i>std(\mu_i))
+% |\mu_i-\mu_j|< dmu         (for \mu_i<std(\mu_i))
 dmu = params.dmu;
 % non homogeneous neighbours vertices length to circumference max ratio
 thresHoldLength = params.thresHoldLength;
@@ -53,6 +55,7 @@ while ~stopMerge,
   else
 	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) mean(x));
   end
+	[Wdmu, VD.Sdmu] = getVDOp(VD, params.W, @(x) std(x));
 
   if 0, % diagnostic plot
     [vx,vy] = voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
@@ -112,7 +115,8 @@ while ~stopMerge,
 			set(gca,'ylim',[min(VD.Sy(VD.Nk{sk}(:)))-2 max(VD.Sy(VD.Nk{sk}(:)))+2])
 	    %pause
     end
-	  if all(err < dmu*abs(VD.Smu(isk))), 
+	  if (abs(VD.Smu(isk))>VD.Sdmu(isk) && all(err < dmu*abs(VD.Smu(isk))))||...
+			 (abs(VD.Smu(isk))<=VD.Sdmu(isk) && all(err < dmu)), 
 	    % all homogeneous neighbours are less than dmu\% different
       % get vertices list of VR(sk)
 		  % unbounded VR not handled properly
