@@ -1,0 +1,92 @@
+% $Id: webDemoVOISE2.m.in,v 1.1 2010/08/31 17:38:06 patrick Exp $
+%
+% Copyright (c) 2010
+% Patrick Guio <p.guio@ucl.ac.uk>
+%
+% All Rights Reserved.
+%
+% This program is free software; you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation; either version 2.  of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+% Public License for more details.
+%
+
+% miscellaneous information about VOISE to be setup
+clear voise
+global voise
+voise.root    = '@top_srcdir@';
+voise.version = '@VERSION@';
+addpath([voise.root '/matlab']);
+
+% load default VOISE parameters
+params = getDefaultVOISEParams;
+
+% the following parameters can be modified
+
+% initialising phase
+params.iNumSeeds       = 12;  % number of initial seeds
+params.RNGiseed        = 10;  % initial value for Random Number Generator
+
+% Dividing phase
+params.dividePctile    = 80;  % percentile p_D for division 
+                              % negative value means no division
+params.d2Seeds         = 2;   % min square distance between seeds
+
+% Merging phase
+params.mergePctile     = 50;  % percentile p_M for merging
+                              % negative value means no merging
+params.dmu             = 0.2; % maximum dissimilarity \Delta\mu
+params.thresHoldLength = 0.3; % max ratio non homogeneous/total length \mathcal{H}
+
+% Regularisation phase
+params.regMaxIter      = 2;   % maximum numbers of iterations
+                              % negative or null value means no
+															% regularisation
+
+% I/O parameters
+params.iFile           = [voise.root '/share/input/sampleint.fits'];
+
+params.oDir            = [voise.root '/share/output/sampleint/'];
+params.oMatFile        = 'voise';
+
+% load input image
+params = loadImage(params);
+
+% create directory if necessary
+if ~exist(params.oDir,'dir')
+    unix(['mkdir -p ' params.oDir]);
+end
+
+% save pause state
+pstate = pause;
+% set pause to off
+pause('off');
+
+[params,IVD,DVD,MVD,CVD] = VOISE(params);
+
+% some diagnostics generated in 
+close all
+clf
+seedDist(MVD, params);
+clf
+plotHistHC(DVD, MVD, params);
+% clf
+% params = plotVDLengthScale(CVD, params);
+
+fid = fopen([params.oDir 'CVDseeds.txt'],'w');
+printSeeds(fid, CVD, params);
+fclose(fid);
+
+fid = fopen([params.oDir 'CVDneighbours.txt'],'w');
+printVD(fid, CVD);
+fclose(fid);
+
+% restore pause state
+pause(pstate);
+
+quit
