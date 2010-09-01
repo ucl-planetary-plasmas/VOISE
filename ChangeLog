@@ -1,5 +1,10 @@
 2010-09-01  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* configure.ac (1.10):
+	  New version 1.0.0rc5.
+
+2010-09-01  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* package-demo.sh.in (1.8), matlab/plotHistHC.m (1.1):
 	  Added plotHistHC.m in the VOISE distribution.  Updated demo
 	  packaging script.
