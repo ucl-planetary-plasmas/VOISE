@@ -2,7 +2,7 @@ function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
 %
-% $Id: printVOISEsetup.m,v 1.2 2009/11/11 13:38:39 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.3 2010/09/01 14:31:59 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -38,6 +38,7 @@ fprintf(1,' * Merging parameters\n');
 fprintf(1,'   -------------------\n\n');
 fprintf(1,'   p_M             = %.1f\n', params.mergePctile);
 fprintf(1,'   dmu             = %.1f\n', params.dmu);
+fprintf(1,'   ksd             = %.1f\n', params.ksd);
 fprintf(1,'   thresHoldLength = %.1f\n', params.thresHoldLength);
 fprintf(1,'   algo            = %d\n\n', params.mergeAlgo);
 

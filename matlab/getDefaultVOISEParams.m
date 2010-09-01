@@ -42,6 +42,11 @@ function params = getDefaultVOISEParams()
 %
 %   mergePctile    : percentile p_M for merging              (60)
 %   dmu            : maximum dissimilarity \Delta\mu         (0.2)
+%   ksd            : coefficient to compare mean and std     (2)
+%                    if |m|>ksd std then use relative 
+%                    dissimilarity otherise check whether 
+%                    the difference in intensity is ksd time
+%                    the square root of the variance
 %   thresHoldLength: max ratio non homogeneous/total length \mathcal{H}
 %                                                            (0.3)
 %   mergeAlgo      : Voronoi algorithm (0 incremental, 1 full, 2 optimal)
@@ -72,7 +77,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.5 2009/11/13 14:46:56 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.6 2010/09/01 14:31:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -117,6 +122,7 @@ params.divideAlgo      = 2;
 % Merging
 params.mergePctile     = 60;
 params.dmu             = 0.2;
+params.ksd             = 2;
 params.thresHoldLength = 0.3;
 % mergeAlgo choice
 % 0 incremental 

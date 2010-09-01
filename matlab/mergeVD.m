@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.14 2010/09/01 13:55:38 patrick Exp $
+% $Id: mergeVD.m,v 1.15 2010/09/01 14:31:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,8 +39,9 @@ end
 % \mu_i is  median(VR_i) or mean(VR_i)
 % |\mu_i-\mu_j|< dmu |\mu_i|, when  \mu_i>a*std(VR_i) 
 % |\mu_i-\mu_j|< a*sqrt(std(\mu_i)^2+std(\mu_j)^2), when \mu_i<=a*std(VR_i)
-% where a=sqrt(2) currently
+% where a(=ksd) is given
 dmu = params.dmu;
+ksd = params.ksd;
 % non homogeneous neighbours vertices length to circumference max ratio
 thresHoldLength = params.thresHoldLength;
 
@@ -59,7 +60,7 @@ while ~stopMerge,
 	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) mean(x));
   end
 	% sqrt(2)*std(VR_i)
-	[Wsdmu, VD.Ssdmu] = getVDOp(VD, params.W, @(x) sqrt(2)*std(x));
+	[Wsdmu, VD.Ssdmu] = getVDOp(VD, params.W, @(x) ksd*std(x));
 
   if 0, % diagnostic plot
     [vx,vy] = voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
