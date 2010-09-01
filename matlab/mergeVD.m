@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.13 2010/09/01 11:06:55 patrick Exp $
+% $Id: mergeVD.m,v 1.14 2010/09/01 13:55:38 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -37,8 +37,9 @@ end
 % Similarity parameters dmu defined for region i and 
 % homogeneous neighbours j
 % \mu_i is  median(VR_i) or mean(VR_i)
-% |\mu_i-\mu_j|< dmu |\mu_i|, when  \mu_i>sqrt(2)*std(VR_i) 
-% |\mu_i-\mu_j|< (std(\mu_i)+std(\mu_j))/2, when  \mu_i<=sqrt(2)*std(VR_i)
+% |\mu_i-\mu_j|< dmu |\mu_i|, when  \mu_i>a*std(VR_i) 
+% |\mu_i-\mu_j|< a*sqrt(std(\mu_i)^2+std(\mu_j)^2), when \mu_i<=a*std(VR_i)
+% where a=sqrt(2) currently
 dmu = params.dmu;
 % non homogeneous neighbours vertices length to circumference max ratio
 thresHoldLength = params.thresHoldLength;
@@ -91,8 +92,8 @@ while ~stopMerge,
 	  end
 	  % median intensity difference to homogeneous neighbours |\mu_i-\mu_j| 
     err  =  abs(VD.Smu(isk) - VD.Smu(IST(VD.Nk{sk}(ihc)))'); 
-		% sum of stdev of intensity with homogeneous neighbouss
-    ssd  =  VD.Ssdmu(isk) + VD.Ssdmu(IST(VD.Nk{sk}(ihc)))'; 
+    % square root of variance of intensity with homogeneous neighbours
+    ssd  = sqrt(VD.Ssdmu(isk).^2 + VD.Ssdmu(IST(VD.Nk{sk}(ihc)))'.^2); 
 	  if 0,
 	    if ~isempty(err), 
         fprintf(1,'dmu |mu|=%7.2g\n', dmu*abs(VD.Smu(isk)));
