@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.12 2010/08/31 17:35:19 patrick Exp $
+% $Id: mergeVD.m,v 1.13 2010/09/01 11:06:55 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,9 +34,11 @@ if params.mergeAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
   timing = load([voise.root '/share/VOISEtiming.mat']);
 end
 
-% Similarity parameters 
-% |\mu_i-\mu_j|< dmu |\mu_i| (for \mu_i>std(\mu_i))
-% |\mu_i-\mu_j|< dmu         (for \mu_i<std(\mu_i))
+% Similarity parameters dmu defined for region i and 
+% homogeneous neighbours j
+% \mu_i is  median(VR_i) or mean(VR_i)
+% |\mu_i-\mu_j|< dmu |\mu_i|, when  \mu_i>sqrt(2)*std(VR_i) 
+% |\mu_i-\mu_j|< (std(\mu_i)+std(\mu_j))/2, when  \mu_i<=sqrt(2)*std(VR_i)
 dmu = params.dmu;
 % non homogeneous neighbours vertices length to circumference max ratio
 thresHoldLength = params.thresHoldLength;
@@ -55,7 +57,8 @@ while ~stopMerge,
   else
 	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) mean(x));
   end
-	[Wdmu, VD.Sdmu] = getVDOp(VD, params.W, @(x) std(x));
+	% sqrt(2)*std(VR_i)
+	[Wsdmu, VD.Ssdmu] = getVDOp(VD, params.W, @(x) sqrt(2)*std(x));
 
   if 0, % diagnostic plot
     [vx,vy] = voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
@@ -86,13 +89,18 @@ while ~stopMerge,
       fprintf(1,'n=%4d HC=%5.2f (%d) mu=%8.3g\n', ...
 	            [VD.Nk{sk}, SHC(IST(VD.Nk{sk})), ihc', VD.Smu(IST(VD.Nk{sk}))]');
 	  end
-	  % 
+	  % median intensity difference to homogeneous neighbours |\mu_i-\mu_j| 
     err  =  abs(VD.Smu(isk) - VD.Smu(IST(VD.Nk{sk}(ihc)))'); 
+		% sum of stdev of intensity with homogeneous neighbouss
+    ssd  =  VD.Ssdmu(isk) + VD.Ssdmu(IST(VD.Nk{sk}(ihc)))'; 
 	  if 0,
 	    if ~isempty(err), 
         fprintf(1,'dmu |mu|=%7.2g\n', dmu*abs(VD.Smu(isk)));
 	      fprintf(1,'err=');
 	      fprintf(1,' %.2g', err); 
+        fprintf(1,'\n');
+	      fprintf(1,'ssd=');
+	      fprintf(1,' %.2g', ssd); 
         fprintf(1,'\n');
 	    end
 	  end
@@ -115,8 +123,8 @@ while ~stopMerge,
 			set(gca,'ylim',[min(VD.Sy(VD.Nk{sk}(:)))-2 max(VD.Sy(VD.Nk{sk}(:)))+2])
 	    %pause
     end
-	  if (abs(VD.Smu(isk))>VD.Sdmu(isk) && all(err < dmu*abs(VD.Smu(isk))))||...
-			 (abs(VD.Smu(isk))<=VD.Sdmu(isk) && all(err < dmu)), 
+    if (abs(VD.Smu(isk))>VD.Ssdmu(isk) && all(err<dmu*abs(VD.Smu(isk))))||...
+      (abs(VD.Smu(isk))<=VD.Ssdmu(isk) && all(err<ssd)), 
 	    % all homogeneous neighbours are less than dmu\% different
       % get vertices list of VR(sk)
 		  % unbounded VR not handled properly
