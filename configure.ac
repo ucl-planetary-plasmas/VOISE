@@ -34,9 +34,8 @@ dnl Generate Makefiles
 AC_CONFIG_FILES([Makefile matlab/Makefile share/Makefile])
 
 AC_CONFIG_FILES([package-demo.sh:package-demo.sh.in], [chmod +x package-demo.sh])
+AC_CONFIG_FILES([compile-webVOISE.sh:compile-webVOISE.sh.in], [chmod +x compile-webVOISE.sh])
 
 AC_CONFIG_FILES([matlab/start_VOISE.m:matlab/start_VOISE.m.in], [])
-AC_CONFIG_FILES([matlab/webDemoVOISE.m:matlab/webDemoVOISE.m.in], [])
-AC_CONFIG_FILES([matlab/webDemoVOISE2.m:matlab/webDemoVOISE2.m.in], [])
 
 AC_OUTPUT
