@@ -2,7 +2,7 @@ function plotHistHC(DVD, MVD, params)
 % function plotHistHC(DVD, MVD, params)
 
 %
-% $Id: plotHistHC.m,v 1.1 2010/09/01 11:13:56 patrick Exp $
+% $Id: plotHistHC.m,v 1.2 2010/09/03 17:13:29 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -19,6 +19,8 @@ function plotHistHC(DVD, MVD, params)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+
+global voise;
 
 MarkerSize = 4;
 if 0,
@@ -55,8 +57,9 @@ for I=1:length(idiv),
 	hold on 
 	bar(edges(2:end),divCumHist(1:end-1,I),'hist');
 	plot(edges(2:end),divCumHist(1:end-1,I),'-r');
-	plot(divChi(:,I),pctiles,'g-'); hold off; pause
-	if interpolate
+	plot(divChi(:,I),pctiles,'g-'); hold off; 
+	if voise.pause, pause, end
+	if interpolate,
 	divCumHist(:,I) = interp1(divChi(:,I), pctiles, edges, method{:});
 	divCumHist(~isfinite(divCumHist(:,I))&edges'<=edges(fix(end/2)),I) = 0;
 	divCumHist(~isfinite(divCumHist(:,I))&edges'>edges(fix(end/2)),I) = 100;
