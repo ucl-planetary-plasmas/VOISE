@@ -12,10 +12,10 @@ function webVOISE(VOISEconf)
 % thresHoldLength = 0.3
 % regMaxIter = 2
 % iFile = ../share/input/sampleint.fits
-% oFile = ../share/output/sampleint/
+% oDir = ../share/output/sampleint/
 % oMatFile = voise
 
-% $Id: webVOISE.m,v 1.1 2010/09/03 17:20:31 patrick Exp $
+% $Id: webVOISE.m,v 1.2 2010/09/03 17:32:41 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>

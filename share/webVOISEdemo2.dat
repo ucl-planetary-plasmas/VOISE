@@ -7,5 +7,5 @@ dmu = 0.2
 thresHoldLength = 0.3
 regMaxIter = 2
 iFile = ../share/input/sampleint.fits
-oFile = ../share/output/sampleint/
+oDIr = ../share/output/sampleint/
 oMatFile = voise
