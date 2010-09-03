@@ -1,0 +1,11 @@
+iNumSeeds = 12
+RNGiseed = 10
+dividePctile = 85
+d2Seeds = 7
+mergePctile = 50
+dmu = 0.2
+thresHoldLength = 0.3
+regMaxIter = 2
+iFile = ../share/input/north_proj.mat
+oFile = ../share/output/north_proj/
+oMatFile = voise
