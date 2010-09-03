@@ -1,0 +1,47 @@
+#! @SHELL@
+# -*- sh -*-
+# @configure_input@
+
+#
+# $Id: compile-webVOISE.sh.in,v 1.1 2010/09/03 17:21:42 patrick Exp $
+#
+# Copyright (c) 2010
+# Patrick Guio <p.guio@ucl.ac.uk>
+#
+# All Rights Reserved.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2.  of the License, or (at your
+# option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+# Public License for more details.
+#
+
+if [ -z "$1" ]; then
+  echo Usage: $0 mcc
+  exit 1
+else
+  MCC=$1
+fi
+
+
+FILES="startup start_VOISE addSeedsToVR addSeedToVD mergeVD benchVD parseArgs
+computeHCThreshold plotHistHC computeVDFast plotVOISE computeVD prctile
+divideVD printFigure exportfig printSeeds getCentroidSeed printSet
+getCentroidVD printVD getDefaultVOISEParams readVOISEconf printVOISEsetup
+getEquidistantPoint randomSeeds getVDOp removeSeedFromVD getVRclosure seedDist
+getVRvertices homogeneousCriteria updateNeighboursListsFromVoronoin initVD
+VOISE isXinW loadImage"
+
+$MCC -R 'nodesktop,nodisplay' -m -v webVOISE $FILES
+
+exit 0
+
+$MCC -R 'nodesktop,nodisplay' -m -v webDemoVOISE $FILES
+
+$MCC -R 'nodesktop,nodisplay' -m -v webDemoVOISE2 $FILES
+
