@@ -15,7 +15,7 @@ function webVOISE(VOISEconf)
 % oDir = ../share/output/sampleint/
 % oMatFile = voise
 
-% $Id: webVOISE.m,v 1.3 2010/09/04 14:04:31 patrick Exp $
+% $Id: webVOISE.m,v 1.4 2010/09/04 16:39:20 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,6 +32,9 @@ function webVOISE(VOISEconf)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+
+% disable warning about using handle graphics with -nojvm
+warning('off','MATLAB:HandleGraphics:noJVM')
 
 % load default VOISE parameters
 params = readVOISEconf(VOISEconf);
