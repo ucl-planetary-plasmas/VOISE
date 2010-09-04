@@ -15,7 +15,7 @@ function webVOISE(VOISEconf)
 % oDir = ../share/output/sampleint/
 % oMatFile = voise
 
-% $Id: webVOISE.m,v 1.2 2010/09/03 17:32:41 patrick Exp $
+% $Id: webVOISE.m,v 1.3 2010/09/04 14:04:31 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -62,5 +62,7 @@ fclose(fid);
 fid = fopen([params.oDir 'CVDneighbours.txt'],'w');
 printVD(fid, CVD);
 fclose(fid);
+
+close all;
 
 return
