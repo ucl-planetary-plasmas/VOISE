@@ -1,11 +1,16 @@
+# webVOISEdemo1 for mat-file
+# Initial phase parameters
 iNumSeeds = 12
 RNGiseed = 10
+# Dividing phase parameters
 dividePctile = 85
 d2Seeds = 7
+# Merging phase parameters
 mergePctile = 50
 dmu = 0.2
 thresHoldLength = 0.3
+# Regularisation phase parameters
 regMaxIter = 2
+# I/O parameters
 iFile = ../share/input/north_proj.mat
 oDir = ../share/output/north_proj/
-oMatFile = voise
