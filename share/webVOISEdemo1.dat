@@ -1,4 +1,5 @@
-# webVOISEdemo1 for mat-file
+# $Id: webVOISEdemo1.dat,v 1.4 2010/09/04 16:38:23 patrick Exp $
+# Demo configuration file for mat-file image north_proj.mat
 # Initial phase parameters
 iNumSeeds = 12
 RNGiseed = 10

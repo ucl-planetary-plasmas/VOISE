@@ -1,4 +1,5 @@
-# webVOISEdemo2 for fits-file
+# $Id: webVOISEdemo2.dat,v 1.5 2010/09/04 16:38:23 patrick Exp $
+# Demo configuration file for fits-file image sampleint.fits
 # Initial phase parameters
 iNumSeeds = 12
 RNGiseed = 10
