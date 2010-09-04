@@ -77,7 +77,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.6 2010/09/01 14:31:59 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.7 2010/09/04 06:58:35 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -154,6 +154,9 @@ params.logVOISE        = true;
 params.divideExport    = false;
 params.mergeExport     = false;
 params.regExport       = false;
+%
+% no pause at all
+params.pause           = false;
 %
 % Movie parameters
 params.movDiag         = false;
