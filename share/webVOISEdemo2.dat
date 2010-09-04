@@ -13,4 +13,4 @@ thresHoldLength = 0.3
 regMaxIter = 2
 # I/O parameters
 iFile = ../share/input/sampleint.fits
-oDIr = ../share/output/sampleint/
+oDir = ../share/output/sampleint/
