@@ -6,7 +6,7 @@ function start_VOISE
 
 % @configure_input@
 %
-% $Id: start_VOISE.m.in,v 1.3 2010/09/04 06:58:35 patrick Exp $
+% $Id: start_VOISE.m.in,v 1.4 2010/09/05 14:29:12 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -26,20 +26,12 @@ function start_VOISE
 
 global voise
 
-if ~isdeployed(),
-  voise.root    = '@abs_top_srcdir@';
-else
-  voise.root    = '..';
-end
+voise.root    = '@abs_top_srcdir@';
 voise.version = '@VERSION@';
 
 fprintf('Setting up VOISE -- version %s\n', voise.version);
 
-% Do not use addpath commands when compiled
-if ~isdeployed(),
-  addpath([voise.root '/matlab']);
-  addpath([voise.root '/matlab/limbFit']);
-  addpath([voise.root '/matlab/imageUtils']);
-end
-
+addpath([voise.root '/matlab']);
+addpath([voise.root '/matlab/limbFit']);
+addpath([voise.root '/matlab/imageUtils']);
 
