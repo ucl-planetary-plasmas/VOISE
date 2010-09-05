@@ -1,4 +1,4 @@
-% $Id: webVOISEdemo1.m,v 1.1 2010/09/03 17:20:31 patrick Exp $
+% $Id: webVOISEdemo1.m,v 1.2 2010/09/05 14:34:21 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -16,11 +16,6 @@
 % Public License for more details.
 %
 
-% miscellaneous information about VOISE to be setup
-global voise
-
-voise.root = '..';
-
-webVOISE([voise.root '/share/webVOISEdemo1.dat');
+webVOISE('../share/webVOISEdemo1.dat');
 
 quit

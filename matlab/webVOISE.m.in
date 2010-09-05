@@ -1,9 +1,22 @@
 function webVOISE(VOISEconf)
 % function webVOISE(VOISEconf)
-
-% $Id: webVOISE.m.in,v 1.1 2010/09/03 17:20:31 patrick Exp $
 %
-% Copyright (c) 2008 
+% VOISEconf is a name of a configuration file containing 
+% a list of parameters for VOISE. For example
+% iNumSeeds = 12
+% RNGiseed = 10
+% dividePctile = 80
+% d2Seeds = 2
+% mergePctile = 50
+% dmu = 0.2
+% thresHoldLength = 0.3
+% regMaxIter = 2
+% iFile = ../share/input/sampleint.fits
+% oDir = ../share/output/sampleint/
+
+% $Id: webVOISE.m.in,v 1.2 2010/09/05 14:34:21 patrick Exp $
+%
+% Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
 %
 % All Rights Reserved.
@@ -18,6 +31,15 @@ function webVOISE(VOISEconf)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+
+% Some set up variables
+global voise
+
+voise.root    = '..';
+voise.version = '@VERSION@';
+
+% disable warning about using handle graphics with -nojvm
+warning('off','MATLAB:HandleGraphics:noJVM');
 
 % load default VOISE parameters
 params = readVOISEconf(VOISEconf);
@@ -49,4 +71,6 @@ fid = fopen([params.oDir 'CVDneighbours.txt'],'w');
 printVD(fid, CVD);
 fclose(fid);
 
+close all;
 
+return
