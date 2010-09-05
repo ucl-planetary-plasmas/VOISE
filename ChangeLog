@@ -1,5 +1,22 @@
 2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* ChangeLog (1.72), package-webVOISE.sh.in (1.10):
+	  Added mcc directory in the package distro.  Small fixes to
+	  distro.
+
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.14):
+	  Added webVOISE.m configuration from template.  Removed mcc
+	  compilation script generation as it it replaced by mcc/Makefile.
+
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* mcc/Makefile (1.2):
+	  Added check targets.
+
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/webVOISE.m (1.5[DEAD]), matlab/webVOISE.m.in (1.2),
 	  matlab/webVOISEdemo1.m (1.2), matlab/webVOISEdemo2.m (1.2):
 	  Fixed typo in the demos.  Resuscitate template version of
@@ -73,7 +90,7 @@
 
 2010-09-03  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.9):
+	* package-webVOISE.sh.in (1.9):
 	  Modified to take package the new webVOISE.
 
 2010-09-03  Patrick Guio <p.guio@ucl.ac.uk>
@@ -148,7 +165,7 @@
 
 2010-09-01  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.8), matlab/plotHistHC.m (1.1):
+	* package-webVOISE.sh.in (1.8), matlab/plotHistHC.m (1.1):
 	  Added plotHistHC.m in the VOISE distribution.  Updated demo
 	  packaging script.
 
@@ -165,7 +182,7 @@
 
 2010-08-31  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* configure.ac (1.8), package-demo.sh.in (1.7),
+	* configure.ac (1.8), package-webVOISE.sh.in (1.7),
 	  matlab/webDemoVOISE2.m.in (1.1):
 	  Added webVOISE demo for test fits file provided by Tom Stallard.
 
@@ -286,7 +303,7 @@
 
 2010-04-14  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.6):
+	* package-webVOISE.sh.in (1.6):
 	  Added printSeeds.
 
 2010-04-14  Patrick Guio <p.guio@ucl.ac.uk>
@@ -317,7 +334,7 @@
 
 2010-04-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.4):
+	* package-webVOISE.sh.in (1.4):
 	  Fixed typo.
 
 2010-04-13  Patrick Guio <p.guio@ucl.ac.uk>
@@ -327,7 +344,7 @@
 
 2010-04-13  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.3):
+	* package-webVOISE.sh.in (1.3):
 	  Added loadImage.m.
 
 2010-04-13  Patrick Guio <p.guio@ucl.ac.uk>
@@ -339,7 +356,7 @@
 
 2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.2):
+	* package-webVOISE.sh.in (1.2):
 	  Distribute ChangeLog, README and AUTHORS files.
 
 2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
@@ -359,7 +376,7 @@
 
 2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
 
-	* package-demo.sh.in (1.1):
+	* package-webVOISE.sh.in (1.1):
 	  Shell script to package the Europlanet web demo.
 
 2010-03-24  Patrick Guio <p.guio@ucl.ac.uk>
