@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2010/09/05 10:21:33 patrick Exp $
+# $Id: Makefile,v 1.2 2010/09/05 14:35:23 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -17,13 +17,20 @@
 # Public License for more details.
 #
 
-# You can invoke this Makefile by just 'make' or using
+# You can invoke this Makefile by just typing
+# make
+# or 
 # make MATLABROOT=[directory where MATLAB is installed]
-# if the MATLABROOT is different from /usr/local/matlab/R2010a
+# default MATLABROOT is /usr/local/matlabR2010a
+# You can also invole the demo/check targets
+# make demo1
+# make demo2
+# make check
+# The target check makes demo1 and demo2
 
 default: webVOISE
 
-MATLABROOT = /usr/local/matlab/R2010a
+MATLABROOT = /usr/local/matlabR2010a
 
 MCC = $(MATLABROOT)/bin/mcc
 MCCFLAGS = -R '-nodisplay' -m -v
@@ -33,7 +40,6 @@ matlab_dir = ../matlab
 SRC = \
 $(matlab_dir)/webVOISE.m \
 $(matlab_dir)/startup.m \
-$(matlab_dir)/start_VOISE.m \
 $(matlab_dir)/addSeedsToVR.m \
 $(matlab_dir)/addSeedToVD.m \
 $(matlab_dir)/mergeVD.m \
@@ -47,7 +53,6 @@ $(matlab_dir)/computeVD.m \
 $(matlab_dir)/prctile.m \
 $(matlab_dir)/divideVD.m \
 $(matlab_dir)/printFigure.m \
-$(matlab_dir)/exportfig.m \
 $(matlab_dir)/printSeeds.m \
 $(matlab_dir)/getCentroidSeed.m \
 $(matlab_dir)/printSet.m \
@@ -74,9 +79,15 @@ webVOISE: $(SRC)
 	$(MCC) $(MCCFLAGS) $^ -o $@
 	-rm -f *.o*
 
-check: webVOISE
-	@echo "*********** testing webVOISE ***********"
+demo1: webVOISE
+	@echo "*********** testing webVOISE demo1 ***********"
+	run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
+
+demo2: webVOISE
+	@echo "*********** testing webVOISE demo2 ***********"
 	run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo2.dat
+
+check: demo1 demo2
 
 clean:
 	-rm -f *webVOISE* mccExcludedFiles.log readme.txt
