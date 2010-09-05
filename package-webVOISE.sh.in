@@ -3,7 +3,7 @@
 # @configure_input@
 
 #
-# $Id: package-webVOISE.sh.in,v 1.9 2010/09/03 17:22:16 patrick Exp $
+# $Id: package-webVOISE.sh.in,v 1.10 2010/09/05 14:38:53 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -23,9 +23,11 @@
 
 root=WebVOISE-@VERSION@
 rm -rf $root $root.*
-mkdir -p $root $root/matlab $root/share/input $root/share/output
+mkdir -p $root $root/matlab $root/mcc $root/share/input $root/share/output
 
-files="startup start_VOISE webVOISE webDemoVOISE webDemoVOISE2 \
+cp README ChangeLog AUTHORS $root
+
+files="startup webVOISE webVOISEdemo1 webVOISEdemo2 \
       getDefaultVOISEParams readVOISEconf VOISE \
       printVOISEsetup plotVOISE printFigure printSet printVD \
 			randomSeeds parseArgs computeVD initVD isXinW addSeedToVD \
@@ -40,11 +42,9 @@ for f in $files ; do
 	cp -p matlab/$f.m $root/matlab
 done
 
-cp README ChangeLog AUTHORS $root
-cp -p compile-webVOISE.sh $root/matlab
-cp -p $HOME/matlab/exportfig.m $root/matlab
+cp -p mcc/Makefile $root/mcc
 cp -p share/VOISEtiming.mat $root/share
-cp -p share/webVOISE*.dat $root/share
+cp -p share/webVOISEdemo*.dat $root/share
 cp -p share/input/north_proj.mat $root/share/input
 cp -p share/input/sampleint.fits $root/share/input
 

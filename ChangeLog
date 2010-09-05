@@ -1,3 +1,42 @@
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/webVOISE.m (1.5[DEAD]), matlab/webVOISE.m.in (1.2),
+	  matlab/webVOISEdemo1.m (1.2), matlab/webVOISEdemo2.m (1.2):
+	  Fixed typo in the demos.  Resuscitate template version of
+	  webVOISE.m and integrated start_VOISE functionalities to avoid
+	  deployed-testing.
+
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/start_VOISE.m.in (1.4):
+	  Removed deployed-testing as the function is not used in the
+	  web-deployed version.
+
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* compile-webVOISE.sh.in (1.3[DEAD]):
+	  Replaced by proper Makefile.
+
+2010-09-05  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* mcc/Makefile (1.1): Makefile to build standalone webVOISE
+
+2010-09-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/webVOISE.m (1.4):
+	  Disabled warning message about the use of HandleGraphics with
+	  -nojvm.
+
+2010-09-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/webVOISEdemo1.dat (1.4), share/webVOISEdemo2.dat (1.5):
+	  Added cvs information in header.
+
+2010-09-04  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/webVOISE.m (1.3):
+	  Close all opened figures to avoid some warnings when terminating.
+
 2010-09-04  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* share/webVOISEdemo1.dat (1.3), share/webVOISEdemo2.dat (1.3):
