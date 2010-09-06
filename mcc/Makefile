@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2010/09/05 14:35:23 patrick Exp $
+# $Id: Makefile,v 1.3 2010/09/06 19:01:02 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -28,16 +28,17 @@
 # make check
 # The target check makes demo1 and demo2
 
-default: webVOISE
+default: webVOISE verifyImage
 
 MATLABROOT = /usr/local/matlabR2010a
 
 MCC = $(MATLABROOT)/bin/mcc
 MCCFLAGS = -R '-nodisplay' -m -v
+MCCFLAGSNOJVM = -R '-nojvm,-nodisplay' -m -v
 
 matlab_dir = ../matlab
 
-SRC = \
+WEBVOISE_SRC = \
 $(matlab_dir)/webVOISE.m \
 $(matlab_dir)/startup.m \
 $(matlab_dir)/addSeedsToVR.m \
@@ -75,8 +76,17 @@ $(matlab_dir)/VOISE.m \
 $(matlab_dir)/isXinW.m \
 $(matlab_dir)/loadImage.m
 
-webVOISE: $(SRC)
+VERIFYIMAGE_SRC = \
+$(matlab_dir)/verifyImage.m \
+$(matlab_dir)/loadImage.m \
+$(matlab_dir)/startup.m
+
+webVOISE: $(WEBVOISE_SRC)
 	$(MCC) $(MCCFLAGS) $^ -o $@
+	-rm -f *.o*
+
+verifyImage: $(VERIFYIMAGE_SRC)
+	$(MCC) $(MCCFLAGSNOJVM) $^ -o $@
 	-rm -f *.o*
 
 demo1: webVOISE
@@ -90,4 +100,4 @@ demo2: webVOISE
 check: demo1 demo2
 
 clean:
-	-rm -f *webVOISE* mccExcludedFiles.log readme.txt
+	-rm -f *webVOISE* *verifyImage* mccExcludedFiles.log readme.txt
