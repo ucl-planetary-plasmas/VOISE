@@ -5,7 +5,7 @@ function verifyImage(filename)
 % contains an image that can be read in VOISE.
 
 %
-% $Id: verifyImage.m,v 1.2 2010/09/06 18:26:01 patrick Exp $
+% $Id: verifyImage.m,v 1.3 2010/09/06 19:00:29 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -27,7 +27,11 @@ function verifyImage(filename)
 warning('off','MATLAB:HandleGraphics:noJVM');
 
 % try to load the file as an image
-params.iFile = filename;
-params = loadImage(params);
+try
+  params.iFile = filename;
+  params = loadImage(params);
+catch me
+  error(me.message);
+end
 
 return
