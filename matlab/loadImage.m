@@ -2,7 +2,7 @@ function params = loadImage(params)
 % function params = loadImage(params)
 
 %
-% $Id: loadImage.m,v 1.3 2010/09/06 14:32:08 patrick Exp $
+% $Id: loadImage.m,v 1.4 2010/09/06 18:23:19 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -63,6 +63,10 @@ elseif strfind(params.iFile,'.fits'), % load fits-file
   params.Wlim = [min(params.W(:)) max(params.W(:))];
   params.xlim = [min(params.x) max(params.x)];
   params.ylim = [min(params.y) max(params.y)];
+
+else
+
+  error([params.iFile ' does not seem to be either a fits or a mat-file']);
 
 end
 
