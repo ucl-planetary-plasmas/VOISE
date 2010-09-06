@@ -2,7 +2,7 @@ function params = loadImage(params)
 % function params = loadImage(params)
 
 %
-% $Id: loadImage.m,v 1.4 2010/09/06 18:23:19 patrick Exp $
+% $Id: loadImage.m,v 1.5 2010/09/06 18:59:05 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -29,8 +29,7 @@ if strfind(params.iFile,'.mat'), % load mat-file
   try
     im = load(params.iFile);
   catch
-    error([params.iFile ' is not in your Matlab path\n' ...
-           'Try to run start_VOISE']);
+    error([params.iFile ' cannot be found or is not in the Matlab path']);
   end
   try
     % set image, axes and related
@@ -38,8 +37,8 @@ if strfind(params.iFile,'.mat'), % load mat-file
     params.x = im.x;
     params.y = im.y;
   catch
-    error([params.iFile ' does not appear to have correct content\n' ...
-           'Expected are Z(nr,nc), x(1,nc) and y(nr,1)']);
+    error([params.iFile ' does not have correct content' ...
+           sprintf('\nExpected content is Z(nr,nc), x(1,nc) and y(nr,1)')]);
   end
 
   % set colour and axes limits
@@ -52,7 +51,7 @@ elseif strfind(params.iFile,'.fits'), % load fits-file
   try
     im = fitsread(params.iFile);
   catch
-    error([params.iFile ' does not seem to exist']);
+    error([params.iFile ' cannot be found']);
   end
   % set image, axes and related
   params.W = im;
@@ -66,7 +65,7 @@ elseif strfind(params.iFile,'.fits'), % load fits-file
 
 else
 
-  error([params.iFile ' does not seem to be either a fits or a mat-file']);
+  error([params.iFile ' is not recognised as a fits- or a mat-file']);
 
 end
 
