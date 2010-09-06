@@ -2,7 +2,7 @@ function params = loadImage(params)
 % function params = loadImage(params)
 
 %
-% $Id: loadImage.m,v 1.2 2010/08/25 17:13:41 patrick Exp $
+% $Id: loadImage.m,v 1.3 2010/09/06 14:32:08 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,10 +32,15 @@ if strfind(params.iFile,'.mat'), % load mat-file
     error([params.iFile ' is not in your Matlab path\n' ...
            'Try to run start_VOISE']);
   end
-  % set image, axes and related
-  params.W = im.Z;
-  params.x = im.x;
-  params.y = im.y;
+  try
+    % set image, axes and related
+    params.W = im.Z;
+    params.x = im.x;
+    params.y = im.y;
+  catch
+    error([params.iFile ' does not appear to have correct content\n' ...
+           'Expected are Z(nr,nc), x(1,nc) and y(nr,1)']);
+  end
 
   % set colour and axes limits
   params.Wlim = [min(params.W(:)) max(params.W(:))];
