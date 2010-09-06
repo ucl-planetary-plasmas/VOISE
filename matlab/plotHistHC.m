@@ -2,7 +2,7 @@ function plotHistHC(DVD, MVD, params)
 % function plotHistHC(DVD, MVD, params)
 
 %
-% $Id: plotHistHC.m,v 1.3 2010/09/04 06:58:35 patrick Exp $
+% $Id: plotHistHC.m,v 1.4 2010/09/06 14:44:52 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -123,7 +123,7 @@ set(gca,'xlim',[0 1], 'ylim', [0 100])
 [legh,objh,outh,outma] = legend(divleg{:},merleg{:},'Location','SouthEast');
 %set(objh(1),'fontsize',9);
 
-exportfig(gcf,[params.oDir 'histhc1.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'histhc1.eps']);
 
 
 pos23 = [pos(1:2) pos(3) pos(4)];
@@ -151,7 +151,7 @@ end
 %set(objh(1),'fontsize',9);
 
 
-exportfig(gcf,[params.oDir 'histhc2.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'histhc2.eps']);
 
 clf
 h=subplot(212);
@@ -182,7 +182,7 @@ ylabel('card(S)')
 %set(objh(1),'fontsize',9);
 
 
-exportfig(gcf,[params.oDir 'histhc3.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'histhc3.eps']);
 
 set(gcf,'position',pos);
 return
@@ -191,5 +191,5 @@ return
 return
 
 %orient landscape
-exportfig(gcf,[params.oDir 'histhc.eps'],'color','cmyk');
+printFigure(gcf,[params.oDir 'histhc.eps']);
 
