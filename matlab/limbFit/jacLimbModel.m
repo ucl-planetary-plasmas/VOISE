@@ -1,8 +1,8 @@
 function dr = jacLimbModel(t,r,p,dp,func)
-% function dr = jacLimbModellimb(t,r,p,dp,func)
+% function dr = jacLimbModel(t,r,p,dp,func)
 
 %
-% $Id: jacLimbModel.m,v 1.1 2009/10/16 13:55:35 patrick Exp $
+% $Id: jacLimbModel.m,v 1.2 2010/09/07 17:58:42 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
