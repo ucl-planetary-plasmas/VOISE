@@ -2,7 +2,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sls)
 % function fit = fitLimb2(fit,Sx,Sy,Sls)
 
 %
-% $Id: fitLimb2.m,v 1.1 2010/09/07 18:00:14 patrick Exp $
+% $Id: fitLimb2.m,v 1.2 2010/09/08 15:23:36 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -43,12 +43,26 @@ else
 end
 
 % column vec of initial parameters
-p0       = [fit.p0; T*pi/180];
+p0       = [fit.p0(:); T(:)*pi/180];
+
+if length(fit.p0)==3,
+  [xc,yc,R,a] = circfit(Sx,Sy);
+	fprintf(1,'** circfit Xc(%.1f,%.1f) R=%.1f\n', xc,yc,R);
+	Par = CircleFitByTaubin([Sx(:),Sy(:)]);
+	fprintf(1,'** circfit Xc(%.1f,%.1f) R=%.1f\n', Par);
+elseif length(fit.p0)==5,
+  p = ellipse_fit(Sx, Sy);
+	fprintf(1,'** ellipse_fit        Xc(%.1f,%.1f) a=%.1f b=%.1f alpha=%.0f\n', p);
+	[A,p] = EllipseFitByTaubin([Sx(:),Sy(:)]);
+	fprintf(1,'** EllipseFitByTaubin Xc(%.1f,%.1f) a=%.1f b=%.1f alpha=%.0f\n', p);
+	[A,p] = EllipseDirectFit([Sx(:),Sy(:)]);
+	fprintf(1,'** EllipseDirectFit   Xc(%.1f,%.1f) a=%.1f b=%.1f alpha=%.0f\n', p);
+end
 
 % leasqr control parameters
 stol     = fit.stol;
 niter    = fit.niter;
-dp       = [fit.dp, ones(1,m)] ;
+dp       = [fit.dp(:); ones(m,1)] ;
 fracprec = [fit.fracprec; zeros(m,1)];
 fracchg  = [fit.fracchg; Inf*ones(m,1)];
 options  = [fracprec, fracchg];
