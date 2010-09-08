@@ -8,7 +8,7 @@ spiceKernelsPath = '/home/patrick/research/codes/spice/data/';
 % Load orientation data for planets, natural 
 % satellites, the Sun, and selected asteroids
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
-cspice_furnsh([spiceKernelsPath 'pck00008.tpc']);
+cspice_furnsh([spiceKernelsPath 'pck00009.tpc']);
 
 radii = cspice_bodvrd(planetName,'RADII',3);
 

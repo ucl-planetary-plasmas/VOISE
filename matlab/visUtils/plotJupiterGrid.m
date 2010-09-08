@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, TimeUT, CML)
 % function plotJupiterGrid(params, p, TimeUT, CML)
 
 %
-% $Id: plotJupiterGrid.m,v 1.1 2009/11/13 14:54:34 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.2 2010/09/08 14:36:35 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -30,7 +30,7 @@ dlon = 20;
 
 % Pixel coordinates for planet centre
 PCX = p(1); 
-PCY = p(3);
+PCY = p(2);
 
 % Pixel size in arcsec (1.5 is correction from Makenzie)
 PIXSIZE = 0.12/1.5; 
@@ -43,7 +43,7 @@ epoch = ['2008 08 04 ' TimeUT(1:2) ' ' TimeUT(3:4) ' 00'];
 x = PIXSIZE*(params.x-PCX);
 y = PIXSIZE*(params.y-PCY);
 
-imagesc(x, y, params.W);
+imagesc(x, y, params.Wo);
 axis xy;
 axis equal
 axis tight
