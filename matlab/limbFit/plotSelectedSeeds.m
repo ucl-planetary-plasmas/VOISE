@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.3 2009/11/01 22:04:25 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.4 2010/09/08 15:26:10 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,41 +32,54 @@ LSmax = fit.LSmax;
 Rmin  = fit.Rmin;
 Rmax  = fit.Rmax;
 
-%imagesc(params.xlim,params.ylim,params.Wo);
+if 0,
+imagesc(params.xlim,params.ylim,params.Wo);
 imagesc(params.xlim,params.ylim,params.W);
 axis xy
 axis equal
 axis tight
 hold on
+end
 
-scatter(Sx(iSelect),Sy(iSelect),LS(iSelect),LS(iSelect))
-set(gca,'xlim',params.xlim,'ylim',params.ylim);
+scatter(Sx(iSelect),Sy(iSelect),LS(iSelect).^2,LS(iSelect),'filled')
+hold on
 
 [vx,vy] = voronoi(Sx, Sy);
 plot(vx,vy,'-k','LineWidth',0.5)
+axis equal
+set(gca,'xlim',params.xlim,'ylim',params.ylim);
+box on
+if 0
 colorbar
+end
 
 
 ts = linspace(-180,180,50);
 
 if length(p)==5,
+  rnom = ellipse(ts,p(:));
   rmin = ellipse(ts,p(:).*[1;1;Rmin;Rmin;1]);
   rmax = ellipse(ts,p(:).*[1;1;Rmax;Rmax;1]);
 elseif length(p)==3,
+  rnom = circle(ts,p(:));
   rmin = circle(ts,p(:).*[1;1;Rmin]);
   rmax = circle(ts,p(:).*[1;1;Rmax]);
 end
 
-plot(rmin.*cosd(ts), rmin.*sind(ts), 'k-', ...
-     rmax.*cosd(ts), rmax.*sind(ts), 'k-');
+h = plot(rnom.*cosd(ts), rnom.*sind(ts), 'r-', ...
+     rmin.*cosd(ts), rmin.*sind(ts), 'r-', ...
+     rmax.*cosd(ts), rmax.*sind(ts), 'r-');
+set(h(2:3), 'LineWidth',2);
 
 if length(p) == 3,
 
-  title(sprintf('d_m=%d X_c=(%.0f,%.0f) R_0=%.0f',LSmax,p));
+  title(sprintf('d_m=%d C=(%.0f,%.0f) R=%.0f \\epsilon=(%.1g,%.1g)',...
+        LSmax,p,Rmin,Rmax));
 
 elseif length(p) == 5,
 
-  title(sprintf('LS_M=%d C=(%.0f,%.0f) a=%.0f b=%.0f \\theta=%.0f',LSmax,p));
+  title(sprintf(['d_m=%d C=(%.0f,%.0f) a=%.0f b=%.0f \\alpha=%.0f ' ...
+                '\\epsilon=(%.1g,%.1g)'], LSmax,p,Rmin,Rmax));
 
 end
 
