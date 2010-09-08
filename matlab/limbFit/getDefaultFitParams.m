@@ -2,7 +2,7 @@ function fit = getDefaultFitParams(p0,polePos)
 % function fit = getDefaultFitParams(p0,polePos)
 
 %
-% $Id: getDefaultFitParams.m,v 1.3 2009/12/02 21:37:19 patrick Exp $
+% $Id: getDefaultFitParams.m,v 1.4 2010/09/08 15:24:19 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -35,10 +35,10 @@ end
 
 % scalar tolerance on fractional improvement in
 % scalar sum of squares = sum((wt.*(y-f))^2); 
-fit.stol           = 1e-6;
+fit.stol           = 1e-15;
 
 % scalar maximum number of iterations
-fit.niter          = 50;
+fit.niter          = 100;
 
 % desired fractional precision in parameter estimates
 fit.fracprec       = zeros(length(p0), 1);
