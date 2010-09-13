@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.5 2010/09/08 14:36:35 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.6 2010/09/13 10:34:02 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -126,6 +126,7 @@ else
 fprintf(1,'Epoch                         = %s\n', cspice_et2utc(et,'C',0));
 fprintf(1,'Sub-Earth latitude, longitude = %12.4f, %12.4f\n', selat, selong);
 fprintf(1,'Sub-Solar latitude, longitude = %12.4f, %12.4f\n', sslat, sslong);
+fprintf(1,'Earth-Jupiter distance = %.4f AU (1 AU = %.3f km)\n',sedistAU,AU2km);
 end
 
 %  It's always good form to unload kernels after use,
