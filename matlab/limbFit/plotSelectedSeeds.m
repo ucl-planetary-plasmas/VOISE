@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.4 2010/09/08 15:26:10 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.5 2010/09/13 10:36:13 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -73,13 +73,13 @@ set(h(2:3), 'LineWidth',2);
 
 if length(p) == 3,
 
-  title(sprintf('d_m=%d C=(%.0f,%.0f) R=%.0f \\epsilon=(%.1g,%.1g)',...
+  title(sprintf('d_m=%d C=(%.0f,%.0f) R=%.0f \\epsilon=(%.2f,%.2f)',...
         LSmax,p,Rmin,Rmax));
 
 elseif length(p) == 5,
 
   title(sprintf(['d_m=%d C=(%.0f,%.0f) a=%.0f b=%.0f \\alpha=%.0f ' ...
-                '\\epsilon=(%.1g,%.1g)'], LSmax,p,Rmin,Rmax));
+                '\\epsilon=(%.2f,%.2f)'], LSmax,p,Rmin,Rmax));
 
 end
 
