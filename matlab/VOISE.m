@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.15 2010/04/14 09:26:12 patrick Exp $
+% $Id: VOISE.m,v 1.16 2010/09/13 10:35:38 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -47,7 +47,7 @@ end
 ns       = params.iNumSeeds;
 
 % init seed of Mersenne-Twister RNG
-rand('twister', params.RNGiseed);
+RandStream.setDefaultStream(RandStream('mt19937ar','seed',params.RNGiseed));
 
 if isa(params.initSeeds, 'char') | isa(params.initSeeds, 'function_handle'),
 	[initSeeds, msg] = fcnchk(params.initSeeds);
