@@ -2,7 +2,7 @@ function fit = fitLimb(fit,Sx,Sy,Sls)
 % function fit = fitLimb(fit,Sx,Sy,Sls)
 
 %
-% $Id: fitLimb.m,v 1.1 2009/10/16 14:02:32 patrick Exp $
+% $Id: fitLimb.m,v 1.2 2010/09/14 08:35:39 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -84,10 +84,10 @@ fit.chi2   = chi2;     % reduced chi2 statistic
 
 fprintf(1,'status %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, chi2);
 if length(p) == 5,
-  fprintf(1,'params est.: Xc=(%.1f,%.1f) a=%.1f b=%.1f tilt=%.0f\n', p);
-  fprintf(1,'stdev  est.: Xc=(%.1g,%.1g) a=%.1g b=%.1g tilt=%.1g\n', psd)
+  fprintf(1,'params estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', p);
+  fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', psd)
 elseif length(p) == 3,
-  fprintf(1,'params est.: Xc=(%.1g,%.1g) R0=%.1f\n', p);
-  fprintf(1,'stdev  est.: Xc=(%.1g,%.1g) R0=%.1f\n', psd)
+  fprintf(1,'params estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', p);
+  fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', psd)
 end
 

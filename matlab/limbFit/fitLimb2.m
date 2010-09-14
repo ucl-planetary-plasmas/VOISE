@@ -2,7 +2,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sls)
 % function fit = fitLimb2(fit,Sx,Sy,Sls)
 
 %
-% $Id: fitLimb2.m,v 1.2 2010/09/08 15:23:36 patrick Exp $
+% $Id: fitLimb2.m,v 1.3 2010/09/14 08:35:39 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -47,16 +47,16 @@ p0       = [fit.p0(:); T(:)*pi/180];
 
 if length(fit.p0)==3,
   [xc,yc,R,a] = circfit(Sx,Sy);
-	fprintf(1,'** circfit Xc(%.1f,%.1f) R=%.1f\n', xc,yc,R);
+	fprintf(1,'* circfit            Xc(%8.1f,%8.1f) R=%8.1f\n', xc,yc,R);
 	Par = CircleFitByTaubin([Sx(:),Sy(:)]);
-	fprintf(1,'** circfit Xc(%.1f,%.1f) R=%.1f\n', Par);
+	fprintf(1,'* CircleFitByTaubin  Xc(%8.1f,%8.1f) R=%8.1f\n', Par);
 elseif length(fit.p0)==5,
   p = ellipse_fit(Sx, Sy);
-	fprintf(1,'** ellipse_fit        Xc(%.1f,%.1f) a=%.1f b=%.1f alpha=%.0f\n', p);
+	fprintf(1,'* ellipse_fit        Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
 	[A,p] = EllipseFitByTaubin([Sx(:),Sy(:)]);
-	fprintf(1,'** EllipseFitByTaubin Xc(%.1f,%.1f) a=%.1f b=%.1f alpha=%.0f\n', p);
+	fprintf(1,'* EllipseFitByTaubin Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
 	[A,p] = EllipseDirectFit([Sx(:),Sy(:)]);
-	fprintf(1,'** EllipseDirectFit   Xc(%.1f,%.1f) a=%.1f b=%.1f alpha=%.0f\n', p);
+	fprintf(1,'* EllipseDirectFit   Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
 end
 
 % leasqr control parameters
@@ -108,10 +108,10 @@ fit.chi2   = chi2;     % reduced chi2 statistic
 
 fprintf(1,'status %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, chi2);
 if length(fit.p0) == 5,
-  fprintf(1,'params est.: Xc=(%.1f,%.1f) a=%.1f b=%.1f tilt=%.0f\n', p(1:5));
-  fprintf(1,'stdev  est.: Xc=(%.1g,%.1g) a=%.1g b=%.1g tilt=%.1g\n', psd(1:5))
+  fprintf(1,'params estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', p(1:5));
+  fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', psd(1:5))
 elseif length(fit.p0) == 3,
-  fprintf(1,'params est.: Xc=(%.1g,%.1g) R0=%.1f\n', p(1:3));
-  fprintf(1,'stdev  est.: Xc=(%.1g,%.1g) R0=%.1f\n', psd(1:3))
+  fprintf(1,'params estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', p(1:3));
+  fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', psd(1:3))
 end
 
