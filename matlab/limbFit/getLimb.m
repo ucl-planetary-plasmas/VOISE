@@ -2,7 +2,7 @@ function fit = getLimb(VD,params,fit)
 % function fit = getLimb(VD,params,fit)
 
 %
-% $Id: getLimb.m,v 1.1 2009/10/16 16:38:05 patrick Exp $
+% $Id: getLimb.m,v 1.2 2010/09/14 08:17:00 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -47,5 +47,5 @@ fit = fitLimb(fit,Sx(fit.iSelect),Sy(fit.iSelect),Sls(fit.iSelect));
 fit.pxc = (fit.p(1)-min(x))/(max(x)-min(x))*(VD.xM-VD.xm)+VD.xm;
 fit.pyc = (fit.p(2)-min(y))/(max(y)-min(y))*(VD.yM-VD.ym)+VD.ym;
 
-fprintf(1,'limb centre %f %f [pixels]\n', fit.pxc,fit.pyc);
+fprintf(1,'limb centre %8.2f, %8.2f [pixels]\n', fit.pxc,fit.pyc);
 
