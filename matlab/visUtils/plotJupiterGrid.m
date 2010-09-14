@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.3 2010/09/13 10:34:03 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.4 2010/09/14 08:36:21 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -43,7 +43,9 @@ axis equal
 axis tight
 xlabel('x [arcsec]')
 ylabel('y [arcsec]')
-title(sprintf('[%.2f,%.2f]x[%.2f,%.2f] [arcsec]',min(x),max(x),min(y),max(y)));
+%title(sprintf('[%.2f,%.2f]x[%.2f,%.2f] [arcsec]',min(x),max(x),min(y),max(y)));
+%title(sprintf('%.2fx%.2f [arcsec]',max(x)-min(x),max(y)-min(y)));
+title(sprintf('epoch %s',epoch));
 
 tic
 if 0,
