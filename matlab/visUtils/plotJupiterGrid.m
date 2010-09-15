@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.4 2010/09/14 08:36:21 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.5 2010/09/15 21:22:07 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,6 +31,7 @@ dlon = 20;
 % Pixel coordinates for planet centre
 PCX = p(1); 
 PCY = p(2);
+fprintf(1,'Planet center %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
 % Draw the image data, on a scale of arcsec
 % Note that PIXSIZE is the size of one side of a square pixel in arcsec
