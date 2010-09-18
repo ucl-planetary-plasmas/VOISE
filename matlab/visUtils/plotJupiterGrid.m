@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.7 2010/09/18 11:35:36 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.8 2010/09/18 17:19:04 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -50,8 +50,11 @@ else
   %A = a/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
   b = B*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
   %B = b/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
+	if 1
   ecc = sqrt(1-(b/a)^2);
+	else
   ecc = e;
+	end
   semiMaj_km = a;
   fprintf(1,'Semi-major axis = %.0f km Eccentricity = %.5f\n',semiMaj_km, ecc);
 end
