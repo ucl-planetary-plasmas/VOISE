@@ -2,7 +2,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sls)
 % function fit = fitLimb2(fit,Sx,Sy,Sls)
 
 %
-% $Id: fitLimb2.m,v 1.3 2010/09/14 08:35:39 patrick Exp $
+% $Id: fitLimb2.m,v 1.4 2010/09/18 18:33:55 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -114,4 +114,11 @@ elseif length(fit.p0) == 3,
   fprintf(1,'params estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', p(1:3));
   fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', psd(1:3))
 end
+
+phis = p(length(fit.p0)+1:end);
+fprintf(1,'                     phi mean, min, max     %8.4f %8.4f %8.4f\n', ...
+        mean(phis), min(phis), max(phis) );
+phis = psd(length(fit.p0)+1:end);
+fprintf(1,'                    dphi mean, min, max     %8.4f %8.4f %8.4f\n', ...
+        mean(phis), min(phis), max(phis) );
 
