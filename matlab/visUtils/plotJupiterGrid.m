@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.6 2010/09/17 17:39:43 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.7 2010/09/18 11:35:36 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -36,24 +36,24 @@ if length(p)==2,
   semiMaj_km = [];
 	ecc = [];
 else
-A = p(3);
-if length(p)==3,
-  B = p(3);
-elseif length(p)==5,
-  B = p(4);
-end
-% calculation of the subEarth and subSolar latitudes and longitudes
-[sslat,sslon,selat,selon,sedistAU,AU_km] = computeJupiterAxis(epoch);
-[a,b,e] = getPlanetGeometry('Jupiter');
-% rad to arcsec (180/pi)*3600
-a = A*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
-%A = a/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
-b = B*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
-%B = b/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
-ecc = sqrt(1-(b/a)^2);
-ecc = e;
-semiMaj_km = a;
-fprintf(1,'Semi-major axis = %.0f km Eccentricity = %.5f\n',semiMaj_km, ecc);
+  A = p(3);
+  if length(p)==3,
+    B = p(3);
+  elseif length(p)==5,
+    B = p(4);
+  end
+  % calculation of the subEarth and subSolar latitudes and longitudes
+  [sslat,sslon,selat,selon,sedistAU,AU_km] = computeJupiterAxis(epoch);
+  [a,b,e] = getPlanetGeometry('Jupiter');
+  % rad to arcsec (180/pi)*3600
+  a = A*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
+  %A = a/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
+  b = B*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
+  %B = b/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
+  ecc = sqrt(1-(b/a)^2);
+  ecc = e;
+  semiMaj_km = a;
+  fprintf(1,'Semi-major axis = %.0f km Eccentricity = %.5f\n',semiMaj_km, ecc);
 end
 
 
@@ -77,7 +77,7 @@ tic
 if 0,
   drawPlanetGridOld(epoch,CML,dlat,dlon);
 else,
-  drawPlanetGrid(epoch,CML,dlat,dlon);
+  drawPlanetGrid(epoch,CML,dlat,dlon,semiMaj_km,ecc);
 end
 toc
 
