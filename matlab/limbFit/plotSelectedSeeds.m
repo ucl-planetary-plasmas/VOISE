@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.5 2010/09/13 10:36:13 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.6 2010/09/18 18:32:11 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -49,7 +49,7 @@ plot(vx,vy,'-k','LineWidth',0.5)
 axis equal
 set(gca,'xlim',params.xlim,'ylim',params.ylim);
 box on
-if 0
+if 1
 colorbar
 end
 
@@ -66,6 +66,8 @@ elseif length(p)==3,
   rmax = circle(ts,p(:).*[1;1;Rmax]);
 end
 
+plot(p(1), p(2), 'rx','MarkerSize',10);
+
 h = plot(rnom.*cosd(ts), rnom.*sind(ts), 'r-', ...
      rmin.*cosd(ts), rmin.*sind(ts), 'r-', ...
      rmax.*cosd(ts), rmax.*sind(ts), 'r-');
@@ -73,13 +75,14 @@ set(h(2:3), 'LineWidth',2);
 
 if length(p) == 3,
 
-  title(sprintf('d_m=%d C=(%.0f,%.0f) R=%.0f \\epsilon=(%.2f,%.2f)',...
-        LSmax,p,Rmin,Rmax));
+  title(sprintf('L_M=%d C(%.0f,%.0f) R=%.0f \\epsilon(%.2f,%.2f) card(S)=%d',...
+        LSmax,p,Rmin,Rmax,length(iSelect)));
 
 elseif length(p) == 5,
 
-  title(sprintf(['d_m=%d C=(%.0f,%.0f) a=%.0f b=%.0f \\alpha=%.0f ' ...
-                '\\epsilon=(%.2f,%.2f)'], LSmax,p,Rmin,Rmax));
+  title(sprintf(['L_M=%d C(%.0f,%.0f) a=%.0f b=%.0f \\alpha=%.0f ' ...
+                '\\epsilon(%.2f,%.2f) card(S)=%d'], ...
+								LSmax,p,Rmin,Rmax,length(iSelect)));
 
 end
 
