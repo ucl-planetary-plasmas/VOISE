@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.8 2010/09/18 17:19:04 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.9 2010/09/19 11:48:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -47,9 +47,9 @@ else
   [a,b,e] = getPlanetGeometry('Jupiter');
   % rad to arcsec (180/pi)*3600
   a = A*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
-  %A = a/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
-  b = B*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
-  %B = b/(sedistAU*AU_km)*(180/pi)*3600/PIXSIZE; % in pixel
+  bp = B*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
+	b = bp * sqrt((1-e^2)/(1-e^2*cos(pi/180*selat)^2)); % in km
+	fprintf(1,'b = %.0f bp = %.0f\n', b, bp);
 	if 1
   ecc = sqrt(1-(b/a)^2);
 	else
