@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.9 2010/09/19 11:48:17 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.10 2010/09/28 17:42:52 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,6 +32,7 @@ PCX = p(1);
 PCY = p(2);
 fprintf(1,'Planet center %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
+p
 if length(p)==2,
   semiMaj_km = [];
 	ecc = [];
@@ -49,7 +50,7 @@ else
   a = A*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
   bp = B*(sedistAU*AU_km)/(180/pi)/3600*PIXSIZE; % in km
 	b = bp * sqrt((1-e^2)/(1-e^2*cos(pi/180*selat)^2)); % in km
-	fprintf(1,'b = %.0f bp = %.0f\n', b, bp);
+	fprintf(1,'a = %.0f b = %.0f bp = %.0f\n', a, b, bp);
 	if 1
   ecc = sqrt(1-(b/a)^2);
 	else
