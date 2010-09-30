@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.7 2010/09/27 17:03:44 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.8 2010/09/30 18:18:13 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -41,8 +41,21 @@ axis tight
 hold on
 end
 
-scatter(Sx(iSelect),Sy(iSelect),LS(iSelect).^2,LS(iSelect),'filled')
+clf
 hold on
+dx = params.xlim(end)-params.xlim(1);
+dy = params.ylim(end)-params.ylim(1);
+dr = sqrt(dx^2+dy^2);
+if ~isempty(fit.Tlim),
+  for i=1:length(fit.Tlim),
+	  x0 = p(1); y0 = p(2);
+		x1 = x0+dr*cosd(fit.Tlim{i}(1)); y1 = y0+dr*sind(fit.Tlim{i}(1));
+		x2 = x0+dr*cosd(fit.Tlim{i}(2)); y2 = y0+dr*sind(fit.Tlim{i}(2));
+		fill([x0;x1;x2],[y0;y1;y2],0.7*[1,1,1]);
+	end
+end
+
+scatter(Sx(iSelect),Sy(iSelect),LS(iSelect).^2,LS(iSelect),'filled')
 
 [vx,vy] = voronoi(Sx, Sy);
 plot(vx,vy,'-k','LineWidth',0.5)
@@ -75,17 +88,43 @@ set(h(2:3), 'LineWidth',2);
 
 if length(p) == 3,
 
-  h=title(sprintf('L_M=%d C(%.0f,%.0f) R=%.0f \\epsilon(%.2f,%.2f) card(S)=%d',...
-        LSmax,p,Rmin,Rmax,length(iSelect)));
+  h=title(sprintf('L_M=%d C(%.1f,%.1f) R=%.1f \\epsilon(%.2f,%.2f)',...
+        LSmax,p,Rmin,Rmax));
 
 elseif length(p) == 5,
 
-  h=title(sprintf(['L_M=%d C(%.0f,%.0f) a=%.0f b=%.0f \\alpha=%.0f ' ...
-                '\\epsilon(%.2f,%.2f) card(S)=%d'], ...
-								LSmax,p,Rmin,Rmax,length(iSelect)));
+  h=title(sprintf(['L_M=%d C(%.1f,%.1f) a=%.1f b=%.1f \\alpha=%.0f ' ...
+                '\\epsilon(%.2f,%.2f)'], ...
+								LSmax,p,Rmin,Rmax));
 
 end
-set(h,'FontSize',12);
+fontsize = get(h,'FontSize');
+
+text(0.02,0.98,sprintf('card(S)=%d',length(iSelect)),...
+     'Units','Normalized',...
+     'VerticalAlignment','top','HorizontalAlignment','left', ...
+		 'FontSize',fontsize,'Fontweight','normal',...
+		 'BackgroundColor', 0.7*[1,1,1])
+
+if ~isempty(fit.Tlim),
+  for i=1:length(fit.Tlim),
+	  x0 = p(1); y0 = p(2);
+		if length(p) == 3, dr = 0.8*p(3); end
+		if length(p) == 5, dr = 0.4*(p(3)+p(4)); end
+		x1 = x0+dr*cosd(fit.Tlim{i}(1)); y1 = y0+dr*sind(fit.Tlim{i}(1));
+		text(x1,y1,sprintf('%d^\\circ',fit.Tlim{i}(1)),...
+         'VerticalAlignment','bottom','HorizontalAlignment','center', ...
+				 'Rotation',fit.Tlim{i}(1)-sign(fit.Tlim{i}(1))*90, ...
+		     'FontSize',12,'Fontweight','normal',...
+				 'BackgroundColor', 0.9*[1,1,1]);
+		x2 = x0+dr*cosd(fit.Tlim{i}(2)); y2 = y0+dr*sind(fit.Tlim{i}(2));
+		text(x2,y2,sprintf('%d^\\circ',fit.Tlim{i}(2)),...
+         'VerticalAlignment','bottom','HorizontalAlignment','center', ...
+				 'Rotation',fit.Tlim{i}(2)-sign(fit.Tlim{i}(2))*90, ...
+		     'FontSize',12,'Fontweight','normal',...
+				 'BackgroundColor', 0.9*[1,1,1]);
+	end
+end
 
 hold off
 

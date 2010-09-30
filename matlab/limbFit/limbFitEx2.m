@@ -8,7 +8,7 @@ function [varargout] = limbFitEx2(action,varargin)
 % [params,fit1,fit2] = limbFitEx2('limbFit')
 
 %
-% $Id: limbFitEx2.m,v 1.3 2009/12/02 21:46:05 patrick Exp $
+% $Id: limbFitEx2.m,v 1.4 2010/09/30 18:18:13 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -122,6 +122,7 @@ switch lower(action),
      % initial guess
 		 if 0
 		   p0 = [0 0 300];
+			 Tpole = -90;
      else
 		   imagesc(params.x,params.y,params.W);
 			 axis xy
@@ -129,13 +130,15 @@ switch lower(action),
 			 axis tight
 		   p0 = getCircleParams();
 		   [px, py] = getPolePos();
+			 Tpole = 180/pi*atan2(py, px);
      end
 		 fit1 = getDefaultFitParams(p0,[px,py]);
 		 fit1.LSmax = 16;
 		 fit1.Rmin = 0.9;
 		 fit1.Rmax = 1.1;
 		 fit1.VD = vdtype;
-		 fit1.selectAngles = @ex2Angles;
+		 %fit1.selectAngles = @ex2Angles;
+		 fit1.Tlim = {[Tpole-20,Tpole+20]};
 		 % allow command line modifications
 		 fit1 = parseArgs(fit1, varargin{:});
 
@@ -147,7 +150,8 @@ switch lower(action),
 		 fit2.Rmin = 0.95;
 		 fit2.Rmax = 1.05;
 		 fit2.VD = vdtype;
-		 fit2.selectAngles = @ex2Angles;
+		 %fit2.selectAngles = @ex2Angles;
+		 fit2.Tlim = {[Tpole-20,Tpole+20]};
 
 		 % allow command line modifications
 		 fit2 = parseArgs(fit2, varargin{:});

@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.5 2009/12/02 22:25:17 patrick Exp $
+% $Id: selectSeeds.m,v 1.6 2010/09/30 18:18:13 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -54,8 +54,23 @@ Y = -ya*(Sx-xc) + xa*(Sy-yc);
 % canonical form of ellipse (X/a)^2+(Y/b)^2=1
 ellipseEq = X.^2/a^2+Y.^2/b^2;
 
-% angle
-T = 180/pi*atan2(Y./b, X./a);
+% selection of seeds criteria 
+%iSelect = find(Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2);
+iSelect = (Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2);
+fprintf(1,'Total number of seeds: %d\n', length(Sls));
+fprintf(1,'Number Seeds on limb : %d\n', length(Sls(find(iSelect))))
+
+% finally angle selection
+T = 180/pi*atan2(Y, X);
+
+if ~isempty(fit.Tlim),
+  for i=1:length(fit.Tlim),
+	  iSelect = iSelect & (T < fit.Tlim{i}(1) | T > fit.Tlim{i}(2) );
+    fprintf(1,'Number Seeds on limb : %d\n', length(Sls(find(iSelect))));
+	end
+end
+
+if 0,
 % if pole position is not empty calculate the polar angle to the pole
 % and substract that value to the polar angle to the seeds
 if ~isempty(fit.polePos),
@@ -66,19 +81,13 @@ end
 if isa(fit.selectAngles,'char') | isa(fit.selectAngles,'function_handle'),
       [selectAngles, msg] = fcnchk(fit.selectAngles);
 end
-
-% selection of seeds criteria 
-iSelect = find(Sls <= LSmax & ellipseEq > Rmin^2 & ellipseEq < Rmax^2);
-fprintf(1,'Total number of seeds: %d\n', length(Sls));
-fprintf(1,'Number Seeds on limb : %d\n', length(iSelect))
-
-% finally angle selection
 withinAngularSpec = selectAngles(T(iSelect));
 if any(withinAngularSpec == false),
   iSelect(withinAngularSpec == false) = [];
   fprintf(1,'Number Seeds on limb : %d\n', length(iSelect))
 end
+end
 
 % embed selected seeds in fit structure
-fit.iSelect = iSelect;
+fit.iSelect = find(iSelect);
 

@@ -2,7 +2,7 @@ function fit = getDefaultFitParams(p0,polePos)
 % function fit = getDefaultFitParams(p0,polePos)
 
 %
-% $Id: getDefaultFitParams.m,v 1.5 2010/09/18 18:33:11 patrick Exp $
+% $Id: getDefaultFitParams.m,v 1.6 2010/09/30 18:18:13 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,20 +22,12 @@ function fit = getDefaultFitParams(p0,polePos)
 
 % initial parameters
 fit.p0             = p0(:);
-% default selection function for angles
-fit.selectAngles   = @allAngles;
-% allow to provide position of one of the poles
-if nargin>1,
-  fit.polePos      = polePos;
-else
-  fit.polePos      = [];
-end
 
 % leasqr control parameters
 
 % scalar tolerance on fractional improvement in
 % scalar sum of squares = sum((wt.*(y-f))^2); 
-fit.stol           = 1e-8;
+fit.stol           = 1e-3;
 
 % scalar maximum number of iterations
 fit.niter          = 100;
@@ -74,3 +66,19 @@ fit.LSmax          = [];
 fit.Rmin           = 0.9;
 fit.Rmax           = 1.1;
 
+% Selection rule to remove polar angle bands
+% Tlim is a cell array of ranges defined by 
+% their minimum and maximum value polar angles
+% polar angles are defined from -180 to 180 degrees
+fit.Tlim           = {};
+
+if 0
+% default selection function for angles
+fit.selectAngles   = @allAngles;
+% allow to provide position of one of the poles
+if nargin>1,
+  fit.polePos      = polePos;
+else
+  fit.polePos      = [];
+end
+end
