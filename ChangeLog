@@ -1,3 +1,29 @@
+2010-09-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/getDefaultFitParams.m (1.6),
+	  matlab/limbFit/limbFitEx2.m (1.4),
+	  matlab/limbFit/plotSelectedSeeds.m (1.8),
+	  matlab/limbFit/selectSeeds.m (1.6):
+	  Added new field Tlim to describe the polar angle bands filtering.
+
+2010-09-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitLimb2.m (1.5):
+	  Added computation of distance between seeds and solution points,
+	  as well as estimates of the error on location from curve
+	  parameters and errors.
+
+2010-09-30  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/getLimb2.m (1.3):
+	  Cosmetic change in diagnostic. Added report of min and max length
+	  scales.
+
+2010-09-27  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/plotSelectedSeeds.m (1.7):
+	  Cosmetic change (font size of the title).
+
 2010-09-18  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/fitLimb2.m (1.4):
