@@ -2,7 +2,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sls)
 % function fit = fitLimb2(fit,Sx,Sy,Sls)
 
 %
-% $Id: fitLimb2.m,v 1.4 2010/09/18 18:33:55 patrick Exp $
+% $Id: fitLimb2.m,v 1.5 2010/09/30 18:17:10 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -69,10 +69,10 @@ options  = [fracprec, fracchg];
 
 verbose  = fit.verbose;
 
-if length(fit.p0)==3.
+if length(fit.p0)==3,
 [f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss] = ...
   leasqr(XY, XY, p0, 'circle2', stol , niter, W, dp,'dcircle2',options);
-elseif length(fit.p0)==5.
+elseif length(fit.p0)==5,
 [f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss] = ...
   leasqr(XY, XY, p0, 'ellipse2', stol , niter, W, dp,'dellipse2',options);
 end
@@ -122,3 +122,67 @@ phis = psd(length(fit.p0)+1:end);
 fprintf(1,'                    dphi mean, min, max     %8.4f %8.4f %8.4f\n', ...
         mean(phis), min(phis), max(phis) );
 
+
+if length(fit.p0)==3,
+  % compute r
+  xy = circle2(XY,fit.p);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	r = sqrt(x.^2+y.^2);
+	% compute distance to seed
+	d2seed = sqrt((x-Sx).^2+(y-Sy).^2);
+	% compute dr
+	xy = circle2(XY,fit.p-[0;0;fit.psd(3);zeros(m,1)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	rm = sqrt(x.^2+y.^2);
+	xy = circle2(XY,fit.p+[0;0;fit.psd(3);zeros(m,1)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	rM = sqrt(x.^2+y.^2);
+	dr = rM-rm;
+	% compute dtheta
+	xy = circle2(XY,fit.p-[zeros(3,1);fit.psd(4:end)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	tm = atan2(y,x);
+	xy = circle2(XY,fit.p+[zeros(3,1);fit.psd(4:end)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	tM = atan2(y,x);
+	dt = tM-tm;
+	% fix the angles that might be wrongly interpreted
+	dt(dt<0) = dt(dt<0)+2*pi;
+	% compute infinitesimal volume rdrdtheta
+  dS = r.*dr.*dt;
+elseif length(fit.p0)==5,
+  % compute r
+  xy = ellipse2(XY,fit.p);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	r = sqrt(x.^2+y.^2);
+	% compute distance to seed
+	d2seed = sqrt((x-Sx).^2+(y-Sy).^2);
+	% compute dr
+	xy = ellipse2(XY,fit.p-[0;0;fit.psd(3:4);0;zeros(m,1)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	rm = sqrt(x.^2+y.^2);
+	xy = ellipse2(XY,fit.p+[0;0;fit.psd(3:4);0;zeros(m,1)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	rM = sqrt(x.^2+y.^2);
+	dr = rM-rm;
+	% compute dtheta
+	xy = ellipse2(XY,fit.p-[zeros(5,1);fit.psd(6:end)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	tm = atan2(y,x);
+	xy = ellipse2(XY,fit.p+[zeros(5,1);fit.psd(6:end)]);
+	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	tM = atan2(y,x);
+	dt = tM-tm;
+	% fix the angles that might be wrongly interpreted
+	dt(dt<0) = dt(dt<0)+2*pi;
+	% compute infinitesimal volume rdrdtheta
+  dS = r.*dr.*dt;
+end
+
+figure
+plot(Sls, sqrt(dS),'o',Sls,d2seed,'s')
+axis equal
+xlabel('Sls')
+legend('sqrt(dS)','d2seed')
+pause
+close
