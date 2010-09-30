@@ -2,7 +2,7 @@ function fit = getLimb2(VD,params,fit)
 % function fit = getLimb2(VD,params,fit)
 
 %
-% $Id: getLimb2.m,v 1.2 2010/09/14 08:17:00 patrick Exp $
+% $Id: getLimb2.m,v 1.3 2010/09/30 18:14:44 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,6 +22,8 @@ function fit = getLimb2(VD,params,fit)
 
 % Calculate scale length from VD 
 [imls, Sls] = getVDOp(VD, params.W, @(x) sqrt(length(x)));
+
+fprintf('min(Sls) %.2f max(Sls) %.2f\n', [min(Sls), max(Sls)]);
 
 % image axis
 x = params.x;
