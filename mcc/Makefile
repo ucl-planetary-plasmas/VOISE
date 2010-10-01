@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2010/10/01 09:57:20 patrick Exp $
+# $Id: Makefile,v 1.6 2010/10/01 10:08:05 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,7 +21,7 @@
 # make
 # or 
 # make MATLABROOT=[directory where MATLAB is installed]
-# default MATLABROOT is /usr/local/matlabR2010a
+# default MATLABROOT is /usr/local/matlabR2010b
 # You can also invole the demo/check targets
 # make demo1
 # make demo2
@@ -30,7 +30,7 @@
 
 default: webVOISE verifyImage
 
-MATLABROOT = /usr/local/matlabR2010a
+MATLABROOT = /usr/local/matlabR2010b
 
 MCC = mcc
 MCCFLAGS = -R '-nodisplay' -m -v
