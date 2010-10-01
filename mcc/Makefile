@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2010/10/01 09:54:18 patrick Exp $
+# $Id: Makefile,v 1.5 2010/10/01 09:57:20 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,7 +32,7 @@ default: webVOISE verifyImage
 
 MATLABROOT = /usr/local/matlabR2010a
 
-MCC = $(MATLABROOT)/bin/mcc
+MCC = mcc
 MCCFLAGS = -R '-nodisplay' -m -v
 MCCFLAGSNOJVM = -R '-nojvm,-nodisplay' -m -v
 
