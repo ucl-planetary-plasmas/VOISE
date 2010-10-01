@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2010/09/06 19:01:02 patrick Exp $
+# $Id: Makefile,v 1.4 2010/10/01 09:54:18 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -74,7 +74,8 @@ $(matlab_dir)/updateNeighboursListsFromVoronoin.m \
 $(matlab_dir)/initVD.m \
 $(matlab_dir)/VOISE.m \
 $(matlab_dir)/isXinW.m \
-$(matlab_dir)/loadImage.m
+$(matlab_dir)/loadImage.m \
+$(matlab_dir)/fitswrite.m
 
 VERIFYIMAGE_SRC = \
 $(matlab_dir)/verifyImage.m \
