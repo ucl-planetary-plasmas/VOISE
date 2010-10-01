@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([VOISE], [1.0.0rc10], [p.guio@ucl.ac.uk])
+AC_INIT([VOISE], [1.0.0rc11], [p.guio@ucl.ac.uk])
 AC_CONFIG_SRCDIR([matlab/divideVD.m])
 dnl AC_CONFIG_HEADERS([config.h])
 
