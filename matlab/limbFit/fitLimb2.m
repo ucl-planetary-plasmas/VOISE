@@ -2,7 +2,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sls)
 % function fit = fitLimb2(fit,Sx,Sy,Sls)
 
 %
-% $Id: fitLimb2.m,v 1.5 2010/09/30 18:17:10 patrick Exp $
+% $Id: fitLimb2.m,v 1.6 2010/10/04 17:12:26 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,7 +39,7 @@ if ~exist('Sls') | isempty(Sls),
   W = [ones(size(R));ones(size(R))];
 else
   % proportional to 1/sqrt(var)
-  W = pi/2*[1./Sls(:);1./Sls(:)];
+  W = sqrt(2)*[1./Sls(:);1./Sls(:)];
 end
 
 % column vec of initial parameters
