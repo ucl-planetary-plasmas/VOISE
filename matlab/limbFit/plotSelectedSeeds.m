@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.8 2010/09/30 18:18:13 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.9 2010/10/04 17:11:43 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -63,7 +63,8 @@ axis equal
 set(gca,'xlim',params.xlim,'ylim',params.ylim);
 box on
 if 1
-colorbar
+h=colorbar;
+set(get(h,'title'),'string','\it L','FontSize',12,'Fontweight','normal')
 end
 
 
@@ -88,12 +89,12 @@ set(h(2:3), 'LineWidth',2);
 
 if length(p) == 3,
 
-  h=title(sprintf('L_M=%d C(%.1f,%.1f) R=%.1f \\epsilon(%.2f,%.2f)',...
+  h=title(sprintf('{\\it L}_M=%d C(%.1f,%.1f) R=%.1f \\epsilon(%.2f,%.2f)',...
         LSmax,p,Rmin,Rmax));
 
 elseif length(p) == 5,
 
-  h=title(sprintf(['L_M=%d C(%.1f,%.1f) a=%.1f b=%.1f \\alpha=%.0f ' ...
+  h=title(sprintf(['{\\it L}_M=%d C(%.1f,%.1f) a=%.1f b=%.1f \\alpha=%.0f ' ...
                 '\\epsilon(%.2f,%.2f)'], ...
 								LSmax,p,Rmin,Rmax));
 
