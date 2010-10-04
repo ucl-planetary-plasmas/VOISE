@@ -2,7 +2,7 @@ function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
 % function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
 
 %
-% $Id: ltc.m,v 1.1 2010/10/02 19:27:33 patrick Exp $
+% $Id: ltc.m,v 1.2 2010/10/04 17:05:28 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -42,13 +42,17 @@ yl = r*sqrt(1-e^2*cos(olat)^2)*sin(theta);
 csnllat = (1-e^2)*cos(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 snnllat = sin(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 
-D = cos(slat)*sin(dlon)*xl+...
+180/pi*acos(csnllat)
+180/pi*asin(snnllat)
+
+DL = cos(slat)*sin(dlon)*xl+...
     (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)/(1-e^2)*cos(olat))*yl;
 
-xll = xl(D>0);
-yll = yl(D>0);
-xld = xl(D<0);
-yld = yl(D<0);
+
+xll = xl(DL>0);
+yll = yl(DL>0);
+xld = xl(DL<0);
+yld = yl(DL<0);
 
 % terminator seen from sun
 xt0 = r*cos(theta);
@@ -92,30 +96,39 @@ aT = sqrt(u^2+v^2)*t1;
 bT = sqrt(u^2+v^2)*t2;
 fprintf(1,'aT=%.2f bT=%.2f thetaT=%.0f\n', aT, bT, 180/pi*thetaT);
 
-% rotation 
+% rotation \theta_T
 rot = [cos(thetaT), sin(thetaT); -sin(thetaT), cos(thetaT)];
+
+t = theta;
+xt = aT*cos(t)*rot(1,1)+bT*sin(t)*rot(1,2);
+yt = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
+DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
+
+plot(theta,DL,theta,DT);
+pause
+
 t=pi/2;
 xt = aT*cos(t)*rot(1,1)+bT*sin(t)*rot(1,2);
 yt = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
-D = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
+DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
 
-D = cos(slat)*sin(dlon)*xc(1)+...
-    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)/(1-e^2)*cos(olat))*yc(1)
-D = cos(slat)*sin(dlon)*xc(2)+...
-    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)/(1-e^2)*cos(olat))*yc(2)
+DLC1 = cos(slat)*sin(dlon)*xc(1)+...
+    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat)/(1-e^2))*yc(1)
+DLC2 = cos(slat)*sin(dlon)*xc(2)+...
+    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat)/(1-e^2))*yc(2)
 
-D = csntlat*sin(dlon)*xc(1)+...
+DTC1 = csntlat*sin(dlon)*xc(1)+...
     (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(1)
-D = csntlat*sin(dlon)*xc(2)+...
+DTC2 = csntlat*sin(dlon)*xc(2)+...
     (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(2)
 
-xtl = xt(D>0);
-ytl = yt(D>0);
-xtd = xt(D<0);
-ytd = yt(D<0);
+xtl = xt(DT>0);
+ytl = yt(DT>0);
+xtd = xt(DT<0);
+ytd = yt(DT<0);
 
 if 0
-if D>0,
+if DT>0,
 t = linspace(0,pi,100);
 xtl = aT*cos(t)*rot(1,1)+bT*sin(t)*rot(1,2);
 ytl = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
