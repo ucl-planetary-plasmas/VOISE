@@ -1,8 +1,8 @@
-function fit = fitLimb2(fit,Sx,Sy,Sls)
-% function fit = fitLimb2(fit,Sx,Sy,Sls)
+function fit = fitLimb2(fit,Sx,Sy,Sw)
+% function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 %
-% $Id: fitLimb2.m,v 1.6 2010/10/04 17:12:26 patrick Exp $
+% $Id: fitLimb2.m,v 1.7 2010/10/05 20:51:35 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,12 +34,12 @@ XY = [Sx(:); Sy(:)];
 m = length(Sx(:));
 
 % column vector of statistical weights 
-if ~exist('Sls') | isempty(Sls),
+if ~exist('Sw') | isempty(Sw),
   % constant
   W = [ones(size(R));ones(size(R))];
 else
   % proportional to 1/sqrt(var)
-  W = sqrt(2)*[1./Sls(:);1./Sls(:)];
+  W = [Sw(:);Sw(:)];
 end
 
 % column vec of initial parameters
@@ -180,7 +180,7 @@ elseif length(fit.p0)==5,
 end
 
 figure
-plot(Sls, sqrt(dS),'o',Sls,d2seed,'s')
+plot(1./Sw, sqrt(dS),'o',1./Sw,d2seed,'s')
 axis equal
 xlabel('Sls')
 legend('sqrt(dS)','d2seed')
