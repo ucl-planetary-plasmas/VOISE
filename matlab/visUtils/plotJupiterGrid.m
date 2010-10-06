@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.12 2010/10/02 19:31:16 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.13 2010/10/06 10:28:55 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -192,7 +192,8 @@ phi = phi_rel + phiobs;
 [r,x,y,z,xsky,ysky] = spherical2Sky(semiMaj_km,ecc, ...
                                     the,phi,theobs,phiobs,scalfac);
 
-plot(xsky, ysky, 'r-', -xsky, ysky, 'r-','LineWidth',1);
+%plot(xsky, ysky, 'r-', -xsky, ysky, 'r-','LineWidth',1);
+plot(xsky, ysky, 'r-', 'LineWidth',1);
 
 % Repeat the above calculation for the locus of the day/night terminator
 the = linspace(0,pi,50);
@@ -220,7 +221,7 @@ flag_zsky = (zsky > 0);
 xsky = xsky(flag_zsky);
 ysky = ysky(flag_zsky);
 
-plot(xsky, ysky, 'm-','LineWidth',1);
+plot(xsky, ysky, 'g-','LineWidth',1);
 
 hold off
 
