@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2010/10/01 10:08:05 patrick Exp $
+# $Id: Makefile,v 1.7 2010/10/07 15:54:59 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -28,12 +28,21 @@
 # make check
 # The target check makes demo1 and demo2
 
-default: webVOISE verifyImage
+default: webVOISE VOISE verifyImage
 
+# Patrick's laptop
+ifeq ($(HOST),jazz2)
 MATLABROOT = /usr/local/matlabR2010b
+endif
+
+# Dugan's laptop
+ifeq ($(OSTYPE),darwin10.0)
+MATLABROOT = /Applications/MATLAB/MATLAB_Compiler_Runtime/v714
+endif
 
 MCC = mcc
-MCCFLAGS = -R '-nodisplay' -m -v
+MCCFLAGS = -m -v
+MCCFLAGSNODISPLAY = -R '-nodisplay' -m -v
 MCCFLAGSNOJVM = -R '-nojvm,-nodisplay' -m -v
 
 matlab_dir = ../matlab
@@ -82,23 +91,36 @@ $(matlab_dir)/verifyImage.m \
 $(matlab_dir)/loadImage.m \
 $(matlab_dir)/startup.m
 
-webVOISE: $(WEBVOISE_SRC)
+VOISE: $(WEBVOISE_SRC)
 	$(MCC) $(MCCFLAGS) $^ -o $@
+	-rm -f *.o*
+
+webVOISE: $(WEBVOISE_SRC)
+	$(MCC) $(MCCFLAGSNODISPLAY) $^ -o $@
 	-rm -f *.o*
 
 verifyImage: $(VERIFYIMAGE_SRC)
 	$(MCC) $(MCCFLAGSNOJVM) $^ -o $@
 	-rm -f *.o*
 
-demo1: webVOISE
+webdemo1: webVOISE
 	@echo "*********** testing webVOISE demo1 ***********"
-	run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
+	./run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
 
-demo2: webVOISE
+webdemo2: webVOISE
 	@echo "*********** testing webVOISE demo2 ***********"
-	run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo2.dat
+	./run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo2.dat
+
+demo1: VOISE
+	@echo "*********** testing webVOISE demo1 ***********"
+	./run_VOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
+
+demo2: VOISE
+	@echo "*********** testing webVOISE demo1 ***********"
+	./run_VOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
 
 check: demo1 demo2
+checkweb: webdemo1 webdemo2
 
 clean:
 	-rm -f *webVOISE* *verifyImage* mccExcludedFiles.log readme.txt
