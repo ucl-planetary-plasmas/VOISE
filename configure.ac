@@ -35,6 +35,8 @@ AC_CONFIG_FILES([Makefile matlab/Makefile share/Makefile])
 
 AC_CONFIG_FILES([package-webVOISE.sh:package-webVOISE.sh.in], [chmod +x package-webVOISE.sh])
 
+AC_CONFIG_FILES([deploy-webVOISE.sh:deploy-webVOISE.sh.in], [chmod +x deploy-webVOISE.sh])
+
 AC_CONFIG_FILES([matlab/start_VOISE.m:matlab/start_VOISE.m.in], [])
 
 AC_CONFIG_FILES([matlab/webVOISE.m:matlab/webVOISE.m.in], [])
