@@ -14,7 +14,7 @@ function webVOISE(VOISEconf)
 % iFile = ../share/input/sampleint.fits
 % oDir = ../share/output/sampleint/
 
-% $Id: webVOISE.m.in,v 1.4 2010/10/01 10:13:41 patrick Exp $
+% $Id: webVOISE.m.in,v 1.5 2010/11/12 11:27:48 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -41,7 +41,7 @@ voise.version = '@VERSION@';
 % disable warning about using handle graphics with -nojvm
 warning('off','MATLAB:HandleGraphics:noJVM');
 
-% load default VOISE parameters
+% load VOISE parameters from configuration file
 params = readVOISEconf(VOISEconf);
 
 % load input image
