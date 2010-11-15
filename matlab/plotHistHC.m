@@ -2,7 +2,7 @@ function plotHistHC(DVD, MVD, params)
 % function plotHistHC(DVD, MVD, params)
 
 %
-% $Id: plotHistHC.m,v 1.4 2010/09/06 14:44:52 patrick Exp $
+% $Id: plotHistHC.m,v 1.5 2010/11/15 10:33:51 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -58,7 +58,9 @@ for I=1:length(idiv),
 	plot(divChi(:,I),pctiles,'g-'); hold off; 
 	if params.pause, pause, end
 	if interpolate,
-	divCumHist(:,I) = interp1(divChi(:,I), pctiles, edges, method{:});
+	% remove identical x values before interpolating
+	[uDiv,ui] = unique(divChi(:,I));
+	divCumHist(:,I) = interp1(divChi(ui,I), pctiles(ui), edges, method{:});
 	divCumHist(~isfinite(divCumHist(:,I))&edges'<=edges(fix(end/2)),I) = 0;
 	divCumHist(~isfinite(divCumHist(:,I))&edges'>edges(fix(end/2)),I) = 100;
 	end
@@ -84,7 +86,9 @@ if length(MVD.mergeSHC)>1, % merging phases available
   merCumHist(:,I) = cumsum(n)/sum(n)*100;
   merChi(:,I) = prctile(MVD.mergeSHC{i}, pctiles);
 	if interpolate
-	merCumHist(:,I) = interp1(merChi(:,I), pctiles, edges,method{:});
+	% remove identical x values before interpolating
+	[uMer,ui] = unique(merChi(:,I));
+	merCumHist(:,I) = interp1(merChi(ui,I), pctiles(ui), edges,method{:});
 	end
 	merleg{I} = sprintf('i=%3d ns=%3d', i-1, length(MVD.mergeSHC{i}));
 	fprintf(1,'%s\n', merleg{I});
