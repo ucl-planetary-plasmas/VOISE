@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2010/10/07 15:54:59 patrick Exp $
+# $Id: Makefile,v 1.8 2011/02/14 15:01:32 patrick Exp $
 #
 # Copyright (c) 2010
 # Patrick Guio <p.guio@ucl.ac.uk>
@@ -17,18 +17,29 @@
 # Public License for more details.
 #
 
-# You can invoke this Makefile by just typing
-# make
-# or 
+# You can invoke this Makefile by just typing `make'
+# at the prompt if your machine is listed in the Makefile
+# 
+# To enforce an alternative MATLABROOT invoke
+#
 # make MATLABROOT=[directory where MATLAB is installed]
-# default MATLABROOT is /usr/local/matlabR2010b
-# You can also invole the demo/check targets
+#
+# Current predefined MATLABROOT are
+# Patrick's laptop /usr/local/matlabR2010b
+# Dugan's laptop   /Applications/MATLAB/MATLAB_Compiler_Runtime/v714 
+#
+# To make demo and check targets invoke 
 # make demo1
 # make demo2
 # make check
-# The target check makes demo1 and demo2
+#
+# Note that the target `check' makes `demo1' followed by `demo2'
 
 default: webVOISE VOISE verifyImage
+
+# Initialise kernel name (tips from Dugan)
+# might be useful to automate the platform choice
+UNAME = $(shell uname -s)
 
 # Patrick's laptop
 ifeq ($(HOST),jazz2)
