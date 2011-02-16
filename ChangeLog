@@ -1,5 +1,11 @@
 2011-02-16  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/verifyImage.m (1.5):
+	  Fixed a small bug pointed by Dugan Witherick
+	  <d.witherick@ucl.ac.uk>.
+
+2011-02-16  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/testVOISE1.m (1.10):
 	  Keep the same test with negative image.
 
