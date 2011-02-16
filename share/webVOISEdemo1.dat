@@ -1,4 +1,4 @@
-# $Id: webVOISEdemo1.dat,v 1.4 2010/09/04 16:38:23 patrick Exp $
+# $Id: webVOISEdemo1.dat,v 1.5 2011/02/16 12:59:06 patrick Exp $
 # Demo configuration file for mat-file image north_proj.mat
 # Initial phase parameters
 iNumSeeds = 12
@@ -15,3 +15,12 @@ regMaxIter = 2
 # I/O parameters
 iFile = ../share/input/north_proj.mat
 oDir = ../share/output/north_proj/
+# Image parameters
+# north_proj.mat is a mat file containing a polar projection of
+# Jupiter observed by HST:
+#    Z           256x256         524288  double  image intensity
+#    x             1x256           2048  double  x-axis (# cols in image Z)
+#    y           256x1             2048  double  y-axis (# rows in image Z)
+# The axes are in unit of Jupiter radius
+pixelUnit  = {'R_J', 'R_J'}
+

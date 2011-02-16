@@ -1,4 +1,4 @@
-# $Id: webVOISEdemo2.dat,v 1.5 2010/09/04 16:38:23 patrick Exp $
+# $Id: webVOISEdemo2.dat,v 1.6 2011/02/16 12:59:06 patrick Exp $
 # Demo configuration file for fits-file image sampleint.fits
 # Initial phase parameters
 iNumSeeds = 12
@@ -15,3 +15,7 @@ regMaxIter = 2
 # I/O parameters
 iFile = ../share/input/sampleint.fits
 oDir = ../share/output/sampleint/
+# Image parameters
+imageOrigo = [0, 0]
+pixelSize  = [1, 1]
+pixelUnit  = {'pixels', 'pixels'}
