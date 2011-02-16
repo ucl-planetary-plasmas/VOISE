@@ -2,7 +2,7 @@ function createTestImage
 % function createTestImage
 
 %
-% $Id: createTestImage.m,v 1.2 2009/11/11 15:26:04 patrick Exp $
+% $Id: createTestImage.m,v 1.3 2011/02/16 12:54:02 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,10 +34,13 @@ nc = 200;
 % [X(end,1)  , Y(end,1)  ] = -2   2
 % [X(end,end), Y(end,end)] =  1   2
 
-% number of cols in image corresponds to x coordinate
+% # of cols in image corresponds to x coordinate
 x     = linspace(-1, 1, nc);
-% number of rows in image corresponds to y coordinate
+% # of rows in image corresponds to y coordinate
 y     = linspace(-1, 1, nr);
+
+% dimensionless pixel unit
+pixelUnit = {'',''};
 
 [X,Y] = meshgrid(x, y);
 
@@ -70,4 +73,4 @@ axis xy
 colorbar
 
 global voise 
-save([voise.root '/share/testImage.mat'], 'x', 'y', 'Z');
+save([voise.root '/share/testImage.mat'], 'x', 'y', 'Z', 'pixelUnit');
