@@ -5,17 +5,19 @@ function [params,IVD,DVD,MVD,CVD] = testVOISE1(varargin)
 %
 % [params,IVD,DVD,MVD,CVD] = testVOISE1();
 % [params,IVD,DVD,MVD,CVD] = testVOISE1('iNumSeeds',20,'dividePctile',92);
+% [params,IVD,DVD,MVD,CVD] = testVOISE1('xlim',[-50 300],'ylim',[-50 300]);
 % 
 % Optional arguments are pairs of arguments, the first one is a string
 % representing a valid field of the VOISE parameter structure generated 
 % by the function getDefaultVOISEParams.
+%
 % To get a list of these fields type the Matlab command
-% help getDefaultVOISEParams
+% >> help getDefaultVOISEParams
 % 
-% Note that this test can take a VERY long time (1-2 hours)
+% Note that this test can take a *VERY* long time (1-2 hours)
 
 %
-% $Id: testVOISE1.m,v 1.8 2009/11/13 12:28:00 patrick Exp $
+% $Id: testVOISE1.m,v 1.9 2011/02/16 12:54:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -67,23 +69,8 @@ params.movPos          = [600 50 1300 1050]; % movie window size
 % allow for command line parameter modifications
 params = parseArgs(params, varargin{:});
 
-try
-  load(params.iFile)
-  Z = double(Z);
-  Z = max(Z(:))-Z;
-catch
-  error([params.iFile ' is not in your Matlab path\n' ...
-	      'Try to run start_VOISE']);
-end
-
-% set image, axes and related
-params.W    = Z;
-params.x    = [1:size(Z,1)];
-params.y    = [1:size(Z,2)];
-
-params.Wlim = [min(params.W(:)) max(params.W(:))];
-params.xlim = [min(params.x) max(params.x)];
-params.ylim = [min(params.y) max(params.y)];
+% load image file
+params = loadImage(params);
 
 % create directory if necessary
 if isunix & ~exist(params.oDir,'dir')

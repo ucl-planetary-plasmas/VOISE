@@ -9,12 +9,15 @@ function [params,IVD,DVD,MVD,CVD] = testVOISE(varargin)
 % Optional arguments are pairs of arguments, the first one is a string
 % representing a valid field of the VOISE parameter structure generated 
 % by the function getDefaultVOISEParams.
+%
 % To get a list of these fields type the Matlab command
-% help getDefaultVOISEParams
+% >> help getDefaultVOISEParams
+%
+% 'testImage' is a synthetic image created by the script createTestImage
 
 
 %
-% $Id: testVOISE.m,v 1.8 2009/11/13 12:28:00 patrick Exp $
+% $Id: testVOISE.m,v 1.9 2011/02/16 12:54:59 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -66,28 +69,13 @@ params.movPos          = [600 50 1300 1050]; % movie window size
 % allow command line modifications
 params = parseArgs(params, varargin{:});
 
-% load file
-try
-  load(params.iFile)
-catch
-  error([params.iFile ' is not in your Matlab path\n' ...
-		     'Try to run start_VOISE']);
-end
-
-% set image, axes and related
-params.W    = Z;
-params.x    = x;
-params.y    = y;
-
-params.Wlim = [min(params.W(:)) max(params.W(:))];
-params.xlim = [min(params.x) max(params.x)];
-params.ylim = [min(params.y) max(params.y)];
+% load image file
+params = loadImage(params);
 
 % create directory if necessary
 if ~exist(params.oDir,'dir')
   unix(['mkdir -p ' params.oDir]);
 end
-
 
 % run VOISE
 [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin{:});
