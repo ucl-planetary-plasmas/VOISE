@@ -2,7 +2,7 @@ function params = loadImage(params)
 % function params = loadImage(params)
 
 %
-% $Id: loadImage.m,v 1.7 2011/02/16 14:47:06 patrick Exp $
+% $Id: loadImage.m,v 1.8 2011/02/16 18:05:44 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -80,7 +80,7 @@ try
 
 	% ensure that image is in floating precision
 	if isinteger(params.W),
-	  param.W = single(params.W);
+	  params.W = single(params.W);
 	end
 
   % set colour and axes limits
