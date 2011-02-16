@@ -6,7 +6,7 @@ function s = parseArgs(s,varargin)
 % is assigned to the field of the structure.
 
 %
-% $Id: parseArgs.m,v 1.2 2009/11/11 16:15:53 patrick Exp $
+% $Id: parseArgs.m,v 1.3 2011/02/16 12:46:34 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -32,9 +32,9 @@ for i=1:length(varargin)-1,
   if ischar(varargin{i}) & isfield(s,varargin{i}),
 	  oldvalue = getfield(s, varargin{i});
 		newvalue = varargin{i+1};
-	  if isa(newvalue,'numeric') & isa(oldvalue,'numeric')
-		  if all(size(newvalue) == size(oldvalue)), 
-			% numeric arrays needs to have same size
+	  if isa(newvalue,'numeric') & isa(oldvalue,'numeric'),
+		  if all(size(newvalue) == size(oldvalue)) | isempty(oldvalue), 
+			% numeric arrays needs to have same size or variable originally empty
         s = setfield(s, varargin{i}, newvalue);
 	    else
 		    fprintf(1,'oldvalue: '); disp(oldvalue)
