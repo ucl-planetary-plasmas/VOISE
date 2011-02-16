@@ -5,7 +5,7 @@ function verifyImage(filename)
 % contains an image that can be read in VOISE.
 
 %
-% $Id: verifyImage.m,v 1.3 2010/09/06 19:00:29 patrick Exp $
+% $Id: verifyImage.m,v 1.4 2011/02/16 12:34:04 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -31,7 +31,8 @@ try
   params.iFile = filename;
   params = loadImage(params);
 catch me
-  error(me.message);
+  disp(['Problem when verifying image file ' filename '.']);
+  rethrow(me);
 end
 
 return
