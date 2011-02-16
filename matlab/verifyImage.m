@@ -5,7 +5,7 @@ function verifyImage(filename)
 % contains an image that can be read in VOISE.
 
 %
-% $Id: verifyImage.m,v 1.5 2011/02/16 18:17:23 patrick Exp $
+% $Id: verifyImage.m,v 1.6 2011/02/16 18:56:16 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -25,6 +25,9 @@ function verifyImage(filename)
 
 % disable warning about using handle graphics with -nojvm
 warning('off','MATLAB:HandleGraphics:noJVM');
+
+% diable warning "Unable to determine format of the card value."
+%warning('off','MATLAB:fitsinfo:unknownFormat');
 
 % try to load the file as an image
 try
