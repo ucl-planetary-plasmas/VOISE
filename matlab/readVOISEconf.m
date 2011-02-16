@@ -6,7 +6,9 @@ function params = readVOISEconf(conffile)
 % parameters structure. 
 % Note that parameters not specified in the
 % file are initialised to their default value.
+%
 % The syntax is 'key' = 'value' on each line.
+%
 % For example:
 % iNumSeeds = 12
 % RNGiseed = 10
@@ -19,12 +21,15 @@ function params = readVOISEconf(conffile)
 % iFile = ../share/input/sampleint.fits
 % oDir = ../share/output/sampleint/
 % oMatFile = voise
+% imageOrigo = [0, 0]
+% pixelSize  = [1, 1]
+% pixelUnit  = {'pixels', 'pixels'}
+%
 % 
-% Lines starting with # are ignored.
-
+% Note that lines starting with # are ignored.
 
 %
-% $Id: readVOISEconf.m,v 1.2 2010/09/04 06:57:13 patrick Exp $
+% $Id: readVOISEconf.m,v 1.3 2011/02/16 12:41:26 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -52,17 +57,35 @@ params = getDefaultVOISEParams();
 % The syntax is
 % field = value
 fid = fopen(conffile);
-C = textscan(fid, '%s=%s','CommentStyle','#');
+C = textscan(fid, '%s%s','Delimiter','=','CommentStyle', '#');
 fclose(fid);
-key = C{1};
-val = C{2};
-v = str2double(val); idx = ~isnan(v);
-val(idx) = num2cell(v(idx));
 
+
+% C{1} should contain the string before the delimiter '='
+% i.e. the key
+key = deblank(C{1});
+% C{2} should contain the string after the delimiter '='
+% i.e. the value 
+val = deblank(C{2});
+
+% replace string value by its numerical argument
+% whenever possible, otherwise do not touch the string
+for i=1:length(val),
+  v = str2num(val{i});
+	if ~isempty(v),
+	  val{i} = v;
+	end
+end
 
 for i=1:length(key),
   if isfield(params, key{i}),
-    params.(key{i}) = val{i};
+    if ischar(val{i}) & val{i}(1)=='{' & val{i}(end)=='}', 
+      % special case of cell array requires an eval
+      params.(key{i}) = eval(val{i});
+    else
+      % all other cases i.e. string, scalar and array of scalars
+      params.(key{i}) = val{i};
+    end
   end
 end
 
