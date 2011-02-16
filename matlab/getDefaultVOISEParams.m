@@ -21,6 +21,11 @@ function params = getDefaultVOISEParams()
 %   xlim           : x-axis range for diagnostics            (empty)
 %   ylim           : y-axis range for diagnostics            (empty)
 %
+%   imageOrigo     : image origo (in pixel unit)             ([0,0])
+%   pixelSize      : pixel size along (x,y)                  ([1,1])
+%   pixelUnit      : units for pixel size along (x,y)        ({'pixels','pixels'})
+%
+%
 % * VOISE initial phase parameters
 %
 %   initSeeds      : function (string or handle) to draw initial seeds
@@ -77,7 +82,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.7 2010/09/04 06:58:35 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.8 2011/02/16 12:37:37 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -103,6 +108,10 @@ params.y               = [];
 params.Wlim            = [];
 params.xlim            = [];
 params.ylim            = [];
+% default for pixels
+params.imageOrigo      = [0, 0];
+params.pixelSize       = [1, 1];
+params.pixelUnit       = {'pixels','pixels'};
 
 % VOISE algorithm parameters 
 % Initialise
