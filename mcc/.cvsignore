@@ -1,4 +1,6 @@
-*VOISE*
-*verifyImage*
+Makefile
+Makefile.in
 mccExcludedFiles.log
 readme.txt
+*verifyImage*
+*VOISE*

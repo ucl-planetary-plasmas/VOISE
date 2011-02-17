@@ -1,3 +1,49 @@
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.26):
+	  Time to bundle to version 1.0.0.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/startup.m (1.4):
+	  Added test to determine whether code is running in deployed or
+	  MATLAB mode.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* Makefile.am (1.2):
+	  Added mcc directory as an automake subdirectory.  Added
+	  conditional extra targets for MATLAB compiler support.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* deploy-webVOISE.sh.in (1.4[DEAD]), package-webVOISE.sh.in
+	  (1.15[DEAD]):
+	  Replaced shell-script hacking for packaging and deployment by
+	  autoconf/automake-enabled tools.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* mcc/Makefile (1.9[DEAD]), mcc/Makefile.am (1.1):
+	  Replaced hardcoded Makefile by autoconf/automake Makefile.am, and
+	  make use of autonconf-conditional HAVE_MCC and
+	  autoconf-substituted variable MATLABROOT.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.25):
+	  Added test for availability of MATLAB mcc and set up an automake
+	  conditional.	Added code to extract information about MATLABROOT
+	  using matlab command and parse value to configure.  Enabled
+	  automake in mcc directory.  Remove shell-script hacking to
+	  package and deploy standalone mccVOISE.  Added some notification
+	  messages.
+
+2011-02-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/Makefile.am (1.4):
+	  Added some necessary files to create distros.
+
 2011-02-16  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/verifyImage.m (1.5):

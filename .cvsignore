@@ -5,6 +5,7 @@ config.status
 config.sub
 configure
 COPYING
+depcomp
 INSTALL
 install-sh
 Makefile
