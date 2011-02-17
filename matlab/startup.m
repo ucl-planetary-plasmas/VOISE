@@ -3,7 +3,7 @@
 %
 
 %
-% $Id: startup.m,v 1.3 2010/09/03 17:09:30 patrick Exp $
+% $Id: startup.m,v 1.4 2011/02/17 14:59:17 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -40,7 +40,7 @@ set(0,'DefaultLineLineWidth',.2);
 
 set(0,'DefaultSurfaceLineWidth',.65);
 
-if exist('start_VOISE')==2,
+if exist('start_VOISE')==2 & ~isdeployed,
   start_VOISE,
 end
 
