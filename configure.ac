@@ -21,6 +21,8 @@ AC_MSG_NOTICE
 
 
 # Checks for programs.
+AC_CHECK_PROG([mcc],[mcc],[yes],)
+AM_CONDITIONAL([HAVE_MCC],[test x$mcc = xyes])
 
 # Checks for libraries.
 
@@ -30,15 +32,49 @@ AC_MSG_NOTICE
 
 # Checks for library functions.
 
+# Get and set MATLABROOT variable
+AC_ARG_VAR(MATLABROOT,[MATLAB software root installation])
+if test -z "$MATLABROOT"; then 
+  AC_MSG_CHECKING([MATLAB software root installation])
+  cat >> mroot.m << EOF
+fprintf(1,'\nMATLABROOT=%s\n',matlabroot);
+exit;
+EOF
+  which matlab &> /dev/null || (echo "matlab command not found" && exit 1)
+	matlab -nodesktop -nojvm -nosplash -nodisplay < mroot.m | grep MATLABROOT > mroot.out
+	MATLABROOT=`sed 's/MATLABROOT=//' mroot.out`
+	rm -f mroot.m mroot.out
+	AC_MSG_RESULT([$MATLABROOT])
+fi
+AC_SUBST(MATLABROOT)
+
+
 dnl Generate Makefiles
-AC_CONFIG_FILES([Makefile matlab/Makefile share/Makefile])
-
-AC_CONFIG_FILES([package-webVOISE.sh:package-webVOISE.sh.in], [chmod +x package-webVOISE.sh])
-
-AC_CONFIG_FILES([deploy-webVOISE.sh:deploy-webVOISE.sh.in], [chmod +x deploy-webVOISE.sh])
+AC_CONFIG_FILES([Makefile matlab/Makefile mcc/Makefile share/Makefile])
 
 AC_CONFIG_FILES([matlab/start_VOISE.m:matlab/start_VOISE.m.in], [])
 
 AC_CONFIG_FILES([matlab/webVOISE.m:matlab/webVOISE.m.in], [])
 
 AC_OUTPUT
+
+AC_MSG_NOTICE([
+
+The configure script has set up MATLAB version of VOISE.
+])
+
+if test x$mcc = xyes; then 
+AC_MSG_NOTICE([
+
+You have further options available since MATLAB compiler is available
+
+  make mccVOISE        Compile VOISE with MATLAB compiler mcc
+  make dist-mccVOISE   Create standalone distro for this architecture
+  make demo1           Run demo1
+  make demo2           Run demo2
+  make check           Run demo1 and demo2
+  make webdemo1        Run demo1 without display
+  make webdemo2        Run demo2 without display
+  make checkweb        Run demo1 and demo2 without display
+])
+fi
