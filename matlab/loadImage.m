@@ -1,8 +1,33 @@
 function params = loadImage(params)
 % function params = loadImage(params)
+%
+% Load an image into a VOISE parameters structure params.
+%
+% A default VOISE parameters structure can be generated using
+% the function getDefaultVOISEParams
+%
+% Supported image formats supported currently include 
+%
+% * MATLAB mat-file format and is expected to contain
+%   - at least one two-dimensional variable named 'Z' (size [nr,nc])
+%     representing the image
+%   - optionally two vectors named 'x' (size [1,nc]) and 'y' (size [nr,1])
+%     representing the axes
+%   if the axes are provided the fields 'pixelSize' and 'imageOrigo' of 
+%   the VOISE parameters structure are updated accordingly, otherwise 
+%   the values provided are used to generate the axes.
+%
+% * FITS format (Flexible Image Transport System)
+%   (see http://heasarc.nasa.gov/docs/heasarc/fits.html)
+%   Only one image is read. The axes are initialised using the fields
+%   'pixelSize' and 'imageOrigo' of the VOISE parameters structure 
+%   provided.
+%
+%   imageOrigo = [0, 0] means the pixel pointed by params.W(1,1) is
+%   the origo
 
 %
-% $Id: loadImage.m,v 1.8 2011/02/16 18:05:44 patrick Exp $
+% $Id: loadImage.m,v 1.9 2011/02/25 14:12:28 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -41,13 +66,15 @@ try
 		if isfield(im,'x') & isfield(im,'y'),
       params.x = im.x;
       params.y = im.y;
-			% overwrite pixelSize and imageOrigo dedecude from x and y
-			params.pixelSize = [params.x(2)-params.x(1), params.y(2)-params.y(1)];
-			params.imageOrigo = [1-params.x(1)./params.pixelSize(1),...
-                           1-params.y(1)./params.pixelSize(2)];
+			% overwrite pixelSize and imageOrigo deduced from x and y
+      params.pixelSize  = [diff(params.x(1:2)), diff(params.y(1:2))];
+      params.imageOrigo = [-params.x(1)./params.pixelSize(1),...
+                           -params.y(1)./params.pixelSize(2)];
 		else
-      params.x = ([1:size(params.W,2)]-params.imageOrigo(2))*params.pixelSize(2);
-      params.y = ([1:size(params.W,1)]-params.imageOrigo(1))*params.pixelSize(1);
+      % imageOrigo = (0,0) means params.W(1,1) is the origo
+      [nr, nc] = size(params.W);
+      params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
+      params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 		end
 		if isfield(im,'pixelUnit') & ...
        isa(im.pixelUnit,'cell') & ...
@@ -67,8 +94,9 @@ try
     im = fitsread(params.iFile);
     % set image, axes and related
     params.W = im;
-    params.x = ([1:size(im,2)]-params.imageOrigo(2))*params.pixelSize(2);
-    params.y = ([1:size(im,1)]-params.imageOrigo(1))*params.pixelSize(1);
+    [nr, nc] = size(params.W);
+    params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
+    params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 
   else, % neither mat-file nor fits-file
 
