@@ -2,7 +2,7 @@ function createTestImage
 % function createTestImage
 
 %
-% $Id: createTestImage.m,v 1.3 2011/02/16 12:54:02 patrick Exp $
+% $Id: createTestImage.m,v 1.4 2011/02/25 14:22:07 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -21,9 +21,9 @@ function createTestImage
 %
 
 % number of rows
-nr = 200;
+nr = 201;
 % number of columns
-nc = 200;
+nc = 201;
 
 % x = linspace(-2, 1, nc);
 % y = linspace(-1, 2, nr);
