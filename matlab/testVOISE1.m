@@ -17,7 +17,7 @@ function [params,IVD,DVD,MVD,CVD] = testVOISE1(varargin)
 % Note that this test can take a *VERY* long time (1-2 hours)
 
 %
-% $Id: testVOISE1.m,v 1.10 2011/02/16 14:47:39 patrick Exp $
+% $Id: testVOISE1.m,v 1.11 2011/02/25 14:15:43 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -74,6 +74,9 @@ params = loadImage(params);
 
 % take the negative image
 params.W = max(params.W(:))-params.W;
+
+% Reset colour limits
+params.Wlim = [min(params.W(:)) max(params.W(:))];
 
 % create directory if necessary
 if isunix & ~exist(params.oDir,'dir')
