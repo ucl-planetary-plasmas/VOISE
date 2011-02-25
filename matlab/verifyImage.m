@@ -3,9 +3,12 @@ function verifyImage(filename)
 % 
 % Wrapper to loadImage to check whether filename 
 % contains an image that can be read in VOISE.
+%
+% If no argument is provided further help is provided 
+% about the data formats supported.
 
 %
-% $Id: verifyImage.m,v 1.6 2011/02/16 18:56:16 patrick Exp $
+% $Id: verifyImage.m,v 1.7 2011/02/25 14:10:18 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -33,10 +36,15 @@ warning('off','MATLAB:HandleGraphics:noJVM');
 try
   % load default VOISE parameters
   params = getDefaultVOISEParams;
-  % assign iFile
-  params.iFile = filename;
-  % load Image
-  params = loadImage(params);
+	if exist('filename','var') & ~isempty(filename),
+    % assign iFile
+    params.iFile = filename;
+    % load Image
+    params = loadImage(params);
+	else
+	  help('verifyImage');
+		help('loadImage'); 
+	end
 catch me
   disp(['Problem when verifying image file ' filename '.']);
   rethrow(me);
