@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.9 2010/10/04 17:11:43 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.10 2011/03/01 18:47:20 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -43,15 +43,16 @@ end
 
 clf
 hold on
-dx = params.xlim(end)-params.xlim(1);
-dy = params.ylim(end)-params.ylim(1);
+dx = 2*diff(params.xlim);
+dy = 2*diff(params.ylim);
 dr = sqrt(dx^2+dy^2);
 if ~isempty(fit.Tlim),
   for i=1:length(fit.Tlim),
 	  x0 = p(1); y0 = p(2);
 		x1 = x0+dr*cosd(fit.Tlim{i}(1)); y1 = y0+dr*sind(fit.Tlim{i}(1));
 		x2 = x0+dr*cosd(fit.Tlim{i}(2)); y2 = y0+dr*sind(fit.Tlim{i}(2));
-		fill([x0;x1;x2],[y0;y1;y2],0.7*[1,1,1]);
+		h{i} = fill([x0;x1;x2],[y0;y1;y2],0.7*[1,1,1]);
+		alpha(h{i},.5);
 	end
 end
 
@@ -67,24 +68,19 @@ h=colorbar;
 set(get(h,'title'),'string','\it L','FontSize',12,'Fontweight','normal')
 end
 
-
-ts = linspace(-180,180,50);
-
 if length(p)==5,
-  rnom = ellipse(ts,p(:));
-  rmin = ellipse(ts,p(:).*[1;1;Rmin;Rmin;1]);
-  rmax = ellipse(ts,p(:).*[1;1;Rmax;Rmax;1]);
+  [xnom,ynom] = disk(p(:));
+  [xmin,ymin] = disk(p(:).*[1;1;Rmin;Rmin;1]);
+  [xmax,ymax] = disk(p(:).*[1;1;Rmax;Rmax;1]);
 elseif length(p)==3,
-  rnom = circle(ts,p(:));
-  rmin = circle(ts,p(:).*[1;1;Rmin]);
-  rmax = circle(ts,p(:).*[1;1;Rmax]);
+  [xnom,ynom] = disk(p(:));
+  [xmin,ymin] = disk(p(:).*[1;1;Rmin]);
+  [xmax,ymax] = disk(p(:).*[1;1;Rmax]);
 end
 
 plot(p(1), p(2), 'rx','MarkerSize',10);
 
-h = plot(rnom.*cosd(ts), rnom.*sind(ts), 'r-', ...
-     rmin.*cosd(ts), rmin.*sind(ts), 'r-', ...
-     rmax.*cosd(ts), rmax.*sind(ts), 'r-');
+h = plot(xnom, ynom, 'r-', xmin, ymin, 'r-', xmax, ymax, 'r-');
 set(h(2:3), 'LineWidth',2);
 
 if length(p) == 3,
@@ -128,4 +124,3 @@ if ~isempty(fit.Tlim),
 end
 
 hold off
-
