@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.13 2010/10/06 10:28:55 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.14 2011/03/01 17:08:36 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -85,6 +85,7 @@ else,
 end
 toc
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function drawPlanetGrid(epoch,CML,dlat,dlon,semiMaj_km,ecc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -120,6 +121,13 @@ thesun = pi/2 - sslat*pi/180;
 % Scaling factor to convert from km to arcsec on the plane of 
 % the Earth observer's sky
 scalfac = (1/(sedistAU*AU_km))*(180/pi)*3600;
+
+mfig = gcf;
+figure
+r = semiMaj_km*scalfac
+[xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,selat,selon,sslat,sslon);
+xc,yc
+figure(mfig)
 
 % Calculate the viewing angle
 lineOfSight = [sin(theobs)*cos(phiobs);sin(theobs)*sin(phiobs);cos(theobs)];
@@ -168,8 +176,8 @@ for phi = [0:dlon:360]*pi/180,
 	Xv = Xv(I);
 	if phi>0,
   plot(Xv,Yv,'k-','LineWidth',.5);
-	else
-	plot(Xv,Yv,'k-','LineWidth',1);
+	else, % phi==0,
+	plot(Xv,Yv,'k-','LineWidth',1.0);
 	end
 	if 0
 	Xh = xsky(~flag_vang);
@@ -181,7 +189,7 @@ for phi = [0:dlon:360]*pi/180,
 end
 
 % Calculate the edge of the planet disk on the sky
-the = linspace(0,pi,50);
+the = linspace(0,pi,200);
 
 discrim = abs(cos(the).*cos(theobs))-(1-ecc^2)*abs(sin(the).*sin(theobs));
 the = the(discrim < 0);
@@ -196,7 +204,7 @@ phi = phi_rel + phiobs;
 plot(xsky, ysky, 'r-', 'LineWidth',1);
 
 % Repeat the above calculation for the locus of the day/night terminator
-the = linspace(0,pi,50);
+the = linspace(0,pi,200);
 
 discrim = abs(cos(the).*cos(thesun))-(1-ecc^2)*abs(sin(the).*sin(thesun));
 the = the(discrim < 0);
@@ -217,9 +225,19 @@ the = [the, the];
 
 [r,x,y,z,xsky,ysky,zsky] = spherical2Sky(semiMaj_km,ecc, ...
                                          the,phi,theobs,phiobs,scalfac);
-flag_zsky = (zsky > 0);
+
+
+flag_zsky = (zsky*sign(ssedlon) > 0);
 xsky = xsky(flag_zsky);
 ysky = ysky(flag_zsky);
+
+if 1
+% trick to avoid "jumps" in theta
+dt=diff(atan2(ysky,xsky));
+ii=find(abs(dt)>2*min(abs(dt)));
+xsky(ii) = NaN;
+ysky(ii) = NaN;
+end
 
 plot(xsky, ysky, 'g-','LineWidth',1);
 
