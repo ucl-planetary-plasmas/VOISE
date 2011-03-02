@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.14 2011/03/01 17:08:36 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.15 2011/03/02 14:34:43 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -188,7 +188,7 @@ for phi = [0:dlon:360]*pi/180,
 	end
 end
 
-% Calculate the edge of the planet disk on the sky
+% Calculate the edge of the planet disc on the sky
 the = linspace(0,pi,200);
 
 discrim = abs(cos(the).*cos(theobs))-(1-ecc^2)*abs(sin(the).*sin(theobs));
