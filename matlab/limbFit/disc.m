@@ -8,7 +8,7 @@ function [x,y] = disc(p,n)
 % in radians unit
 
 %
-% $Id: disc.m,v 1.2 2011/03/02 14:35:24 patrick Exp $
+% $Id: disc.m,v 1.3 2011/03/02 17:41:36 patrick Exp $
 %
 % Copyright (c) 2011
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -45,8 +45,8 @@ xc = p(1); % x-coordinate of circle center
 yc = p(2); % y-coordinate of circle center
 r0 = p(3); % radius
 
-x = xc + r0*cosd(t);
-y = yc + r0*sind(t);
+x = xc + r0*cos(t);
+y = yc + r0*sin(t);
 
 function [x,y] = ellipse(t,p)
 
