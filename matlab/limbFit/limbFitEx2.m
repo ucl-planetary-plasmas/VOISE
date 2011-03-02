@@ -8,7 +8,7 @@ function [varargout] = limbFitEx2(action,varargin)
 % [params,fit1,fit2] = limbFitEx2('limbFit')
 
 %
-% $Id: limbFitEx2.m,v 1.5 2011/03/02 14:46:05 patrick Exp $
+% $Id: limbFitEx2.m,v 1.6 2011/03/02 17:46:22 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -122,37 +122,38 @@ switch lower(action),
      % initial guess
 		 if 0
 		   p0 = [0 0 300];
-			 Tpole = -90;
+			 Tlim = {[-120,-60]};
      else
 		   imagesc(params.x,params.y,params.W);
 			 axis xy
 			 axis equal
 			 axis tight
 		   p0 = getCircleParams();
-		   [px, py] = getPolePos();
-			 Tpole = 180/pi*atan2(py, px);
+			 Tlim = selectSector();
      end
 		 pp = 1:length(p0);
-		 fit1 = getDefaultFitParams(p0,[px,py]);
+		 fit1 = getDefaultFitParams(p0);
+		 fit1.model          = { @circle2, @dcircle2 };
 		 fit1.LSmax = 16;
 		 fit1.Rmin = 0.9;
 		 fit1.Rmax = 1.1;
 		 fit1.VD = vdtype;
 		 %fit1.selectAngles = @ex2Angles;
-		 fit1.Tlim = {[Tpole-20,Tpole+20]};
+		 fit1.Tlim = {Tlim};
 		 % allow command line modifications
 		 fit1 = parseArgs(fit1, varargin{:});
 
 		 fit1 = getLimb2(CVD, params, fit1);
 
 		 % try again with better selected seeds
-		 fit2 = getDefaultFitParams(fit1.p(pp),[px,py]);
+		 fit2 = getDefaultFitParams(fit1.p(pp));
+		 fit2.model          = { @circle2, @dcircle2 };
 		 fit2.LSmax = 12;
 		 fit2.Rmin = 0.95;
 		 fit2.Rmax = 1.05;
 		 fit2.VD = vdtype;
 		 %fit2.selectAngles = @ex2Angles;
-		 fit2.Tlim = {[Tpole-20,Tpole+20]};
+		 fit2.Tlim = {Tlim};
 
 		 % allow command line modifications
 		 fit2 = parseArgs(fit2, varargin{:});
