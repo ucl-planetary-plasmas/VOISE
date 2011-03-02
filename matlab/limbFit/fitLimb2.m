@@ -1,8 +1,14 @@
 function fit = fitLimb2(fit,Sx,Sy,Sw)
 % function fit = fitLimb2(fit,Sx,Sy,Sw)
+% 
+% fit: structure that can be initialised by getDefaultFitParams
+% Sx,Sy: measurements, i.e. Cartesian coordinates of seeds 
+% Sw: errors on location of seeds, i.e. spread of the Voronoi region 
+% around the seed
+
 
 %
-% $Id: fitLimb2.m,v 1.7 2010/10/05 20:51:35 patrick Exp $
+% $Id: fitLimb2.m,v 1.8 2011/03/02 17:43:13 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -28,26 +34,28 @@ R = sqrt(Sx(:).^2+Sy(:).^2);
 % column vector or matrix of independent variables
 T = 180/pi*atan2(Sy(:),Sx(:));
 
-% arrange as [X;Y]
+% arrange measurement, i.e. seed position (X,Y) as a single column vector
+% with all X's followed by Y's
 XY = [Sx(:); Sy(:)];
 
+% number of measurements
 m = length(Sx(:));
 
 % column vector of statistical weights 
 if ~exist('Sw') | isempty(Sw),
-  % constant
+  % constant=1 if none provided
   W = [ones(size(R));ones(size(R))];
 else
   % proportional to 1/sqrt(var)
   W = [Sw(:);Sw(:)];
 end
 
-% column vec of initial parameters
+% column vector of initial parameters
 p0       = [fit.p0(:); T(:)*pi/180];
 
 if length(fit.p0)==3,
-  [xc,yc,R,a] = circfit(Sx,Sy);
-	fprintf(1,'* circfit            Xc(%8.1f,%8.1f) R=%8.1f\n', xc,yc,R);
+  [xc,yc,r,a] = circfit(Sx,Sy);
+	fprintf(1,'* circfit            Xc(%8.1f,%8.1f) R=%8.1f\n', xc,yc,r);
 	Par = CircleFitByTaubin([Sx(:),Sy(:)]);
 	fprintf(1,'* CircleFitByTaubin  Xc(%8.1f,%8.1f) R=%8.1f\n', Par);
 elseif length(fit.p0)==5,
@@ -59,6 +67,11 @@ elseif length(fit.p0)==5,
 	fprintf(1,'* EllipseDirectFit   Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
 end
 
+% model function
+modelFun = fit.model{1};
+% direct function jacobian
+modelJac = fit.model{2};
+
 % leasqr control parameters
 stol     = fit.stol;
 niter    = fit.niter;
@@ -69,13 +82,8 @@ options  = [fracprec, fracchg];
 
 verbose  = fit.verbose;
 
-if length(fit.p0)==3,
 [f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss] = ...
-  leasqr(XY, XY, p0, 'circle2', stol , niter, W, dp,'dcircle2',options);
-elseif length(fit.p0)==5,
-[f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss] = ...
-  leasqr(XY, XY, p0, 'ellipse2', stol , niter, W, dp,'dellipse2',options);
-end
+  leasqr(XY, XY, p0, modelFun, stol, niter, W, dp, modelJac, options);
 
 % degrees of freedom
 nu = length(f) - length(p(dp==1));
