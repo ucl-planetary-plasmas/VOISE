@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.10 2011/03/01 18:47:20 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.11 2011/03/02 14:45:01 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -69,13 +69,13 @@ set(get(h,'title'),'string','\it L','FontSize',12,'Fontweight','normal')
 end
 
 if length(p)==5,
-  [xnom,ynom] = disk(p(:));
-  [xmin,ymin] = disk(p(:).*[1;1;Rmin;Rmin;1]);
-  [xmax,ymax] = disk(p(:).*[1;1;Rmax;Rmax;1]);
+  [xnom,ynom] = disc(p(:));
+  [xmin,ymin] = disc(p(:).*[1;1;Rmin;Rmin;1]);
+  [xmax,ymax] = disc(p(:).*[1;1;Rmax;Rmax;1]);
 elseif length(p)==3,
-  [xnom,ynom] = disk(p(:));
-  [xmin,ymin] = disk(p(:).*[1;1;Rmin]);
-  [xmax,ymax] = disk(p(:).*[1;1;Rmax]);
+  [xnom,ynom] = disc(p(:));
+  [xmin,ymin] = disc(p(:).*[1;1;Rmin]);
+  [xmax,ymax] = disc(p(:).*[1;1;Rmax]);
 end
 
 plot(p(1), p(2), 'rx','MarkerSize',10);
