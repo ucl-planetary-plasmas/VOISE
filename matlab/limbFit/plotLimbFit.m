@@ -2,7 +2,7 @@ function plotLimbFit(params,fit1,fit2)
 % function plotLimbFit(params,fit1,fit2)
 
 %
-% $Id: plotLimbFit.m,v 1.2 2009/11/12 17:13:02 patrick Exp $
+% $Id: plotLimbFit.m,v 1.3 2011/03/02 14:46:05 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -27,19 +27,12 @@ axis tight
 
 hold on
 
-td = linspace(-180,180,50);
+[x0,y0] = disc(fit1.p0);
+pp = 1:length(fit1.p0);
 
-r0 = limbModel(td,fit1.p0);
-x0 = r0.*cosd(td);
-y0 = r0.*sind(td);
+[x1,y1] = disc(fit1.p(pp));
 
-r1 = limbModel(td,fit1.p);
-x1 = r1.*cosd(td);
-y1 = r1.*sind(td);
-
-r2 = limbModel(td,fit2.p);
-x2 = r2.*cosd(td);
-y2 = r2.*sind(td);
+[x2,y2] = disc(fit2.p(pp));
 
 h = plot(x0,y0,'k-.',x1,y1,'k--',x2,y2,'k-');
 set(h,'linewidth',1)

@@ -8,7 +8,7 @@ function [varargout] = limbFitEx2(action,varargin)
 % [params,fit1,fit2] = limbFitEx2('limbFit')
 
 %
-% $Id: limbFitEx2.m,v 1.4 2010/09/30 18:18:13 patrick Exp $
+% $Id: limbFitEx2.m,v 1.5 2011/03/02 14:46:05 patrick Exp $
 %
 % Copyright (c) 2008 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -132,6 +132,7 @@ switch lower(action),
 		   [px, py] = getPolePos();
 			 Tpole = 180/pi*atan2(py, px);
      end
+		 pp = 1:length(p0);
 		 fit1 = getDefaultFitParams(p0,[px,py]);
 		 fit1.LSmax = 16;
 		 fit1.Rmin = 0.9;
@@ -142,10 +143,10 @@ switch lower(action),
 		 % allow command line modifications
 		 fit1 = parseArgs(fit1, varargin{:});
 
-		 fit1 = getLimb(CVD, params, fit1);
+		 fit1 = getLimb2(CVD, params, fit1);
 
 		 % try again with better selected seeds
-		 fit2 = getDefaultFitParams(fit1.p,[px,py]);
+		 fit2 = getDefaultFitParams(fit1.p(pp),[px,py]);
 		 fit2.LSmax = 12;
 		 fit2.Rmin = 0.95;
 		 fit2.Rmax = 1.05;
@@ -158,7 +159,7 @@ switch lower(action),
 
 		 close all
 
-		 fit2 = getLimb(CVD, params, fit2);
+		 fit2 = getLimb2(CVD, params, fit2);
 
 		 orient landscape, set(gcf,'PaperOrientation','portrait');
 		 printFigure(gcf,[path '/select.eps']);
