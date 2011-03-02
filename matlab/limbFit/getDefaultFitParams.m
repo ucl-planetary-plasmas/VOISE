@@ -1,8 +1,8 @@
-function fit = getDefaultFitParams(p0,polePos)
-% function fit = getDefaultFitParams(p0,polePos)
+function fit = getDefaultFitParams(p0)
+% function fit = getDefaultFitParams(p0)
 
 %
-% $Id: getDefaultFitParams.m,v 1.6 2010/09/30 18:18:13 patrick Exp $
+% $Id: getDefaultFitParams.m,v 1.7 2011/03/02 17:38:20 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,6 +22,9 @@ function fit = getDefaultFitParams(p0,polePos)
 
 % initial parameters
 fit.p0             = p0(:);
+
+% direct model function and jacobian
+fit.model          = { @ellipse2, @dellipse2 };
 
 % leasqr control parameters
 
@@ -72,9 +75,10 @@ fit.Rmax           = 1.1;
 % polar angles are defined from -180 to 180 degrees
 fit.Tlim           = {};
 
-if 0
 % default selection function for angles
 fit.selectAngles   = @allAngles;
+
+if 0
 % allow to provide position of one of the poles
 if nargin>1,
   fit.polePos      = polePos;
@@ -82,3 +86,4 @@ else
   fit.polePos      = [];
 end
 end
+
