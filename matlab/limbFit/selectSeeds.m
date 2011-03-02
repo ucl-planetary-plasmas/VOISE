@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.6 2010/09/30 18:18:13 patrick Exp $
+% $Id: selectSeeds.m,v 1.7 2011/03/02 17:40:21 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -68,24 +68,6 @@ if ~isempty(fit.Tlim),
 	  iSelect = iSelect & (T < fit.Tlim{i}(1) | T > fit.Tlim{i}(2) );
     fprintf(1,'Number Seeds on limb : %d\n', length(Sls(find(iSelect))));
 	end
-end
-
-if 0,
-% if pole position is not empty calculate the polar angle to the pole
-% and substract that value to the polar angle to the seeds
-if ~isempty(fit.polePos),
-  Tpole = 180/pi*atan2(fit.polePos(2)./b, fit.polePos(1)./a);
-	fprintf(1,'Pole polar angle %.0f deg\n', Tpole);
-	T = T - Tpole;
-end
-if isa(fit.selectAngles,'char') | isa(fit.selectAngles,'function_handle'),
-      [selectAngles, msg] = fcnchk(fit.selectAngles);
-end
-withinAngularSpec = selectAngles(T(iSelect));
-if any(withinAngularSpec == false),
-  iSelect(withinAngularSpec == false) = [];
-  fprintf(1,'Number Seeds on limb : %d\n', length(iSelect))
-end
 end
 
 % embed selected seeds in fit structure
