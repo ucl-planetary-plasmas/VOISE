@@ -1,14 +1,14 @@
-function [x,y] = disk(p,n)
-% function [x,y] = disk(p,n)
+function [x,y] = disc(p,n)
+% function [x,y] = disc(p,n)
 %
-% returns coordinates [x,y] of n points on a disk 
+% returns coordinates [x,y] of n points on a disc
 % i.e. a circle given by parameters p=(xc,yc,r) or
 % an ellipse given by parameters p=(xc,yc,a,b,tilt)
 % where tilt is the angle of semi-major axis to x-axis 
 % in radians unit
 
 %
-% $Id: disc.m,v 1.1 2011/03/01 18:46:41 patrick Exp $
+% $Id: disc.m,v 1.2 2011/03/02 14:35:24 patrick Exp $
 %
 % Copyright (c) 2011
 % Patrick Guio <p.guio@ucl.ac.uk>
