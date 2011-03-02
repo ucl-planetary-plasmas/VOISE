@@ -1,3 +1,81 @@
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/limbFitEx2.m (1.6):
+	  Updated to use selectSector function and removed dependencies on
+	  obsolete polePos.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/selectSector.m (1.1):
+	  New function to get the angle limit of an angle sector.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitLimb2.m (1.8):
+	  Added help text.  Updated code to support new field 'model'.
+	  Fixed bug where R was overwritten when running circfit.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/disc.m (1.3):
+	  Fixed circle function to handle parameter angle in radian.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/selectSeeds.m (1.7):
+	  Removed commented code that use obsolete fit fields
+	  'selectAngles' and 'polePos'.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/getDefaultFitParams.m (1.7):
+	  Added new field model. This is cell that contains function handle
+	  or function name to the direct function and Jacobian.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/plotLimbFit.m (1.4):
+	  Fixed the number of primary parameters for the legend.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/limbFitEx1.m (1.3), matlab/limbFit/limbFitEx2.m
+	  (1.5), matlab/limbFit/plotLimbFit.m (1.3):
+	  Removed dependencies on obsolete fitting code.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/plotSelectedSeeds.m (1.11):
+	  Updated calls to disc function instead of disk.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/circle.m (1.4[DEAD]), matlab/limbFit/dcircle.m
+	  (1.4[DEAD]), matlab/limbFit/dellipse.m (1.5[DEAD]),
+	  matlab/limbFit/ellipse.m (1.4[DEAD]), matlab/limbFit/fitCircle.m
+	  (1.4[DEAD]), matlab/limbFit/fitEllipse.m (1.4[DEAD]),
+	  matlab/limbFit/fitLimb.m (1.3[DEAD]), matlab/limbFit/getLimb.m
+	  (1.3[DEAD]), matlab/limbFit/jacLimbModel.m (1.3[DEAD]),
+	  matlab/limbFit/testCircleFit.m (1.3[DEAD]),
+	  matlab/limbFit/testEllipseFit.m (1.4[DEAD]),
+	  matlab/limbFit/testLimbFit.m (1.2[DEAD]):
+	  Obsoleted initial fitting code.
+
+2011-03-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/disc.m (1.2):
+	  Renamed function disc (instead of disk).
+
+2011-03-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/plotSelectedSeeds.m (1.10):
+	  Updated to use new function 'disk'.
+
+2011-03-01  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/disc.m (1.1):
+	  Function to generate a disk (i.e. a circle or an ellipse).
+
 2011-02-25  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* configure.ac (1.27):
