@@ -4,11 +4,9 @@ function [params,IVD,DVD,MVD,CVD] = VOISEf(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISEf.m,v 1.1 2009/03/20 18:03:09 patrick Exp $
+% $Id: VOISEf.m,v 1.2 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2008 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -21,6 +19,8 @@ function [params,IVD,DVD,MVD,CVD] = VOISEf(params, ns, initSeeds, varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 %[s,w] = unix(['rm -f ' params.oDir '*.eps']);
 

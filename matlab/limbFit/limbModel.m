@@ -2,11 +2,9 @@ function r = limbModel(t,p)
 % function r = limbModel(t,p)
 
 %
-% $Id: limbModel.m,v 1.1 2009/10/16 13:55:35 patrick Exp $
+% $Id: limbModel.m,v 1.2 2011/03/26 17:16:56 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function r = limbModel(t,p)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 if length(p) == 3,
 

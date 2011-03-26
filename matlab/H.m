@@ -2,11 +2,9 @@ function h = H(p1,p2,p3,p4)
 % function h = H(p1,p2,p3,p4)
 
 %
-% $Id: H.m,v 1.2 2009/03/18 17:15:54 patrick Exp $
+% $Id: H.m,v 1.3 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function h = H(p1,p2,p3,p4)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % See Eq. 2.4.10 page 80 in Spatial Tesselation and Applications 
 % of Voronoi Diagrams, Okabe, 2000

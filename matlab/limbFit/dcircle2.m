@@ -2,10 +2,10 @@ function dr=dcircle2(xy,f,p,dp,func)
 % function dr=dcircle2(xy,f,p,dp,func)
 
 %
-% $Id: dcircle2.m,v 1.4 2010/07/13 15:11:01 patrick Exp $
+% $Id: dcircle2.m,v 1.5 2011/03/26 17:16:56 patrick Exp $
 %
-% Copyright (c) 2010
-% Patrick Guio <p.guio@ucl.ac.uk>
+% Copyright (c) 2010-2011
+% Patrick Guio <patrick.guio@gmail.com>
 %
 % All Rights Reserved.
 %

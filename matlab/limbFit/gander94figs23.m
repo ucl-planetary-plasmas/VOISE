@@ -4,11 +4,9 @@ function gander94fig23
 % figure 3.1 and 3.2 from Gander et al., 1994
 
 %
-% $Id: gander94figs23.m,v 1.2 2010/07/15 17:02:39 patrick Exp $
+% $Id: gander94figs23.m,v 1.3 2011/03/26 17:16:56 patrick Exp $
 %
-% Copyright (c) 2010
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2010-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -21,6 +19,8 @@ function gander94fig23
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % eq 3.6 from Gander et al., 1994
 x = [1, 2, 5, 7, 9, 6, 3, 8]';

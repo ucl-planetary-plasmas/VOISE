@@ -2,11 +2,9 @@ function fit = getLimb2(VD,params,fit)
 % function fit = getLimb2(VD,params,fit)
 
 %
-% $Id: getLimb2.m,v 1.4 2010/10/05 20:51:35 patrick Exp $
+% $Id: getLimb2.m,v 1.5 2011/03/26 17:16:56 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function fit = getLimb2(VD,params,fit)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % Calculate equivalent scale length from VD as sqrt(S)
 [imls, Sls] = getVDOp(VD, params.W, @(x) sqrt(length(x)));

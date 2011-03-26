@@ -2,11 +2,9 @@ function [xp,yp] = getPolePos()
 % function [xp,yp] = getPolePos()
 
 %
-% $Id: getPolePos.m,v 1.2 2009/12/02 22:25:17 patrick Exp $
+% $Id: getPolePos.m,v 1.3 2011/03/26 17:16:56 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function [xp,yp] = getPolePos()
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 fprintf(1,'\nSelect approximate pole position and press mouse button\n');
 [xp, yp] = ginput(1);

@@ -2,11 +2,9 @@ function [S,xc,yc,md2s,md2c] = getVDstats(VD, params, sk)
 % function [S,xc,yc,md2s,md2c] = getVDstats(VD, params, sk)
 
 %
-% $Id: getVRstats.m,v 1.1 2010/10/05 13:44:28 patrick Exp $
+% $Id: getVRstats.m,v 1.2 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2010
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2010-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function [S,xc,yc,md2s,md2c] = getVDstats(VD, params, sk)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % Calculate equivalent scale length from VD as sqrt(S)
 [imls, Sls] = getVDOp(VD, params.W, @(x) sqrt(length(x)));

@@ -2,11 +2,9 @@ function [Wop, Sop] = getFiniteVR(VD, W)
 % function [Wop, Sop] = getFiniteVR(VD, W)
 
 %
-% $Id: getFiniteVR.m,v 1.1 2009/07/03 08:20:47 patrick Exp $
+% $Id: getFiniteVR.m,v 1.2 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function [Wop, Sop] = getFiniteVR(VD, W)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 Wop = zeros(size(W));

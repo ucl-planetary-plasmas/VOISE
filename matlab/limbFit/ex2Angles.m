@@ -2,11 +2,9 @@ function flag = ex2Angles(T)
 % function flag = ex2Angles(T)
 
 %
-% $Id: ex2Angles.m,v 1.2 2009/12/02 21:46:05 patrick Exp $
+% $Id: ex2Angles.m,v 1.3 2011/03/26 17:16:56 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function flag = ex2Angles(T)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % do not consider points at the pole
 flag = T<=-20 | T>=20;

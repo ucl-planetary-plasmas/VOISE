@@ -2,11 +2,9 @@ function S = getCentroidSeed(VD, params, k)
 % function S = getCentroidSeed(VD, params, k)
 
 %
-% $Id: getCentroidSeed.m,v 1.9 2009/08/26 08:33:37 patrick Exp $
+% $Id: getCentroidSeed.m,v 1.10 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2008 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function S = getCentroidSeed(VD, params, k)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % find out closure of Voronoi Region associated to seed k
 [ii, jj, ij] = getVRclosure(VD, k, VD.Nk{k});

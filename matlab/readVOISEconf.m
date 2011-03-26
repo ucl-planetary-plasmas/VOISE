@@ -29,11 +29,9 @@ function params = readVOISEconf(conffile)
 % Note that lines starting with # are ignored.
 
 %
-% $Id: readVOISEconf.m,v 1.3 2011/02/16 12:41:26 patrick Exp $
+% $Id: readVOISEconf.m,v 1.4 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2010
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2010-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -46,6 +44,8 @@ function params = readVOISEconf(conffile)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % load default VOISE parameters
 params = getDefaultVOISEParams();

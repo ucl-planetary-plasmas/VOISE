@@ -2,11 +2,9 @@ function VD = computeVDFast(nr, nc, S)
 % function VD = computeVDFast(nr, nc, S)
 
 %
-% $Id: computeVDFast.m,v 1.5 2009/07/07 14:12:44 patrick Exp $
+% $Id: computeVDFast.m,v 1.6 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2008 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function VD = computeVDFast(nr, nc, S)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % update VD structure
 VD.nr = nr;

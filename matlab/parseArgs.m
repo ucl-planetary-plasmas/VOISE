@@ -6,11 +6,9 @@ function s = parseArgs(s,varargin)
 % is assigned to the field of the structure.
 
 %
-% $Id: parseArgs.m,v 1.3 2011/02/16 12:46:34 patrick Exp $
+% $Id: parseArgs.m,v 1.4 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2009 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -23,6 +21,8 @@ function s = parseArgs(s,varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 if isempty(varargin)
   return

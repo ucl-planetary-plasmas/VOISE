@@ -2,11 +2,9 @@ function [V,I] = getVRvertices(VD, s)
 % function [V,I] = getVRvertices(VD, s)
 
 %
-% $Id: getVRvertices.m,v 1.2 2009/07/04 21:17:11 patrick Exp $
+% $Id: getVRvertices.m,v 1.3 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2008 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -19,6 +17,8 @@ function [V,I] = getVRvertices(VD, s)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % seed to consider
 xs = VD.Sx(s);

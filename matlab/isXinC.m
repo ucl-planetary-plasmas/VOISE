@@ -16,11 +16,9 @@ function inC = isXinC(X, rsu,  s, A, VD)
 % Vol. 18, No 10, October 1997
 
 %
-% $Id: isXinC.m,v 1.1 2009/02/08 21:07:16 patrick Exp $
+% $Id: isXinC.m,v 1.2 2011/03/26 17:16:55 patrick Exp $
 %
-% Copyright (c) 2008 
-% Patrick Guio <p.guio@ucl.ac.uk>
-%
+% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
@@ -33,7 +31,8 @@ function inC = isXinC(X, rsu,  s, A, VD)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
 % Public License for more details.
 %
-
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 if ~isempty(rsu), % if rsu empty don't look for cocircularity
   % Look for cocircular points
