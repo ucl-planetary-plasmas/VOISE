@@ -2,9 +2,9 @@ function flag = ex2Angles(T)
 % function flag = ex2Angles(T)
 
 %
-% $Id: ex2Angles.m,v 1.3 2011/03/26 17:16:56 patrick Exp $
+% $Id: ex2Angles.m,v 1.4 2012/04/16 15:45:15 patrick Exp $
 %
-% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

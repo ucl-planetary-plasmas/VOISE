@@ -8,9 +8,9 @@ function [x,y] = disc(p,n)
 % in radians unit
 
 %
-% $Id: disc.m,v 1.4 2011/03/26 17:16:56 patrick Exp $
+% $Id: disc.m,v 1.5 2012/04/16 15:45:15 patrick Exp $
 %
-% Copyright (c) 2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2011-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

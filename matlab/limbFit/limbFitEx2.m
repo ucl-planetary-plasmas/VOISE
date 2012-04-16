@@ -8,9 +8,9 @@ function [varargout] = limbFitEx2(action,varargin)
 % [params,fit1,fit2] = limbFitEx2('limbFit')
 
 %
-% $Id: limbFitEx2.m,v 1.7 2011/03/26 17:16:56 patrick Exp $
+% $Id: limbFitEx2.m,v 1.8 2012/04/16 15:45:15 patrick Exp $
 %
-% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
