@@ -14,9 +14,9 @@ function webVOISE(VOISEconf)
 % iFile = ../share/input/sampleint.fits
 % oDir = ../share/output/sampleint/
 
-% $Id: webVOISE.m.in,v 1.6 2011/03/26 17:16:56 patrick Exp $
+% $Id: webVOISE.m.in,v 1.7 2012/04/16 16:54:28 patrick Exp $
 %
-% Copyright (c) 2010-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

@@ -8,9 +8,9 @@ function verifyImage(filename)
 % about the data formats supported.
 
 %
-% $Id: verifyImage.m,v 1.8 2011/03/26 17:16:56 patrick Exp $
+% $Id: verifyImage.m,v 1.9 2012/04/16 16:54:28 patrick Exp $
 %
-% Copyright (c) 2010-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

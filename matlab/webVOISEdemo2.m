@@ -2,9 +2,9 @@
 % webVOISEdemo2: script for demo2 with config webVOISEdemo2.dat
 %
 
-% $Id: webVOISEdemo2.m,v 1.3 2011/03/26 17:16:56 patrick Exp $
+% $Id: webVOISEdemo2.m,v 1.4 2012/04/16 16:54:28 patrick Exp $
 %
-% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

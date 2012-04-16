@@ -11,9 +11,9 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.18 2011/03/26 17:16:55 patrick Exp $
+% $Id: VOISE.m,v 1.19 2012/04/16 16:54:27 patrick Exp $
 %
-% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

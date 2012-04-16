@@ -6,9 +6,9 @@ function [S,varargout] = poissonSeeds(nr,nc,ns,varargin)
 % in the randomisation of the regular tesselation (default pc = 0.02)
 
 %
-% $Id: poissonSeeds.m,v 1.5 2011/03/26 17:16:55 patrick Exp $
+% $Id: poissonSeeds.m,v 1.6 2012/04/16 16:54:27 patrick Exp $
 %
-% Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

@@ -2,9 +2,9 @@ function printFigure(hf,filename)
 % function printFigure(hf,filename)
 
 %
-% $Id: printFigure.m,v 1.4 2011/03/26 17:16:55 patrick Exp $
+% $Id: printFigure.m,v 1.5 2012/04/16 16:54:27 patrick Exp $
 %
-% Copyright (c) 2009-2011 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
