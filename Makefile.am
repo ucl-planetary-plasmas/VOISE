@@ -2,7 +2,7 @@
 
 SUBDIRS = matlab mcc share
 
-EXTRA_DIST = mcc/Makefile 
+EXTRA_DIST = LICENSE mcc/Makefile 
 
 update-cl:
 	update-cl.sh
