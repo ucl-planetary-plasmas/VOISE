@@ -2,9 +2,9 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.6 2010/09/13 10:34:02 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.7 2012/04/16 11:54:16 patrick Exp $
 %
-% Copyright (c) 2008 
+% Copyright (c) 2008-2012
 % Patrick Guio <p.guio@ucl.ac.uk>
 %
 % All Rights Reserved.
@@ -27,7 +27,7 @@ spiceKernelsPath = '/home/patrick/research/codes/spice/data/';
 
 % Load a leapseconds kernel.
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-cspice_furnsh([spiceKernelsPath 'naif0009.tls']);
+cspice_furnsh([spiceKernelsPath 'naif0010.tls']);
 
 % Load planetary ephemeris 
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
@@ -40,7 +40,7 @@ cspice_furnsh([spiceKernelsPath 'jup267.bsp']);
 % Load orientation data for planets, natural 
 % satellites, the Sun, and selected asteroids
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
-cspice_furnsh([spiceKernelsPath 'pck00009.tpc']);
+cspice_furnsh([spiceKernelsPath 'pck00010.tpc']);
 
 
 % Convert string date to cspice
