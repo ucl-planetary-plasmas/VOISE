@@ -2,7 +2,7 @@ function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
 % function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
 
 %
-% $Id: ltc.m,v 1.2 2010/10/04 17:05:28 patrick Exp $
+% $Id: ltc.m,v 1.3 2012/04/17 20:17:47 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -42,8 +42,8 @@ yl = r*sqrt(1-e^2*cos(olat)^2)*sin(theta);
 csnllat = (1-e^2)*cos(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 snnllat = sin(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 
-180/pi*acos(csnllat)
-180/pi*asin(snnllat)
+%180/pi*acos(csnllat)
+%180/pi*asin(snnllat)
 
 DL = cos(slat)*sin(dlon)*xl+...
     (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)/(1-e^2)*cos(olat))*yl;
@@ -113,14 +113,16 @@ yt = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
 DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
 
 DLC1 = cos(slat)*sin(dlon)*xc(1)+...
-    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat)/(1-e^2))*yc(1)
+    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat)/(1-e^2))*yc(1);
 DLC2 = cos(slat)*sin(dlon)*xc(2)+...
-    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat)/(1-e^2))*yc(2)
+    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat)/(1-e^2))*yc(2);
 
 DTC1 = csntlat*sin(dlon)*xc(1)+...
-    (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(1)
+    (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(1);
 DTC2 = csntlat*sin(dlon)*xc(2)+...
-    (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(2)
+    (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(2);
+
+fprintf(1,'DLC1=%.2g DLC2=%.2g DTC1=%.2g DTC2=%.2g\n', DLC1, DLC2, DTC1, DTC2);
 
 xtl = xt(DT>0);
 ytl = yt(DT>0);

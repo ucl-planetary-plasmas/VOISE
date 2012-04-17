@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.15 2011/03/02 14:34:43 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.16 2012/04/17 20:17:47 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -124,9 +124,9 @@ scalfac = (1/(sedistAU*AU_km))*(180/pi)*3600;
 
 mfig = gcf;
 figure
-r = semiMaj_km*scalfac
+r = semiMaj_km*scalfac;
 [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,selat,selon,sslat,sslon);
-xc,yc
+%xc',yc'
 figure(mfig)
 
 % Calculate the viewing angle
