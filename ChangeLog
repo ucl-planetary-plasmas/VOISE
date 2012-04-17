@@ -1,3 +1,18 @@
+2012-04-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/fitLimb2.m (1.11),
+	  matlab/limbFit/plotSelectedSeeds.m (1.14),
+	  matlab/limbFit/selectSeeds.m (1.10):
+	  Added support for new ellipse parametrisation with eccentricity.
+
+2012-04-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/limbFit/dellipse3.m (1.1), matlab/limbFit/ellipse3.m
+	  (1.1):
+	  Function and Jacobian for a five parameters ellipse (centre
+	  position, semi- major axis, eccentricity and orientation of
+	  semi-major axis).
+
 2012-04-16  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* LICENSE (1.1), Makefile.am (1.3):
