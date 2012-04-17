@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.9 2012/04/16 15:45:15 patrick Exp $
+% $Id: selectSeeds.m,v 1.10 2012/04/17 19:34:57 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,6 +22,13 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 
 p     = fit.p0;
+
+% eccentricity parametrisation
+if strcmp(func2str(fit.model{1}),'ellipse3'),
+  a = p(3);
+  e = p(4);
+  p(4) = a * sqrt(1-e^2);
+end
 
 Sx    = fit.Sx;
 Sy    = fit.Sy;

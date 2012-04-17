@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.13 2012/04/16 15:45:15 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.14 2012/04/17 19:34:57 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,6 +21,13 @@ function plotSelectedSeeds(VD,params,fit)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 p     = fit.p0;
+
+% eccentricity parametrisation
+if strcmp(func2str(fit.model{1}),'ellipse3'),
+  a = p(3); 
+  e = p(4);
+  p(4) = a * sqrt(1-e^2);
+end
 
 iSelect = fit.iSelect;
 

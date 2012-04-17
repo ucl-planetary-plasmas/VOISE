@@ -8,7 +8,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 
 %
-% $Id: fitLimb2.m,v 1.10 2012/04/16 15:45:15 patrick Exp $
+% $Id: fitLimb2.m,v 1.11 2012/04/17 19:34:57 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -116,6 +116,24 @@ fit.chi2   = chi2;     % reduced chi2 statistic
 
 fprintf(1,'status %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, chi2);
 if length(fit.p0) == 5,
+  % eccentricity parametrisation
+  if strcmp(func2str(fit.model{1}),'ellipse3'),
+    fprintf(1,'params estimated     Xc(%8.1f,%8.1f) a=%8.1f e=%8.1f tilt=%8.4f\n', p(1:5));
+    fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) a=%8.1f e=%8.1f tilt=%8.4f\n', psd(1:5))
+    a = p(3);
+    e = p(4);
+    p(4) = a * sqrt(1-e^2);
+    da = psd(3);
+    de = psd(4);
+    % b^2 = a^2(1-e^2)
+    % 2b db = 2a da (1-e^2) -a^2 2 e de 
+    % db^2 = 1/4b^2 [4 a^2 (1-e^2)^2 da^2 + a^4 4 e^2 de^2
+    % db^2 = a^2/b^2(1-e^2)^2 da^2 + a^4/b^2e^2 de^2
+    % db^2 = (1-e^2) da^2 + a^2/(1-e^2)de^2
+    psd(4) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
+    fit.p = p;
+    fit.psd = psd;
+  end
   fprintf(1,'params estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', p(1:5));
   fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', psd(1:5))
 elseif length(fit.p0) == 3,
