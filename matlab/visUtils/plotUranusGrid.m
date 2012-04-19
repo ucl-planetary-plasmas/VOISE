@@ -2,7 +2,7 @@ function plotUranusGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 % function plotUranusGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 
 %
-% $Id: plotUranusGrid.m,v 1.1 2012/04/19 08:48:40 patrick Exp $
+% $Id: plotUranusGrid.m,v 1.2 2012/04/19 12:00:49 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -90,7 +90,6 @@ toc
 function drawUranusGrid(epoch,CML,psi,orientat,dlat,dlon,semiMaj_km,ecc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-orientat = -orientat;
 
 disp('************I am called**************')
 
@@ -136,6 +135,11 @@ figure(mfig)
 % Calculate the viewing angle
 lineOfSight = [sin(theobs)*cos(phiobs);sin(theobs)*sin(phiobs);cos(theobs)];
 
+% http://www.imcce.fr/cgi-bin/ephephys.cgi/calcul
+% gives 254.31 deg 
+alpha = psi-orientat;
+psi,orientat,alpha
+
 hold on
 
 % Grid curves of constant latitude
@@ -154,13 +158,14 @@ for the = [0:dlat:180]*pi/180,
 	[Xv,I] = sort(Xv);
 	Yv = Yv(I);
 	% rotation
-	[Xv,Yv] = rot(psi-orientat,Xv,Yv);
+	[Xv,Yv] = Rotate(alpha,Xv,Yv);
   plot(Xv,Yv,'k-','LineWidth',.5);
 	if 0
 	Xh = xsky(~flag_vang);
 	Yh = ysky(~flag_vang);
 	[Xh,I] = sort(Xh);
 	Yh = Yh(I);
+  [Xh,Yh] = Rotate(alpha,Xh,Yh);
   plot(Xh,Yh,'k--','LineWidth',.5);
 	end
 end
@@ -181,7 +186,7 @@ for phi = [0:dlon:360]*pi/180,
 	[Yv,I] = sort(Yv);
 	Xv = Xv(I);
 	% rotation
-	[Xv,Yv] = rot(psi-orientat,Xv,Yv);
+	[Xv,Yv] = Rotate(alpha,Xv,Yv);
 	if phi>0,
   plot(Xv,Yv,'k-','LineWidth',.5);
 	else, % phi==0,
@@ -192,6 +197,7 @@ for phi = [0:dlon:360]*pi/180,
 	Yh = ysky(~flag_vang);
 	[Yh,I] = sort(Yh);
 	Xh = Xh(I);
+  [Xh,Yh] = Rotate(alpha,Xh,Yh);
   plot(Xh,Yh,'k--','LineWidth',.5);
 	end
 end
@@ -208,9 +214,9 @@ phi = phi_rel + phiobs;
 [r,x,y,z,xsky,ysky] = spherical2Sky(semiMaj_km,ecc, ...
                                     the,phi,theobs,phiobs,scalfac);
 
-%plot(xsky, ysky, 'r-', -xsky, ysky, 'r-','LineWidth',1);
 % rotation
-[xsky,ysky] = rot(psi-orientat,xsky,ysky);
+[xsky,ysky] = Rotate(alpha,xsky,ysky);
+%plot(xsky, ysky, 'r-', -xsky, ysky, 'r-','LineWidth',1);
 plot(xsky, ysky, 'r-', 'LineWidth',1);
 
 % Repeat the above calculation for the locus of the day/night terminator
@@ -250,7 +256,7 @@ ysky(ii) = NaN;
 end
 
 % rotation
-[xsky,ysky] = rot(psi-orientat,xsky,ysky);
+[xsky,ysky] = Rotate(alpha,xsky,ysky);
 plot(xsky, ysky, 'g-','LineWidth',1);
 
 hold off
@@ -279,12 +285,12 @@ end
 
 return
 
-function [Vx,Vy] = rot(alpha,Ux,Uy)
+function [Vx,Vy] = Rotate(alpha,Ux,Uy)
 
 cosa = cosd(alpha);
 sina = sind(alpha);
 
-Vx = cosa*Ux-sina*Uy;
-Vy = sina*Ux+cosa*Uy;
+Vx = cosa*Ux - sina*Uy;
+Vy = sina*Ux + cosa*Uy;
 
 

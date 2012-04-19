@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
 
 %
-% $Id: computeUranusAxis.m,v 1.1 2012/04/19 08:48:40 patrick Exp $
+% $Id: computeUranusAxis.m,v 1.2 2012/04/19 12:00:49 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -61,18 +61,18 @@ ssdist  = norm(ssposn);
 %sslong  = mod(atan2(ssposn(2), ssposn(1))*180/pi, 360);
 sslong  = atan2(ssposn(2), ssposn(1))*cspice_dpr;
 sslat = 90 - acos(ssposn(3)/ssdist)*cspice_dpr;
-ssdist,[sslong,sslat]
+%ssdist,[sslong,sslat]
 
 % converts rectangular coordinates to latitudinal coordinates.
 [radius, lon, lat] = cspice_reclat(ssposn);
-radius,[lon lat]*cspice_dpr
+%radius,[lon lat]*cspice_dpr
 
 % converts rectangular coordinates to planetographic coordinates.
 radii = cspice_bodvrd('URANUS','RADII',3);
 re = radii(1);
 f = (radii(1)-radii(2))/radii(2);
 [lon, lat, alt] = cspice_recpgr('URANUS', ssposn, re, f);
-alt,[lon lat]*cspice_dpr
+%alt,[lon lat]*cspice_dpr
 
 if 0
 %
@@ -116,12 +116,17 @@ UranusRotAxis = [0;0;1];
 Earth2UranusRot = cspice_pxform('IAU_EARTH','IAU_URANUS',et);
 EarthRotAxis = cspice_vhat(Earth2UranusRot*[0;0;1]);
 
-% psi is the angle between the projection of the rotation axes of Earth and
-% Uranus onto the plane perpendicular to the line of sight between Earth and
+% psi is the angle between the projections of the rotation axes of Earth and
+% Uranus onto the plane perpendicular to the line of sight from Earth to
 % Uranus
-psi = -asind(cspice_vnorm(cross( ...
-       cspice_vhat(UranusRotAxis-dot(UranusRotAxis,lineOfSight)*lineOfSight), ...
-       cspice_vhat(EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight))))
+projUranusRotAxis = cspice_vhat( ...
+                    UranusRotAxis-dot(UranusRotAxis,lineOfSight)*lineOfSight);
+projEarthRotAxis = cspice_vhat( ...
+                    EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight);
+crossProductProj = cspice_vhat(cross(projEarthRotAxis,projUranusRotAxis));
+
+psi = -sign(dot(crossProductProj,lineOfSight))*...
+      asind(cspice_vnorm(cross(projEarthRotAxis,projUranusRotAxis)))
 
 seposn = state(1:3);
 sedist  = norm(seposn);
