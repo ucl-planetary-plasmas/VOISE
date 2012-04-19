@@ -1,5 +1,5 @@
-function varargout = getFitsPrimaryDataKeywordsValue(filename,keywords)
-% function values = getFitsPrimaryDataKeywordsValue(filename,keywords)
+function varargout = getFitsKeywordsValue(filename,keywords)
+% function values = getFitsKeywordsValue(filename,keywords)
 %
 % Return values of keywords contained in the Primary Data structure of a 
 % file in FITS format.
@@ -12,7 +12,7 @@ function varargout = getFitsPrimaryDataKeywordsValue(filename,keywords)
 % [pcx,pcy,cml,udate]
 
 %
-% $Id: getFitsPrimaryDataKeywordsValue.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: getFitsKeyVal.m,v 1.1 2012/04/19 11:51:57 patrick Exp $
 %
 % Copyright (c) 2011-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -37,6 +37,7 @@ values = cell(size(keywords));
 for k = 1:length(keywords),
 
   keyword = keywords{k};
+	if isfield(info,'PrimaryData') & isfield(info.PrimaryData,'Keywords')
   for i = 1:size(info.PrimaryData.Keywords,1),
 
     if strcmp(info.PrimaryData.Keywords{i,1},keyword),
@@ -45,6 +46,18 @@ for k = 1:length(keywords),
 
 		end
 
+	end
+	end
+	if isfield(info,'Image') & isfield(info.Image,'Keywords')
+  for i = 1:size(info.Image(1).Keywords,1),
+
+    if strcmp(info.Image(1).Keywords{i,1},keyword),
+
+		  values{k} = info.Image(1).Keywords{i,2};
+
+		end
+
+	end
 	end
 
 end
