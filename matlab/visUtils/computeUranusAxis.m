@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
 
 %
-% $Id: computeUranusAxis.m,v 1.2 2012/04/19 12:00:49 patrick Exp $
+% $Id: computeUranusAxis.m,v 1.3 2012/04/19 14:54:21 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -97,7 +97,7 @@ end
 rotate = cspice_pxform('J2000', 'IAU_URANUS', et);
 sysIIIstate = rotate*state(1:3);
 % modulo to get longitude
-CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360)
+CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360);
 %lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*180/pi
 
 % and Earth
@@ -135,8 +135,8 @@ sedist  = norm(seposn);
 selong  = atan2(seposn(2), seposn(1))*180/pi;
 selat   = 90 - acos(seposn(3)/sedist)*180/pi;
 
-% Jovian Central Meridian Longitude
-% CML is defined by the longitude of Jupiter facing the Earth at a certain time.
+% Uranian Central Meridian Longitude
+% CML is defined by the longitude of Uranus facing the Earth at a certain time.
 target   = 'EARTH';
 frame    = 'J2000';
 abcorr   = 'NONE';
@@ -154,31 +154,31 @@ sedistAU = cspice_convrt(sedist,'KM','AU');
 % AU in km
 AU2km = cspice_convrt(1,'AU','KM');
 
-% Transform position of Jupiter axis to Radial Tangential Normal coordinates
-% Set up RTN definitions in Jupiter coordinates
-% R = Sun to Jupiter unit vector
+% Transform position of Uranus axis to Radial Tangential Normal coordinates
+% Set up RTN definitions in Uranus coordinates
+% R = Sun to Uranus unit vector
 % T = (Omega x R) / | (Omega x R) | where Omega is Sun's spin axis  
 % N completes the right-handed triad 
 
-% normalised radial vector from Sun toward Jupiter 
+% normalised radial vector from Sun toward Uranus 
 rvec = -cspice_vhat(ssposn);
 
-% get the matrix that transforms position vectors from Sun to Jupiter
+% get the matrix that transforms position vectors from Sun to Uranus
 % a specified epoch 'et'. 
-% For a n-vector 'et' Sun2Jupiter is an array of dimensions (3,3,n).
-Sun2Jupiter = cspice_pxform('IAU_SUN', 'IAU_URANUS', et);
+% For a n-vector 'et' Sun2Uranus is an array of dimensions (3,3,n).
+Sun2Uranus = cspice_pxform('IAU_SUN', 'IAU_URANUS', et);
 
 % Sun axis orientation in Sun-centred system
 sunaxis = [0.0; 0.0; 1.0];
-% and in frame of Jupiter
-sunaxis = Sun2Jupiter * sunaxis;
+% and in frame of Uranus
+sunaxis = Sun2Uranus * sunaxis;
 
 % Tangential is perpendicular to radial and sun axis 
 tvec = cspice_vhat(cross(sunaxis, rvec));
 % Normal is perpendicular to radial and tangential
 nvec = cspice_vhat(cross(rvec, tvec));
 
-% Jupiter axis orientation in Jupiter-centred system
+% Uranus axis orientation in Uranus-centred system
 jupaxis = [0.0; 0.0; 1.0]; 
 
 % in RTN
@@ -189,7 +189,7 @@ jupaxis_t = sum(jupaxis.*tvec);
 jupaxis_n = sum(jupaxis.*nvec);
 end
 
-% get Jupiter axis / sun direction angular separation
+% get Uranus axis / sun direction angular separation
 axis_sun_ang = acos(-1.0*rvec(3))*180/pi;
 
 if 0,

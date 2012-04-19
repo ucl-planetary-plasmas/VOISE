@@ -1,8 +1,8 @@
-function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
-% function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
+function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(epoch)
+% function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(epoch)
 
 %
-% $Id: computeSaturnAxis.m,v 1.1 2012/04/19 12:49:41 patrick Exp $
+% $Id: computeSaturnAxis.m,v 1.2 2012/04/19 14:56:30 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -44,7 +44,7 @@ cspice_furnsh([spiceKernelsPath 'pck00010.tpc']);
 % Convert string date to cspice
 et = cspice_str2et(epoch);
 
-% Get position of Sun with respect to Uranus
+% Get position of Sun with respect to Saturn
 target   = 'SUN';
 frame    = 'IAU_SATURN';
 abcorr   = 'NONE';
@@ -93,7 +93,7 @@ obsrvr = 'Earth';
 end
 
 % Uranian Central Meridian Longitude
-% CML is defined by the longitude of Uranus facing the Earth at a certain time.
+% CML is defined by the longitude of Saturn facing the Earth at a certain time.
 rotate = cspice_pxform('J2000', 'IAU_SATURN', et);
 sysIIIstate = rotate*state(1:3);
 % modulo to get longitude
@@ -105,28 +105,28 @@ target   = 'EARTH';
 frame    = 'IAU_SATURN';
 abcorr   = 'NONE';
 observer = 'SATURN';
-% in IAU_SATURN frame the rotation axis of Uranus is state(1:3)=(0,0,1)
+% in IAU_SATURN frame the rotation axis of Saturn is state(1:3)=(0,0,1)
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
 
 % In IAU_SATURN coordinates system
 lineOfSight = -cspice_vhat(state(1:3));
-UranusRotAxis = [0;0;1];
+SaturnRotAxis = [0;0;1];
 
-% matrix to transform from Earth referential to Uranus referential
-Earth2UranusRot = cspice_pxform('IAU_EARTH','IAU_SATURN',et);
-EarthRotAxis = cspice_vhat(Earth2UranusRot*[0;0;1]);
+% matrix to transform from Earth referential to Saturn referential
+Earth2SaturnRot = cspice_pxform('IAU_EARTH','IAU_SATURN',et);
+EarthRotAxis = cspice_vhat(Earth2SaturnRot*[0;0;1]);
 
 % psi is the angle between the projections of the rotation axes of Earth and
-% Uranus onto the plane perpendicular to the line of sight from Earth to
-% Uranus
-projUranusRotAxis = cspice_vhat( ...
-                    UranusRotAxis-dot(UranusRotAxis,lineOfSight)*lineOfSight);
+% Saturn onto the plane perpendicular to the line of sight from Earth to
+% Saturn
+projSaturnRotAxis = cspice_vhat( ...
+                    SaturnRotAxis-dot(SaturnRotAxis,lineOfSight)*lineOfSight);
 projEarthRotAxis = cspice_vhat( ...
                     EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight);
-crossProductProj = cspice_vhat(cross(projEarthRotAxis,projUranusRotAxis));
+crossProductProj = cspice_vhat(cross(projEarthRotAxis,projSaturnRotAxis));
 
 psi = -sign(dot(crossProductProj,lineOfSight))*...
-      asind(cspice_vnorm(cross(projEarthRotAxis,projUranusRotAxis)))
+      asind(cspice_vnorm(cross(projEarthRotAxis,projSaturnRotAxis)))
 
 seposn = state(1:3);
 sedist  = norm(seposn);
@@ -136,7 +136,7 @@ selong  = atan2(seposn(2), seposn(1))*180/pi;
 selat   = 90 - acos(seposn(3)/sedist)*180/pi;
 
 % Jovian Central Meridian Longitude
-% CML is defined by the longitude of Jupiter facing the Earth at a certain time.
+% CML is defined by the longitude of Saturn facing the Earth at a certain time.
 target   = 'EARTH';
 frame    = 'J2000';
 abcorr   = 'NONE';
@@ -154,31 +154,31 @@ sedistAU = cspice_convrt(sedist,'KM','AU');
 % AU in km
 AU2km = cspice_convrt(1,'AU','KM');
 
-% Transform position of Jupiter axis to Radial Tangential Normal coordinates
-% Set up RTN definitions in Jupiter coordinates
-% R = Sun to Jupiter unit vector
+% Transform position of Saturn axis to Radial Tangential Normal coordinates
+% Set up RTN definitions in Saturn coordinates
+% R = Sun to Saturn unit vector
 % T = (Omega x R) / | (Omega x R) | where Omega is Sun's spin axis  
 % N completes the right-handed triad 
 
-% normalised radial vector from Sun toward Jupiter 
+% normalised radial vector from Sun toward Saturn 
 rvec = -cspice_vhat(ssposn);
 
-% get the matrix that transforms position vectors from Sun to Jupiter
+% get the matrix that transforms position vectors from Sun to Saturn
 % a specified epoch 'et'. 
-% For a n-vector 'et' Sun2Jupiter is an array of dimensions (3,3,n).
-Sun2Jupiter = cspice_pxform('IAU_SUN', 'IAU_SATURN', et);
+% For a n-vector 'et' Sun2Saturn is an array of dimensions (3,3,n).
+Sun2Saturn = cspice_pxform('IAU_SUN', 'IAU_SATURN', et);
 
 % Sun axis orientation in Sun-centred system
 sunaxis = [0.0; 0.0; 1.0];
-% and in frame of Jupiter
-sunaxis = Sun2Jupiter * sunaxis;
+% and in frame of Saturn
+sunaxis = Sun2Saturn * sunaxis;
 
 % Tangential is perpendicular to radial and sun axis 
 tvec = cspice_vhat(cross(sunaxis, rvec));
 % Normal is perpendicular to radial and tangential
 nvec = cspice_vhat(cross(rvec, tvec));
 
-% Jupiter axis orientation in Jupiter-centred system
+% Saturn axis orientation in Saturn-centred system
 jupaxis = [0.0; 0.0; 1.0]; 
 
 % in RTN
@@ -189,7 +189,7 @@ jupaxis_t = sum(jupaxis.*tvec);
 jupaxis_n = sum(jupaxis.*nvec);
 end
 
-% get Jupiter axis / sun direction angular separation
+% get Saturn axis / sun direction angular separation
 axis_sun_ang = acos(-1.0*rvec(3))*180/pi;
 
 if 0,
