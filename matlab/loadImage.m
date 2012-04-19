@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.12 2012/04/16 16:54:27 patrick Exp $
+% $Id: loadImage.m,v 1.13 2012/04/19 14:05:06 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -91,7 +91,12 @@ try
                       '\nAnd/or try to run start_VOISE'],params.iFile);
       throw(ME);
 		end
-    im = squeeze(fitsread(params.iFile));
+    info = fitsinfo(params.iFile);
+    if ~isfield(info,'Image')
+      im = squeeze(fitsread(params.iFile));
+    else
+      im = squeeze(fitsread(params.iFile,'image'));
+    end
     % set image, axes and related
     params.W = im;
     [nr, nc] = size(params.W);
