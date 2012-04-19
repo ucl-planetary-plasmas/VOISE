@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.7 2012/04/16 11:54:16 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.8 2012/04/19 15:50:53 patrick Exp $
 %
 % Copyright (c) 2008-2012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -69,6 +69,27 @@ frame    = 'IAU_JUPITER';
 abcorr   = 'NONE';
 observer = 'JUPITER';
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
+
+% In IAU_JUPITER coordinates system
+lineOfSight = -cspice_vhat(state(1:3));
+JupiterRotAxis = [0;0;1];
+
+% matrix to transform from Earth referential to Jupiter referential
+Earth2JupiterRot = cspice_pxform('IAU_EARTH','IAU_JUPITER',et);
+EarthRotAxis = cspice_vhat(Earth2JupiterRot*[0;0;1]);
+
+% psi is the angle between the projections of the rotation axes of Earth and
+% Jupiter onto the plane perpendicular to the line of sight from Earth to
+% Jupiter
+projJupiterRotAxis = cspice_vhat( ...
+                    JupiterRotAxis-dot(JupiterRotAxis,lineOfSight)*lineOfSight);
+projEarthRotAxis = cspice_vhat( ...
+                    EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight);
+crossProductProj = cspice_vhat(cross(projEarthRotAxis,projJupiterRotAxis));
+
+psi = -sign(dot(crossProductProj,lineOfSight))*...
+      asind(cspice_vnorm(cross(projEarthRotAxis,projJupiterRotAxis)))
+
 
 seposn = state(1:3);
 sedist  = norm(seposn);
