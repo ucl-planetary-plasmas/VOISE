@@ -2,7 +2,7 @@ function plotSaturnGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 % function plotSaturnGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 
 %
-% $Id: plotSaturnGrid.m,v 1.1 2012/04/19 12:55:04 patrick Exp $
+% $Id: plotSaturnGrid.m,v 1.2 2012/04/20 11:59:26 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -85,9 +85,6 @@ toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function drawSaturnGrid(epoch,CML,psi,orientat,dlat,dlon,semiMaj_km,ecc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-disp('************I am called**************')
 
 % get parameters from SPICE
 [semiMaj_km1,b1,ecc1,f1] = getPlanetGeometry('Saturn');

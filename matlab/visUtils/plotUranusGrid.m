@@ -2,7 +2,7 @@ function plotUranusGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 % function plotUranusGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 
 %
-% $Id: plotUranusGrid.m,v 1.2 2012/04/19 12:00:49 patrick Exp $
+% $Id: plotUranusGrid.m,v 1.3 2012/04/20 11:59:43 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -90,9 +90,6 @@ toc
 function drawUranusGrid(epoch,CML,psi,orientat,dlat,dlon,semiMaj_km,ecc)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-disp('************I am called**************')
-
 % get parameters from SPICE
 [semiMaj_km1,b1,ecc1,f1] = getPlanetGeometry('Uranus');
 fprintf(1,'Semi-major axis = %.0f km Eccentricity = %.5f\n',semiMaj_km1, ecc1);
@@ -137,7 +134,7 @@ lineOfSight = [sin(theobs)*cos(phiobs);sin(theobs)*sin(phiobs);cos(theobs)];
 
 % http://www.imcce.fr/cgi-bin/ephephys.cgi/calcul
 % gives 254.31 deg 
-alpha = psi-orientat;
+alpha = psi;
 psi,orientat,alpha
 
 hold on

@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(epoch)
 
 %
-% $Id: computeSaturnAxis.m,v 1.2 2012/04/19 14:56:30 patrick Exp $
+% $Id: computeSaturnAxis.m,v 1.3 2012/04/20 11:57:20 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -108,6 +108,8 @@ observer = 'SATURN';
 % in IAU_SATURN frame the rotation axis of Saturn is state(1:3)=(0,0,1)
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
 
+% Calculation of the angle between celestial north and Saturn rotation axis 
+% as seen along the line of sight Earth-Saturn
 % In IAU_SATURN coordinates system
 lineOfSight = -cspice_vhat(state(1:3));
 SaturnRotAxis = [0;0;1];
@@ -125,8 +127,14 @@ projEarthRotAxis = cspice_vhat( ...
                     EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight);
 crossProductProj = cspice_vhat(cross(projEarthRotAxis,projSaturnRotAxis));
 
-psi = -sign(dot(crossProductProj,lineOfSight))*...
-      asind(cspice_vnorm(cross(projEarthRotAxis,projSaturnRotAxis)))
+cosa = dot(projEarthRotAxis,projSaturnRotAxis);
+sina = cspice_vnorm(cross(projEarthRotAxis,projSaturnRotAxis));
+
+if dot(crossProductProj,lineOfSight)<0,% projEarth,projSaturn anti-clockwise
+  psi = acosd(cosa);
+else, % clockwise
+  psi = 360-acosd(cosa);
+end
 
 seposn = state(1:3);
 sedist  = norm(seposn);

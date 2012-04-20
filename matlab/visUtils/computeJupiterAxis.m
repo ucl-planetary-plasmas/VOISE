@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.8 2012/04/19 15:50:53 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.9 2012/04/20 11:57:20 patrick Exp $
 %
 % Copyright (c) 2008-2012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -70,6 +70,8 @@ abcorr   = 'NONE';
 observer = 'JUPITER';
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
 
+% Calculation of the angle between celestial north and Jupiter rotation axis 
+% as seen along the line of sight Earth-Jupiter
 % In IAU_JUPITER coordinates system
 lineOfSight = -cspice_vhat(state(1:3));
 JupiterRotAxis = [0;0;1];
@@ -87,9 +89,14 @@ projEarthRotAxis = cspice_vhat( ...
                     EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight);
 crossProductProj = cspice_vhat(cross(projEarthRotAxis,projJupiterRotAxis));
 
-psi = -sign(dot(crossProductProj,lineOfSight))*...
-      asind(cspice_vnorm(cross(projEarthRotAxis,projJupiterRotAxis)))
+cosa = dot(projEarthRotAxis,projJupiterRotAxis);
+sina = cspice_vnorm(cross(projEarthRotAxis,projJupiterRotAxis));
 
+if dot(crossProductProj,lineOfSight)<0,% projEarth,projJupiter anti-clockwise
+  psi = acosd(cosa);
+else, % clockwise
+  psi = 360-acosd(cosa);
+end
 
 seposn = state(1:3);
 sedist  = norm(seposn);

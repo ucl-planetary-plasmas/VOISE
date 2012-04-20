@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
 
 %
-% $Id: computeUranusAxis.m,v 1.3 2012/04/19 14:54:21 patrick Exp $
+% $Id: computeUranusAxis.m,v 1.4 2012/04/20 11:57:20 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -105,16 +105,18 @@ target   = 'EARTH';
 frame    = 'IAU_URANUS';
 abcorr   = 'NONE';
 observer = 'URANUS';
-% in IAU_URANUS frame the rotation axis of Uranus is state(1:3)=(0,0,1)
+% in IAU_URANUS frame the rotation axis of Uranus is UranusRotAxis=(0,0,1)
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
 
+% Calculation of the angle between celestial north and Uranus rotation axis 
+% as seen along the line of sight Earth-Uranus
 % In IAU_URANUS coordinates system
 lineOfSight = -cspice_vhat(state(1:3));
 UranusRotAxis = [0;0;1];
 
 % matrix to transform from Earth referential to Uranus referential
-Earth2UranusRot = cspice_pxform('IAU_EARTH','IAU_URANUS',et);
-EarthRotAxis = cspice_vhat(Earth2UranusRot*[0;0;1]);
+Earth2UranusRef = cspice_pxform('IAU_EARTH','IAU_URANUS',et);
+EarthRotAxis = cspice_vhat(Earth2UranusRef*[0;0;1]);
 
 % psi is the angle between the projections of the rotation axes of Earth and
 % Uranus onto the plane perpendicular to the line of sight from Earth to
@@ -125,8 +127,14 @@ projEarthRotAxis = cspice_vhat( ...
                     EarthRotAxis-dot(EarthRotAxis,lineOfSight)*lineOfSight);
 crossProductProj = cspice_vhat(cross(projEarthRotAxis,projUranusRotAxis));
 
-psi = -sign(dot(crossProductProj,lineOfSight))*...
-      asind(cspice_vnorm(cross(projEarthRotAxis,projUranusRotAxis)))
+cosa = dot(projEarthRotAxis,projUranusRotAxis);
+sina = cspice_vnorm(cross(projEarthRotAxis,projUranusRotAxis));
+
+if dot(crossProductProj,lineOfSight)<0,% projEarth,projUranus anti-clockwise
+  psi = acosd(cosa);
+else, % clockwise
+  psi = 360-acosd(cosa);
+end
 
 seposn = state(1:3);
 sedist  = norm(seposn);
