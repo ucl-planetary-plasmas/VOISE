@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.9 2012/04/20 11:57:20 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.10 2012/04/25 10:20:16 patrick Exp $
 %
 % Copyright (c) 2008-2012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -60,7 +60,8 @@ observer = 'JUPITER';
 ssposn = state(1:3);
 ssdist  = norm(ssposn);
 % modulo to get longitude 
-sslong  = mod(atan2(ssposn(2), ssposn(1))*180/pi, 360);
+sslong  = mod(atan2(ssposn(2), ssposn(1))*180/pi, 360)
+sslong  = atan2(ssposn(2), ssposn(1))*cspice_dpr
 sslat = 90 - acos(ssposn(3)/ssdist)*180/pi;
 
 % and Earth
