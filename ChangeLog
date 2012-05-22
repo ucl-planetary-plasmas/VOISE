@@ -1,3 +1,27 @@
+2012-05-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/loadImage.m (1.14):
+	  Added support to load specific information about planetary images
+	  from HST fits files.
+
+2012-05-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTPlanetParams.m (1.1):
+	  Function to compute planetary parameters using SPICE and data
+	  collected in the HST fits file.
+
+2012-05-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getFitsKeywordsValue.m (1.2):
+	  Added extraction of instrument data of first image in addition to
+	  the primary data.
+
+2012-05-22  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTInfo.m (1.1):
+	  Function to extract useful information from HST header about
+	  image geometry.
+
 2012-04-19  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/loadImage.m (1.13):
