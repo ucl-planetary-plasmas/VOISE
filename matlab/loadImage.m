@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.13 2012/04/19 14:05:06 patrick Exp $
+% $Id: loadImage.m,v 1.14 2012/05/22 16:38:55 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -92,7 +92,13 @@ try
       throw(ME);
 		end
     info = fitsinfo(params.iFile);
-    if ~isfield(info,'Image')
+    % get HST parameters if available
+    params = getHSTInfo(params);
+    pause
+    params = getHSTPlanetParams(params);
+    pause
+
+    if ~isfield(info,'Image'), 
       im = squeeze(fitsread(params.iFile));
     else
       im = squeeze(fitsread(params.iFile,'image'));
@@ -102,6 +108,37 @@ try
     [nr, nc] = size(params.W);
     params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
     params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
+
+    % pixel coordinates
+    [Xj,Yj] = meshgrid(1:nc, 1:nr);
+
+    HST = params.HST;
+
+    % pixel coordinates to intermediate world coordinates (ra and dec)
+    Xi = HST.CD1_1*(Xj-HST.CRPIX1)+HST.CD1_2*(Yj-HST.CRPIX2)+HST.CRVAL1;
+    Yi = HST.CD2_1*(Xj-HST.CRPIX1)+HST.CD2_2*(Yj-HST.CRPIX2)+HST.CRVAL2;
+
+    % planet world coordinates to pixel coordinates
+    params.planet.pxc = HST.iCD1_1*(params.planet.ra-HST.CRVAL1)+...
+		                   HST.iCD1_2*(params.planet.rec-HST.CRVAL2)+HST.CRPIX1;
+    params.planet.pyc = HST.iCD2_1*(params.planet.ra-HST.CRVAL1)+...
+		                   HST.iCD2_2*(params.planet.rec-HST.CRVAL2)+HST.CRPIX2;
+
+    close all
+    figure
+    pcolor(Xj,Yj,log10(abs(params.W))); shading flat; 
+    hold on
+    plot(HST.CRPIX1,HST.CRPIX2,'ko','markersize',5)
+    plot(params.planet.pxc,params.planet.pyc,'kx','markersize',5)
+    hold off
+
+    figure
+    pcolor(Xi,Yi,log10(abs(params.W))); shading flat; 
+    hold on
+    plot(HST.CRVAL1,HST.CRVAL2,'ko','markersize',5)
+    plot(params.planet.ra,params.planet.rec,'kx','markersize',5)
+    hold off
+    pause
 
   else, % neither mat-file nor fits-file
 
@@ -133,3 +170,8 @@ catch me
   rethrow(me);
 
 end
+
+
+function string = mydeblank(string)
+
+string = deblank(fliplr(deblank(fliplr(string))));
