@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.1 2012/05/22 16:18:35 patrick Exp $
+% $Id: getHSTInfo.m,v 1.2 2012/05/31 14:40:25 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,7 +47,7 @@ if ~isempty(TELESCOP) | strcmp(TELESCOP,'HST'),
   HST.APER_FOV = getFitsKeywordsValue(iFile,{'APER_FOV'});
 	% plate scale (arcsec/pixel)
   if strcmp(HST.INSTRUME,'ACS'),
-    HST.PLATESC = 0.25;
+    HST.PLATESC = 0.025;
   else
     HST.PLATESC = getFitsKeywordsValue(iFile,{'PLATESC'});
   end
@@ -86,6 +86,32 @@ if ~isempty(TELESCOP) | strcmp(TELESCOP,'HST'),
 	% angle between sun and V1 axis (optical axis)
   HST.SUNANGLE = getFitsKeywordsValue(iFile,{'SUNANGLE'});
 
+	fprintf(1,'RA_TARG, DEC_TARG = %.8f, %.8f [deg]\n', HST.RA_TARG, HST.DEC_TARG);
+	fprintf(1,'CRVAL1 , CRVAL2   = %.8f, %.8f [deg]\n', HST.CRVAL1, HST.CRVAL2);
+	fprintf(1,'RA_APER, DEC_APER = %.8f, %.8f [deg]\n', HST.RA_TARG, HST.DEC_TARG);
+
+	fprintf(1,'ORIENTAT          = %f [deg]\n', HST.ORIENTAT);
+	% find scaling and rotation
+	CD = [HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2];
+	% scaling
+	s = [norm(CD(1,:));norm(CD(2,:))];
+	% linear tranformation
+	m = [CD(1,:)/s(1);CD(2,:)/s(2)];
+	% rotation angle
+	orientat = atan2(m(2,1), m(2,2))*180/pi;
+	fprintf(1,'orientat          = %f [deg]\n', orientat);
+
+	% embed scaling and rotation stuff into HST 
+	HST.CD = CD;
+	HST.s = s;
+	HST.m = m;
+	HST.orientat = orientat;
+
+	% inverse linear transform matrix with scale
+	HST.iCD = [HST.iCD1_1,HST.iCD1_2;HST.iCD2_1,HST.iCD2_2];
+
+  % Embed HST into params
 	params.HST = HST;
+
 end
 
