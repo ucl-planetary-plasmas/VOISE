@@ -1,5 +1,5 @@
-function varargout = getFitsKeywordsValue(filename,keywords)
-% function values = getFitsKeywordsValue(filename,keywords)
+function varargout = getFitsKeywordsValue(filename,keywords,verbose)
+% function values = getFitsKeywordsValue(filename,keywords,verbose)
 %
 % Return values of keywords contained in the Primary Data structure and
 % the Instrument Data structure of the first image of a file in FITS format.
@@ -12,7 +12,7 @@ function varargout = getFitsKeywordsValue(filename,keywords)
 % [pcx,pcy,cml,udate]
 
 %
-% $Id: getFitsKeyVal.m,v 1.2 2012/05/22 16:30:50 patrick Exp $
+% $Id: getFitsKeyVal.m,v 1.3 2012/06/11 16:50:54 patrick Exp $
 %
 % Copyright (c) 2011-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -38,26 +38,30 @@ for k = 1:length(keywords),
 
   keyword = keywords{k};
 
-  if isfield(info,'PrimaryData') & isfield(info.PrimaryData,'Keywords')
+  if isfield(info,'PrimaryData') && isfield(info.PrimaryData,'Keywords')
     for i = 1:size(info.PrimaryData.Keywords,1),
       if strcmp(info.PrimaryData.Keywords{i,1},keyword),
         values{k} = info.PrimaryData.Keywords{i,2};
+        if exist('verbose','var') && ~isempty(verbose) && verbose,
         fprintf(1,'PrimaryData %3d %8s - %s\n', i, ...
                 mydeblank(info.PrimaryData.Keywords{i,1}), ...
                 mydeblank(info.PrimaryData.Keywords{i,3}));
+        end
       end
     end
   end
 
-  if isfield(info,'Image') & isfield(info.Image,'Keywords')
+  if isfield(info,'Image') && isfield(info.Image,'Keywords')
 		%for j = 1:length(info.Image),
 		for j = 1,
       for i = 1:size(info.Image(j).Keywords,1),
         if strcmp(info.Image(j).Keywords{i,1},keyword),
           values{k} = info.Image(j).Keywords{i,2};
+          if exist('verbose','var') && ~isempty(verbose) && verbose,
           fprintf(1,'Image(%d)    %3d %8s - %s\n', j, i, ...
                   mydeblank(info.Image(j).Keywords{i,1}), ...
                   mydeblank(info.Image(j).Keywords{i,3}));
+          end
         end
       end
     end
