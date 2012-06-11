@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.2 2012/06/11 17:07:43 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.3 2012/06/11 17:22:03 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -98,7 +98,7 @@ fprintf(1,'target2planetangle %f\n', target2planetangle);
 fprintf(1,'|planet-rp|        %f\n', norm([planet.ra-rpra;planet.dec-rpdec]));
 
 % zhat normalised vector from Earth toward target (line of sight) in Earth frame
-zhat = cspice_vhat(refpixposn);
+zhat = -cspice_vhat(refpixposn);
 % celestial north is y in Earth frame of reference
 if isJ2000,
 north = EarthtoJ2000*[0;0;1];
@@ -177,6 +177,7 @@ xplanetaxis = dot(planetaxis,xhat);
 yplanetaxis = dot(planetaxis,yhat);
 %[xplanetaxis,yplanetaxis] = rot2d(HST.ORIENTAT,xplanetaxis,yplanetaxis);
 planetaxis = [xplanetaxis,yplanetaxis];
+fprintf(1,'planetaxis %12.6g, %12.6g\n', planetaxis);
 
 % poles computed in world coordinates (ra/dec) and transformed to pixel coordinate
 if ~isJ2000,
