@@ -1,3 +1,36 @@
+2012-06-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTPlanetParams.m (1.3):
+	  Fixed direction of zhat.
+
+2012-06-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTPlanetParams.m (1.2):
+	  Work in progress, more debugging and cleaning required...
+
+2012-06-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTInfo.m (1.3):
+	  Small fix in the RA/DEC variables displayed.
+
+2012-06-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getFitsKeywordsValue.m (1.3):
+	  Added verbose flag.  Fixed logical test from element-wise AND (&)
+	  to short-circuit AND (&&).
+
+2012-06-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/cmpHSTSpiceTimeDelays.m (1.1):
+	  Small test function for checking time and aberration correction
+	  effect on reference point positioning.
+
+2012-05-31  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTInfo.m (1.2):
+	  Embed linear transformation from/to pixel coordinates to/from
+	  world intermediate coordinates.
+
 2012-05-22  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/loadImage.m (1.14):
