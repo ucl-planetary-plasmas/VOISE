@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.2 2012/05/31 14:40:25 patrick Exp $
+% $Id: getHSTInfo.m,v 1.3 2012/06/11 16:53:15 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -86,9 +86,11 @@ if ~isempty(TELESCOP) | strcmp(TELESCOP,'HST'),
 	% angle between sun and V1 axis (optical axis)
   HST.SUNANGLE = getFitsKeywordsValue(iFile,{'SUNANGLE'});
 
-	fprintf(1,'RA_TARG, DEC_TARG = %.8f, %.8f [deg]\n', HST.RA_TARG, HST.DEC_TARG);
-	fprintf(1,'CRVAL1 , CRVAL2   = %.8f, %.8f [deg]\n', HST.CRVAL1, HST.CRVAL2);
-	fprintf(1,'RA_APER, DEC_APER = %.8f, %.8f [deg]\n', HST.RA_TARG, HST.DEC_TARG);
+	fprintf(1,'CRPIX1 , CRPIX2   = %12.6f, %12.6f pixel\n', HST.CRPIX1, HST.CRPIX2);
+
+	fprintf(1,'CRVAL1 , CRVAL2   = %12.6f, %12.6f deg\n', HST.CRVAL1, HST.CRVAL2);
+	fprintf(1,'RA_TARG, DEC_TARG = %12.6f, %12.6f deg\n', HST.RA_TARG, HST.DEC_TARG);
+	fprintf(1,'RA_APER, DEC_APER = %12.6f, %12.6f deg\n', HST.RA_APER, HST.DEC_APER);
 
 	fprintf(1,'ORIENTAT          = %f [deg]\n', HST.ORIENTAT);
 	% find scaling and rotation
