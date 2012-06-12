@@ -2,7 +2,7 @@ function cmpHSTSpiceTimeDelays(filename)
 % function cmpHSTSpiceTimeDelays(filename)
 
 %
-% $Id: cmpHSTSpiceTimeDelays.m,v 1.3 2012/06/12 14:23:29 patrick Exp $
+% $Id: cmpHSTSpiceTimeDelays.m,v 1.4 2012/06/12 14:26:40 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -134,9 +134,13 @@ figure
 if 1,
   % convert to arcsec and set relative ra/dec to ref pix
   offx = -rpra; offy = -rpdec; s = 3600;
+	xlbl = 'ra/ref. pixel [arcsec]';
+	ylbl = 'dec/ref.pixel [arcsec]';
 else
   % absolute ra/dec in deg
   offx = 0; offy = 0; s = 1;
+	xlbl = 'ra [deg]';
+	ylbl = 'dec [deg]';
 end
 Xi = s*(Xi+offx);
 Yi = s*(Yi+offy);
@@ -157,8 +161,8 @@ end
 hold off
 axis auto
 axis equal
-xlabel('ra');
-ylabel('dec');
+xlabel(xlbl);
+ylabel(ylbl);
 
 
 %  particularly in MATLAB due to data persistence.
