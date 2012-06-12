@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.3 2012/06/11 17:22:03 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.4 2012/06/12 14:29:32 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,6 +22,7 @@ function params = getHSTPlanetParams(params)
 
 HST = params.HST;
 
+% load necessary SPICE kernels
 planet = setUpSpice4Planet(HST);
 
 IAU_PLANET = ['IAU_' upper(planet.name)];
@@ -64,9 +65,10 @@ planetdist = cspice_vnorm(planetposn);
 [range,ra,dec] = cspice_recrad(state(1:3,:));
 planet.r = range;
 % rad to deg
-planet.ra = ra*degPerRad; planet.dec = dec*degPerRad;
+planet.ra = ra*degPerRad; 
+planet.dec = dec*degPerRad;
 
-fprintf(1,'planet    ra, dec = %.4f,%.4f\n',[planet.ra(:)';planet.dec(:)']);
+fprintf(1,'planet    ra, dec = %12.6f,%12.6f deg\n',[planet.ra(:)';planet.dec(:)']);
 
 % reference pixel image coordinates 
 rpx = HST.CRPIX1;
@@ -77,8 +79,7 @@ rpdec = HST.CRVAL2;
 % inverse matrix to transform from world to pixel coordinates
 iCD = HST.iCD;
 % planet world coordinates to pixel coordinates
-xpc = iCD(1,1)*(planet.ra-rpra)+iCD(1,2)*(planet.dec-rpdec)+rpx;
-ypc = iCD(2,1)*(planet.ra-rpra)+iCD(2,2)*(planet.dec-rpdec)+rpy;
+[xpc,ypc] = getHSTradec2pixel(HST,planet.ra,planet.dec);
 
 % Convert reference pixel ra/dec (target direction) to rect coordinates
 refpixposn = cspice_radrec(planetdist, rpra*radPerDeg, rpdec*radPerDeg);
@@ -90,26 +91,28 @@ if ~isJ2000,
 refpixposn = J2000toEarth*refpixposn;
 end
 
-fprintf(1,'planetposn %12.6g, %12.6g %12.6g\n', planetposn);
-fprintf(1,'refpixposn %12.6g, %12.6g %12.6g\n', refpixposn);
+fprintf(1,'planetposn        = %12.6g, %12.6g, %12.6g km\n', planetposn);
+fprintf(1,'refpixposn        = %12.6g, %12.6g, %12.6g km\n', refpixposn);
 
-target2planetangle = acosd(dot(cspice_vhat(planetposn),cspice_vhat(refpixposn)));
-fprintf(1,'target2planetangle %f\n', target2planetangle);
-fprintf(1,'|planet-rp|        %f\n', norm([planet.ra-rpra;planet.dec-rpdec]));
+refpix2planetangle = acosd(dot(cspice_vhat(planetposn),cspice_vhat(refpixposn)));
+fprintf(1,'angle(planet,refpix)           = %f deg\n', refpix2planetangle);
+fprintf(1,'|planet(ra,dec)-refpix(ra,dec) = %f deg\n', ...
+norm([planet.ra-rpra;planet.dec-rpdec],2));
 
-% zhat normalised vector from Earth toward target (line of sight) in Earth frame
+% zhat normalised vector from ref pixel pointing toward Earth in Earth ref
 zhat = -cspice_vhat(refpixposn);
-% celestial north is y in Earth frame of reference
+% get celestial north in Earth ref
 if isJ2000,
 north = EarthtoJ2000*[0;0;1];
 else
 north = [0;0;1];
 end
 % yhat is the projection of celestial north onto the image plane
-% perpendicular to the line of sight
-%cspice_vnorm(north-dot(zhat,north)*zhat)
+% (the plane perpendicular to the line of sight defined by zhat)
+% rotated by ORIENTAT - position angle of image y axis (deg. e of n)
 yhat = cspice_vhat(north-dot(zhat,north)*zhat);
-% rotate to account to ORIENTAT
+% rotate by ORIENTAT corresponding to the position angle of
+% image y axis (deg. e of n)
 [yhatr(1),yhatr(2),yhatr(3)] = rot3d(zhat,HST.ORIENTAT,yhat(1),yhat(2),yhat(3));
 %yhat = yhatr;
 % angle between celestial north and its projection onto the image plane
@@ -118,18 +121,18 @@ yhat = cspice_vhat(north-dot(zhat,north)*zhat);
 % xhat such that (xhat,yhat,zhat) is direct
 xhat = cross(yhat,zhat);
 xhatr = cross(yhatr,zhat);
+if 0
 fprintf(1,'angle(y/xhat,y/xhatr)=%.2f,%.2f\n', ...
         [acosd(dot(yhat,yhatr)), acosd(dot(xhat,xhatr))]);
 fprintf(1,'xhat(r).yhat(r)      =%.2g,%.2g\n',[dot(xhat,yhat), dot(xhatr,yhatr)])
+end
 % rotated axes
 xhat=xhatr; yhat=yhatr;
 
-% ref pixel position (xt,yt) should be zero
-xt = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
-yt = atan2(dot(refpixposn,yhat), planetdist)*radPerPixel;
-fprintf(1,'xt    = %10.4g, yt    = %10.4g\n', xt, yt);
-
-%pause
+% ref pixel position (xrp,yrp) should be zero
+xrp = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
+yrp = atan2(dot(refpixposn,yhat), planetdist)*radPerPixel;
+fprintf(1,'xrp, yrp          = %12.6g, %12.6g pixel\n', xrp, yrp);
 
 if 1
 % planet centre (Xpc,Ypc) in the image plane in km
@@ -140,18 +143,10 @@ end
 
 pc = [xpc-HST.CRPIX1, ypc-HST.CRPIX2];
 PC = [Xpc-HST.CRPIX1, Ypc-HST.CRPIX2];
-fprintf(1,'xpc   = %10.2f, ypc   = %10.2f norm=%10.2f\n', pc, norm(pc));
-fprintf(1,'Xpc   = %10.2f, Ypc   = %10.2f norm=%10.2f\n', PC, norm(PC));
-fprintf(1,'angle(xpc,Xpc)  =  %6.2f deg\n', acosd(dot(pc/norm(pc),PC/norm(PC))));
+fprintf(1,'xpc, ypc, |pc|    = %12.6f, %12.6f, %12.6f pixel\n', pc, norm(pc));
+fprintf(1,'xPC, yPC, |PC|    = %12.6f, %12.6f, %12.6f pixel\n', PC, norm(PC));
+fprintf(1,'angle(pc,PC)      = %12.2f deg\n', acosd(dot(pc/norm(pc),PC/norm(PC))));
 
-if 0
-% rotation to position angle of image y axis (deg. e of n)
-% i.e. rotated by ORIENTAT corresponding to the position
-% angle of image y axis (in degrees East of North)
-[xpcrot,ypcrot] = rot2d(HST.ORIENTAT,xpc,ypc);
-end
-
-%pause
 
 % get planet radii
 radii = cspice_bodvrd(planet.name,'RADII',3);
@@ -159,98 +154,91 @@ a = radii(1);
 b = radii(3);
 e = sqrt(a^2-b^2)/a;
 
+% if Saturn get rings parameters
+
 % Retrieve the transformation matrix from frame of the planet to IAU_EARTH.
+if 1, 
+% one-way light time corrected epoch
 planet2Earth = cspice_pxform(IAU_PLANET, 'IAU_EARTH', et-lt);
-% planet axis direction in Earth frame
+else
+planet2Earth = cspice_pxform(IAU_PLANET, 'IAU_EARTH', et);
+end
+% planet axis direction (pointing north) in Earth frame (or inertial J2000)
 if ~isJ2000,
 planetaxis = planet2Earth*[0;0;1];
 else
 planetaxis = EarthtoJ2000*(planet2Earth*[0;0;1]);
 end
-% angle between rotation axis and projection onto the image plane
+% angle between planet axis and projection onto the image plane
 tprojplanetaxis = acosd(dot(planetaxis,cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat)));
-fprintf(1,'tprojplanetaxis = %.2f deg\n', tprojplanetaxis);
+fprintf(1,'tprojplanetaxis      = %12.2g deg\n', tprojplanetaxis);
+fprintf(1,'cos(tprojplanetaxis) = %12.2g\n', cosd(tprojplanetaxis)),
 % projection of the planet axis onto the plane of the image
 planetaxis = cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat);
-fprintf(1,'planetaxis %12.6g, %12.6g %12.6g\n', planetaxis);
+fprintf(1,'planetaxis (Earth r) = %12.6f, %12.6f, %12.6f\n', planetaxis);
 xplanetaxis = dot(planetaxis,xhat);
 yplanetaxis = dot(planetaxis,yhat);
-%[xplanetaxis,yplanetaxis] = rot2d(HST.ORIENTAT,xplanetaxis,yplanetaxis);
 planetaxis = [xplanetaxis,yplanetaxis];
-fprintf(1,'planetaxis %12.6g, %12.6g\n', planetaxis);
+fprintf(1,'planetaxis (image)   = %12.6f, %12.6f\n', planetaxis);
 
-% poles computed in world coordinates (ra/dec) and transformed to pixel coordinate
+% poles computed in world (ra/dec) and transformed to pixel coordinates
 if ~isJ2000,
 planetnorth = EarthtoJ2000*(planetposn+planet2Earth*[0;0;b]);
-else
-planetnorth = planetposn+EarthtoJ2000*(planet2Earth*[0;0;b]);
-end
-[northrange,northra,northdec] = cspice_recrad(planetnorth);
-northra=northra*degPerRad;
-northdec=northdec*degPerRad;
-if ~isJ2000,
 planetsouth = EarthtoJ2000*(planetposn+planet2Earth*[0;0;-b]);
 else
+planetnorth = planetposn+EarthtoJ2000*(planet2Earth*[0;0;b]);
 planetsouth = planetposn+EarthtoJ2000*(planet2Earth*[0;0;-b]);
 end
+[northrange,northra,northdec] = cspice_recrad(planetnorth);
 [southrange,southra,southdec] = cspice_recrad(planetsouth);
-southra=southra*degPerRad;
-southdec=southdec*degPerRad;
-% planet world coordinates to pixel coordinates
-xn = iCD(1,1)*(northra-rpra)+iCD(1,2)*(northdec-rpdec)+rpx;
-yn = iCD(2,1)*(northra-rpra)+iCD(2,2)*(northdec-rpdec)+rpy;
-xs = iCD(1,1)*(southra-rpra)+iCD(1,2)*(southdec-rpdec)+rpx;
-ys = iCD(2,1)*(southra-rpra)+iCD(2,2)*(southdec-rpdec)+rpy;
-% equator,
+[xn,yn] = getHSTradec2pixel(HST,northra*degPerRad,northdec*degPerRad);
+[xs,ys] = getHSTradec2pixel(HST,southra*degPerRad,southdec*degPerRad);
+
+% equator computed in world (ra/dec) and transformed to pixel coordinates,
 lat = 0;
 lon = linspace(0,2*pi,100);
+planeteq = zeros(3,length(lon));
 for i=1:length(lon);
   posn = [a*cos(lat)*cos(lon(i));a*cos(lat)*sin(lon(i));b*sin(lat)];
 	if ~isJ2000,
-	planeteq = EarthtoJ2000*(planetposn+planet2Earth*posn);
+	planeteq(:,i) = EarthtoJ2000*(planetposn+planet2Earth*posn);
 	else
-	planeteq = planetposn+EarthtoJ2000*(planet2Earth*posn);
+	planeteq(:,i) = planetposn+EarthtoJ2000*(planet2Earth*posn);
 	end
-	[eqrange,eqra(i),eqdec(i)] = cspice_recrad(planeteq);
 end
-eqra = eqra*degPerRad;
-eqdec = eqdec*degPerRad;
-% planet world coordinates to pixel coordinates
-xeq = iCD(1,1)*(eqra-rpra)+iCD(1,2)*(eqdec-rpdec)+rpx;
-yeq = iCD(2,1)*(eqra-rpra)+iCD(2,2)*(eqdec-rpdec)+rpy;
-% meridian
+[eqrange,eqra,eqdec] = cspice_recrad(planeteq);
+[xeq,yeq] = getHSTradec2pixel(HST,eqra*degPerRad,eqdec*degPerRad);
+
+% meridian computed in world (ra/dec) and transformed to pixel coordinates
 lat = linspace(-pi/2,pi/2,100);
 lon = 0;
+planetmerid = zeros(3,length(lat));
 for i=1:length(lat);
   posn = [a*cos(lat(i))*cos(lon(1));a*cos(lat(1))*sin(lon(1));b*sin(lat(i))];
 	if ~isJ2000,
-  planetmerid = EarthtoJ2000*(planetposn+planet2Earth*posn);
+  planetmerid(:,i) = EarthtoJ2000*(planetposn+planet2Earth*posn);
 	else
-  planetmerid = planetposn+EarthtoJ2000*(planet2Earth*posn);
+  planetmerid(:,i) = planetposn+EarthtoJ2000*(planet2Earth*posn);
 	end
-	[meridrange,meridra(i),meriddec(i)] = cspice_recrad(planetmerid);
 end
-meridra = meridra*degPerRad;
-meriddec = meriddec*degPerRad;
-% planet world coordinates to pixel coordinates
-xmerid = iCD(1,1)*(meridra-rpra)+iCD(1,2)*(meriddec-rpdec)+rpx;
-ymerid = iCD(2,1)*(meridra-rpra)+iCD(2,2)*(meriddec-rpdec)+rpy;
+[meridrange,meridra,meriddec] = cspice_recrad(planetmerid);
+[xmerid,ymerid] = getHSTradec2pixel(HST,meridra*degPerRad,meriddec*degPerRad);
 
 
 if 1,
 % correction for projection on the plane
-fprintf(1,'cosd(tprojplanetaxis) = %f\n', cosd(tprojplanetaxis)),
 a = a*cosd(tprojplanetaxis);
 b = b*cosd(tprojplanetaxis);
 end
 
 % projection of semi-major and semi minor axis in pixels
-a = atan2(a,planetdist)*arcsecPerRad/HST.PLATESC;
-b = atan2(b,planetdist)*arcsecPerRad/HST.PLATESC;
+a = atan2(a,planetdist)*radPerPixel;
+b = atan2(b,planetdist)*radPerPixel;
 % tilt in the plane of the image with respect to x axis
 tilt = atan2(planetaxis(2),planetaxis(1))*degPerRad;
 
-fprintf(1,'planetary disc a=%.1f pix, b=%.1f pix, tilt=%.1f deg\n',a,b,tilt);
+fprintf(1,'planetary disc  a, b = %12.1f, %12.1f pixel, tilt = %5.1f deg\n',...
+a,b,tilt);
 
 % plot an ellipse with planet parameters, i.e. a, b, tilt
 theta = linspace(0,360,100);
@@ -260,7 +248,7 @@ elly = a*cosd(theta);
 % rotation by tilt
 [ellx,elly] = rot2d(tilt,ellx,elly);
 
-opts = {'fontsize',12,'fontweight','normal','color','black'};
+opts = {'fontsize',12,'fontweight','normal'}; %,'color','black'};
 
 % north-south pole axis
 xAxis = [1;-1]*planetaxis(1)*b;
@@ -271,7 +259,7 @@ plot(ellx,elly,xAxis,yAxis)
 text(xAxis(1),yAxis(1),'NAxis',opts{:});
 text(xAxis(2),yAxis(2),'SAxis',opts{:});
 axis equal
-%pause
+pause
 end
 
 W = params.W;
@@ -282,40 +270,22 @@ imagesc(X,Y,log10(abs(W)))
 axis xy
 hold on
 axis auto
-plot(rpx,rpy,'+','markersize',10)
-text(rpx,rpy,'O',opts{:})
-h=plot(Xpc,Ypc,'x','markersize',10);
-text(Xpc,Ypc,'(Xpc,Ypc)',opts{:})
-h=plot(xpc,ypc,'-x','markersize',10);
-text(xpc,ypc,'(xpc,ypc)',opts{:})
-plot(xn,yn,'ko','markersize',10);
-plot(xs,ys,'ko','markersize',10);
-text(xn,yn,'N',opts{:})
-text(xs,ys,'S',opts{:})
-plot(xeq,yeq,'-o');
-plot(xmerid,ymerid,'-o');
-plot([xn,xs],[yn,ys])
-plot(ellx+xpc(1,1),elly+ypc(1,1),'k-',xAxis+xpc(1),yAxis+ypc(1),'k-')
-text(xAxis(1)+xpc,yAxis(1)+ypc,'NAxis',opts{:})
-text(xAxis(2)+xpc,yAxis(2)+ypc,'SAxis',opts{:})
+plot(rpx,rpy,'b+','markersize',10), text(rpx,rpy,'O',opts{:})
+
+% using HST transformation from/to world to/from pixel coordinates and SPICE
+plot(xpc,ypc,'bx','markersize',10), text(xpc,ypc,'(xpc,ypc)',opts{:})
+plot([xn;xs],[yn;ys],'bo-','markersize',10), 
+text([xn;xs],[yn;ys],['N';'S'],opts{:},'color','b'),
+plot(xeq,yeq,'bo-',xmerid,ymerid,'bo-');
+
+% using HST ref pixel, y-axis orientation, plate scale and SPICE
+plot(Xpc,Ypc,'kx','markersize',10), text(Xpc,Ypc,'(Xpc,Ypc)',opts{:})
+plot(ellx+Xpc,elly+Ypc,'k-',xAxis+Xpc,yAxis+Ypc,'g-')
+text(xAxis+Xpc,yAxis+Ypc,['NAxis';'SAxis'],opts{:},'color','k')
+
 hold off
 axis equal
 %pause
-%figure
-
-if 0
-
-% rotate of ORIENTAT
-[ellx,elly] = rot2d(HST.ORIENTAT,ellx,elly);
-
-[xAxis,yAxis] = rot2d(HST.ORIENTAT,xAxis,yAxis);
-
-hold on
-plot([rpx,xpcrot+rpx],[rpy,ypcrot+rpy],'-x','markersize',10)
-plot(ellx+xpcrot+rpx,elly+ypcrot+rpy,'-',xAxis+xpcrot+rpx,yAxis+ypcrot+rpy)
-hold off
-
-end
 
 % Embed planet structure into params
 params.planet = planet;
