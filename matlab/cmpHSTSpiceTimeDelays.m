@@ -2,7 +2,7 @@ function cmpHSTSpiceTimeDelays(filename)
 % function cmpHSTSpiceTimeDelays(filename)
 
 %
-% $Id: cmpHSTSpiceTimeDelays.m,v 1.1 2012/06/11 11:48:39 patrick Exp $
+% $Id: cmpHSTSpiceTimeDelays.m,v 1.2 2012/06/12 14:17:38 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -73,8 +73,8 @@ dec = dec*degPerRad;
 
 %fprintf(1,'planet    ra, dec = %.4f,%.4f : %.4f,%.4f\n',[ra(:)';dec(:)']);
 for i = 1:length(abcorr),
-  fprintf(1,'planet    ra, dec = %.4f,%.4f : %.4f,%.4f (%s)\n',...
-	ra(:,i),dec(:,i), abcorr{i});
+  fprintf(1,'pc ra, dec (deg)  = %12.6f,%12.6f : %12.6f,%12.6f (%s)\n',...
+	[ra(:,i),dec(:,i)]', abcorr{i});
 end
 
 % remove converged corrections
@@ -96,21 +96,24 @@ end
 % pixel coordinates (indices j)
 [Xj,Yj] = meshgrid(1:nc, 1:nr);
 
+% ref pixel
 rpx = HST.CRPIX1;
 rpy = HST.CRPIX2;
+% ref ra/dec
 rpra = HST.CRVAL1;
 rpdec = HST.CRVAL2;
 
-CD = HST.CD;
-iCD = HST.iCD;
-
 % pixel coordinates to world coordinates (ra/dec) (indices i)
-Xi = CD(1,1)*(Xj-rpx)+CD(1,2)*(Yj-rpy)+rpra;
-Yi = CD(2,1)*(Xj-rpx)+CD(2,2)*(Yj-rpy)+rpdec;
+[Xi,Yi] = getHSTpixel2radec(HST,Xj,Yj);
 
 % planet world coordinates (ra/dec) to pixel coordinates
-pxc = iCD(1,1)*(ra-rpra)+iCD(1,2)*(dec-rpdec)+rpx;
-pyc = iCD(2,1)*(ra-rpra)+iCD(2,2)*(dec-rpdec)+rpy;
+[pxc,pyc] = getHSTradec2pixel(HST,ra,dec);
+
+for i = 1:length(abcorr),
+  fprintf(1,'pc x, y (pixel)   = %12.6f,%12.6f : %12.6f,%12.6f (%s)\n',...
+	[pxc(:,i),pyc(:,i)]', abcorr{i});
+end
+
 
 close all
 figure
@@ -118,7 +121,7 @@ pcolor(Xj,Yj,log10(abs(img))); shading flat;
 hold on
 plot(rpx,rpy,'ko','markersize',5);
 plot(pxc,pyc,'-kx','markersize',5);
-opts = {'fontsize',9,'fontweight','light','color','black'};
+opts = {'fontsize',9,'fontweight','light','color','green'};
 for i = 1:length(abcorr),
   text(pxc(1,i), pyc(1,i),['S(' abcorr{i} ')'],opts{:})
   text(pxc(2,i), pyc(2,i),'E',opts{:})
@@ -127,10 +130,9 @@ hold off
 axis auto
 axis equal
 
-
 figure
 if 1,
-  % convert to arcsec and set relative ra/dec
+  % convert to arcsec and set relative ra/dec to ref pix
   offx = -rpra; offy = -rpdec; s = 3600;
 else
   % absolute ra/dec in deg
