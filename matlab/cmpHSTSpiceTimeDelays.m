@@ -2,7 +2,7 @@ function cmpHSTSpiceTimeDelays(filename)
 % function cmpHSTSpiceTimeDelays(filename)
 
 %
-% $Id: cmpHSTSpiceTimeDelays.m,v 1.2 2012/06/12 14:17:38 patrick Exp $
+% $Id: cmpHSTSpiceTimeDelays.m,v 1.3 2012/06/12 14:23:29 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -110,7 +110,7 @@ rpdec = HST.CRVAL2;
 [pxc,pyc] = getHSTradec2pixel(HST,ra,dec);
 
 for i = 1:length(abcorr),
-  fprintf(1,'pc x, y (pixel)   = %12.6f,%12.6f : %12.6f,%12.6f (%s)\n',...
+  fprintf(1,'pc  x, y (pixel)  = %12.6f,%12.6f : %12.6f,%12.6f (%s)\n',...
 	[pxc(:,i),pyc(:,i)]', abcorr{i});
 end
 
