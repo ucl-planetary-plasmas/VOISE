@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.3 2012/06/11 16:53:15 patrick Exp $
+% $Id: getHSTInfo.m,v 1.4 2012/06/12 11:08:41 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -92,7 +92,7 @@ if ~isempty(TELESCOP) | strcmp(TELESCOP,'HST'),
 	fprintf(1,'RA_TARG, DEC_TARG = %12.6f, %12.6f deg\n', HST.RA_TARG, HST.DEC_TARG);
 	fprintf(1,'RA_APER, DEC_APER = %12.6f, %12.6f deg\n', HST.RA_APER, HST.DEC_APER);
 
-	fprintf(1,'ORIENTAT          = %f [deg]\n', HST.ORIENTAT);
+	fprintf(1,'ORIENTAT          = %12.6f deg\n', HST.ORIENTAT);
 	% find scaling and rotation
 	CD = [HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2];
 	% scaling
@@ -101,7 +101,7 @@ if ~isempty(TELESCOP) | strcmp(TELESCOP,'HST'),
 	m = [CD(1,:)/s(1);CD(2,:)/s(2)];
 	% rotation angle
 	orientat = atan2(m(2,1), m(2,2))*180/pi;
-	fprintf(1,'orientat          = %f [deg]\n', orientat);
+	fprintf(1,'orientat CD(2,:)  = %12.6f deg\n', orientat);
 
 	% embed scaling and rotation stuff into HST 
 	HST.CD = CD;
