@@ -2,7 +2,7 @@ function [ra, dec] = getHSTpixel2radec(HST,px,py)
 % function [ra, dec] = getHSTpixel2radec(HST,px,py)
 
 %
-% $Id: getHSTpixel2radec.m,v 1.1 2012/06/12 10:52:40 patrick Exp $
+% $Id: getHSTpixel2radec.m,v 1.2 2012/06/12 11:00:05 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -31,7 +31,7 @@ rpdec = HST.CRVAL2;
 % matrix to transform from pixel to world (ra/dec) coordinates
 CD = HST.CD;
 
-% pixel coordinates to world coordinates (ra/dec)
+% pixel (lower left is 1,1) to world (deg) coordinates 
 ra  = CD(1,1)*(px-rpx) + CD(1,2)*(py-rpy) + rpra;
 dec = CD(2,1)*(px-rpx) + CD(2,2)*(py-rpy) + rpdec;
 

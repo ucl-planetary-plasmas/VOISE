@@ -1,8 +1,8 @@
-function [px, px] = getHSTradec2pixel(HST,ra,dec)
-% function [px, px] = getHSTradec2pixel(HST,ra,dec)
+function [px, py] = getHSTradec2pixel(HST,ra,dec)
+% function [px, py] = getHSTradec2pixel(HST,ra,dec)
 
 %
-% $Id: getHSTradec2pixel.m,v 1.1 2012/06/12 10:52:41 patrick Exp $
+% $Id: getHSTradec2pixel.m,v 1.2 2012/06/12 11:00:05 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -28,10 +28,10 @@ rpy = HST.CRPIX2;
 rpra  = HST.CRVAL1;
 rpdec = HST.CRVAL2;
 
-% inverse matrix to transform from world to pixel coordinates
+% inverse matrix to transform from world (ra/dec) to pixel coordinates
 iCD = HST.iCD;
 
-% planet world coordinates to pixel coordinates
+% world (deg) to pixel (lower left corner is 1,1) coordinates
 px = iCD(1,1)*(ra-rpra) + iCD(1,2)*(dec-rpdec) + rpx;
-yn = iCD(2,1)*(ra-rpra) + iCD(2,2)*(dec-rpdec) + rpy;
+py = iCD(2,1)*(ra-rpra) + iCD(2,2)*(dec-rpdec) + rpy;
 
