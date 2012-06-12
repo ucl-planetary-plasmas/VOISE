@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.4 2012/06/12 14:29:32 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.5 2012/06/12 16:36:09 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -150,11 +150,24 @@ fprintf(1,'angle(pc,PC)      = %12.2f deg\n', acosd(dot(pc/norm(pc),PC/norm(PC))
 
 % get planet radii
 radii = cspice_bodvrd(planet.name,'RADII',3);
-a = radii(1);
-b = radii(3);
-e = sqrt(a^2-b^2)/a;
+a = radii(1); % equatorial radius (1 and 2)
+b = radii(3); % polar radius
+e = sqrt(a^2-b^2)/a; % excentricity
 
 % if Saturn get rings parameters
+if strcmp(planet.name,'saturn'),
+  % A Ring, Encke Gap, Cassini Division, B Ring
+  rings = {'RING1','RING1_1','RING2','RING3'};
+	ringSpecs = zeros(5,length(rings));
+	% Ring geometry is defined in the form of one set of R1, R2, Z1, Z2, OD where
+	% R1 and R2 are inner and outer radii of the ring (in km)
+	% Z1 and Z2 are the vertical heights of the ring at R1 and R2 (also in km, 
+	% equal to one-half of the total thickness of the ring) 
+	% OD is the average optical depth of the ring sub-segment/gap across R1 to R2.
+	for i=1:length(rings),
+   ringSpecs(:,i) = cspice_bodvrd(planet.name,rings{i},5);
+	end
+end
 
 % Retrieve the transformation matrix from frame of the planet to IAU_EARTH.
 if 1, 
@@ -225,6 +238,33 @@ end
 [xmerid,ymerid] = getHSTradec2pixel(HST,meridra*degPerRad,meriddec*degPerRad);
 
 
+if strcmp(planet.name,'saturn'),
+% Saturn's ring computed in world (ra/dec) and transformed to pixel coordinates,
+lon = linspace(0,2*pi,100);
+for j = 1:length(rings),
+rmn{j} =  zeros(3,length(lon));
+rmx{j} =  zeros(3,length(lon));
+for i=1:length(lon);
+  posn = [ringSpecs(1,j)*cos(lon(i));ringSpecs(1,j)*sin(lon(i));0];
+	if ~isJ2000,
+	rmn{j}(:,i) = EarthtoJ2000*(planetposn+planet2Earth*posn);
+	else
+	rmn{j}(:,i) = planetposn+EarthtoJ2000*(planet2Earth*posn);
+	end
+  posn = [ringSpecs(2,j)*cos(lon(i));ringSpecs(2,j)*sin(lon(i));0];
+	if ~isJ2000,
+	rmx{j}(:,i) = EarthtoJ2000*(planetposn+planet2Earth*posn);
+	else
+	rmx{j}(:,i) = planetposn+EarthtoJ2000*(planet2Earth*posn);
+	end
+end
+[rmnr{j},rmnra{j},rmndec{j}] = cspice_recrad(rmn{j});
+[xrmn{j},yrmn{j}] = getHSTradec2pixel(HST,rmnra{j}*degPerRad,rmndec{j}*degPerRad);
+[rmxr{j},rmxra{j},rmxdec{j}] = cspice_recrad(rmx{j});
+[xrmx{j},yrmx{j}] = getHSTradec2pixel(HST,rmxra{j}*degPerRad,rmxdec{j}*degPerRad);
+end
+end
+
 if 1,
 % correction for projection on the plane
 a = a*cosd(tprojplanetaxis);
@@ -239,6 +279,11 @@ tilt = atan2(planetaxis(2),planetaxis(1))*degPerRad;
 
 fprintf(1,'planetary disc  a, b = %12.1f, %12.1f pixel, tilt = %5.1f deg\n',...
 a,b,tilt);
+
+if strcmp(planet.name,'saturn'),
+% correction for projection on the plane
+%ARmin = ARmin*cosd(tprojplanetaxis);
+end
 
 % plot an ellipse with planet parameters, i.e. a, b, tilt
 theta = linspace(0,360,100);
@@ -262,6 +307,16 @@ axis equal
 pause
 end
 
+figure
+% load color values
+h=plot(ones(10));
+for i=1:length(h),
+  colors{i} = get(h(i),'color');
+end
+clear h
+close
+
+
 W = params.W;
 clf
 X = [1:size(W,2)];
@@ -277,6 +332,12 @@ plot(xpc,ypc,'bx','markersize',10), text(xpc,ypc,'(xpc,ypc)',opts{:})
 plot([xn;xs],[yn;ys],'bo-','markersize',10), 
 text([xn;xs],[yn;ys],['N';'S'],opts{:},'color','b'),
 plot(xeq,yeq,'bo-',xmerid,ymerid,'bo-');
+if strcmp(planet.name,'saturn'),
+for i=1:length(rings),
+plot(xrmn{i},yrmn{i},'o-','color',colors{i});
+plot(xrmx{i},yrmx{i},'o-','color',colors{i});
+end
+end
 
 % using HST ref pixel, y-axis orientation, plate scale and SPICE
 plot(Xpc,Ypc,'kx','markersize',10), text(Xpc,Ypc,'(Xpc,Ypc)',opts{:})
