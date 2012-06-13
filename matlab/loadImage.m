@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.14 2012/05/22 16:38:55 patrick Exp $
+% $Id: loadImage.m,v 1.15 2012/06/13 11:45:07 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,19 +47,17 @@ function params = loadImage(params)
 
 try
 
+	me = checkField(params,'iFile');
+	if ~isempty(me), throw(me), end
+
   if strfind(params.iFile,'.mat'), % mat-file
     %   north_proj.mat is a mat file containing a polar projection of
     %   Jupiter observed by HST:
     %   Z           256x256         524288  double  image intensity
     %   x             1x256           2048  double  x-axis (# cols in Z)
     %   y           256x1             2048  double  y-axis (# rows in Z)
-		if ~exist(params.iFile,'file'),
-		  ME = MException('MyFunction:verifyFile', ...
-                      ['Problem with file pointed to by ''params.iFile''' ...
-											'\nCheck the value for params.iFile=%s' ...
-                      '\nAnd/or try to run start_VOISE'],params.iFile);
-      throw(ME);
-		end
+		me = checkiFile(params);
+		if ~isempty(me), throw(me), end
     im = load(params.iFile);
     % set image, axes and related
     params.W = im.Z;
@@ -71,6 +69,10 @@ try
       params.imageOrigo = [-params.x(1)./params.pixelSize(1),...
                            -params.y(1)./params.pixelSize(2)];
 		else
+		  me = checkField(params,'imageOrigo'); 
+		  if ~isempty(me), throw(me), end
+		  me = checkField(params,'pixelSize'); 
+		  if ~isempty(me), throw(me), end
       % imageOrigo = (0,0) means params.W(1,1) is the origo
       [nr, nc] = size(params.W);
       params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
@@ -84,67 +86,91 @@ try
 
   elseif strfind(params.iFile,'.fits'), % fits-file
 
-		if ~exist(params.iFile,'file')
-		  ME = MException('MyFunction:verifyFile', ...
-                      ['Problem with file pointed to by ''params.iFile''' ...
-											'\nCheck the value for params.iFile=%s' ...
-                      '\nAnd/or try to run start_VOISE'],params.iFile);
-      throw(ME);
-		end
+    me = checkiFile(params);
+		if ~isempty(me), throw(me), end
     info = fitsinfo(params.iFile);
-    % get HST parameters if available
-    params = getHSTInfo(params);
-    pause
-    params = getHSTPlanetParams(params);
-    pause
 
     if ~isfield(info,'Image'), 
       im = squeeze(fitsread(params.iFile));
     else
       im = squeeze(fitsread(params.iFile,'image'));
     end
+
     % set image, axes and related
     params.W = im;
+
+    % get HST parameters if available
+    params = getHSTInfo(params);
+    params = getHSTPlanetParams(params);
+    %pause
+
     [nr, nc] = size(params.W);
+		me = checkField(params,'imageOrigo'); 
+		if ~isempty(me), throw(me), end
+		me = checkField(params,'pixelSize'); 
+		if ~isempty(me), throw(me), end
     params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
     params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 
-    % pixel coordinates
+    % pixel coordinates (indices j)
     [Xj,Yj] = meshgrid(1:nc, 1:nr);
 
     HST = params.HST;
+    % reference pixel image coordinates 
+    rpx = HST.CRPIX1;
+    rpy = HST.CRPIX2;
+    % reference pixel ra/dec coordinates (deg)
+    rpra  = HST.CRVAL1;
+    rpdec = HST.CRVAL2;
 
-    % pixel coordinates to intermediate world coordinates (ra and dec)
-    Xi = HST.CD1_1*(Xj-HST.CRPIX1)+HST.CD1_2*(Yj-HST.CRPIX2)+HST.CRVAL1;
-    Yi = HST.CD2_1*(Xj-HST.CRPIX1)+HST.CD2_2*(Yj-HST.CRPIX2)+HST.CRVAL2;
+    % pixel coordinates to world coordinates (ra/dec in deg) (indices i)
+    [Xi,Yi] = getHSTpixel2radec(HST,Xj,Yj);
 
-    % planet world coordinates to pixel coordinates
-    params.planet.pxc = HST.iCD1_1*(params.planet.ra-HST.CRVAL1)+...
-		                   HST.iCD1_2*(params.planet.rec-HST.CRVAL2)+HST.CRPIX1;
-    params.planet.pyc = HST.iCD2_1*(params.planet.ra-HST.CRVAL1)+...
-		                   HST.iCD2_2*(params.planet.rec-HST.CRVAL2)+HST.CRPIX2;
+    % planet world coordinates (ra/dec) to pixel coordinates
+    planet = params.planet;
+    [planet.pxc,planet.pyc] = getHSTradec2pixel(HST,planet.ra,planet.dec);
+    params.planet = planet;
 
-    close all
+if 0
     figure
     pcolor(Xj,Yj,log10(abs(params.W))); shading flat; 
     hold on
-    plot(HST.CRPIX1,HST.CRPIX2,'ko','markersize',5)
-    plot(params.planet.pxc,params.planet.pyc,'kx','markersize',5)
+    plot(rpx,rpy,'ko','markersize',5)
+    plot(planet.pxc,planet.pyc,'kx','markersize',5)
     hold off
 
     figure
-    pcolor(Xi,Yi,log10(abs(params.W))); shading flat; 
+    if 1,
+      % convert to arcsec and set relative ra/dec to ref pix
+      [Xi,Yi] = getHSTabs2relRadec(HST,Xi,Yi);
+      [rpra,rpdec] = getHSTabs2relRadec(HST,rpra,rpdec);
+      [planet.ra,planet.dec] = getHSTabs2relRadec(HST,planet.ra,planet.dec);
+      xlbl = 'ra/ref. pixel [arcsec]';
+      ylbl = 'dec/ref.pixel [arcsec]';
+    else
+      % absolute ra/dec in deg
+      xlbl = 'ra [deg]';
+      ylbl = 'dec [deg]';
+    end
+    pcolor(Xi,Y,log10(abs(params.W))); shading flat; 
     hold on
-    plot(HST.CRVAL1,HST.CRVAL2,'ko','markersize',5)
-    plot(params.planet.ra,params.planet.rec,'kx','markersize',5)
+    plot(rpra,rpdec,'ko','markersize',5)
+    plot(planet.ra,planet.dec,'kx','markersize',5)
     hold off
-    pause
+    xlabel(xlbl);
+    ylabel(ylbl);
+end
 
   else, % neither mat-file nor fits-file
 
-    me = MException('MyFunction:fileTypeNotSupported',...
-                    '%s is not a fits- nor a mat-file',params.iFile);
-    throw(me);
+    if ~isempty(params.iFile), 
+      me = MException('MyFunction:fileTypeNotSupported',...
+                      '%s is not a fits- nor a mat-file',params.iFile);
+		else
+		  me = MException('MyFunction:fileEmpty',...
+			                'field iFile is empty');
+      throw(me);
+		end
 
   end
 
@@ -166,7 +192,7 @@ try
 
 catch me
 
-  disp(['Problem when loading image file ' params.iFile '.']);
+	disp(['Problem when loading image file.']);
   rethrow(me);
 
 end
@@ -175,3 +201,30 @@ end
 function string = mydeblank(string)
 
 string = deblank(fliplr(deblank(fliplr(string))));
+
+function me = checkiFile(params)
+
+me = [];
+if ~exist(params.iFile,'file')
+  me = MException('MyFunction:verifyFile', ...
+                  ['Problem with file pointed to by ''params.iFile''' ...
+                  '\nCheck the value for params.iFile=%s' ...
+                  '\nAnd/or try to run start_VOISE'],params.iFile);
+end
+
+function me = checkField(params,field)
+
+me = [];
+if ~isfield(params,field),
+  names = fieldnames(params);
+	strnames = '';
+	if ~isempty(names),
+	  strnames = '(';
+    for i=1:length(names)-1, strnames = [strnames names{i} ', ']; end
+	  strnames = [strnames names{end} ')'];
+	end
+  me = MException('MyFunction:verifyParams', ...
+                  ['Problem with ''params'' structure fields ''%s''' ...
+									'\nNon-existing fields ''%s''' ...
+                  '\nYou should run getDefaultVOISEParams'], strnames, field);
+end
