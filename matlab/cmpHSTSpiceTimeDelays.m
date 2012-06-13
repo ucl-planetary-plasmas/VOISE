@@ -2,7 +2,7 @@ function cmpHSTSpiceTimeDelays(filename)
 % function cmpHSTSpiceTimeDelays(filename)
 
 %
-% $Id: cmpHSTSpiceTimeDelays.m,v 1.4 2012/06/12 14:26:40 patrick Exp $
+% $Id: cmpHSTSpiceTimeDelays.m,v 1.5 2012/06/13 14:14:56 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -133,21 +133,16 @@ axis equal
 figure
 if 1,
   % convert to arcsec and set relative ra/dec to ref pix
-  offx = -rpra; offy = -rpdec; s = 3600;
+	[Xi,Yi] = getHSTabs2relRadec(HST,Xi,Yi);
+	[rpra,rpdec] = getHSTabs2relRadec(HST,rpra,rpdec);
+	[ra,dec] = getHSTabs2relRadec(HST,ra,dec);
 	xlbl = 'ra/ref. pixel [arcsec]';
 	ylbl = 'dec/ref.pixel [arcsec]';
 else
   % absolute ra/dec in deg
-  offx = 0; offy = 0; s = 1;
 	xlbl = 'ra [deg]';
 	ylbl = 'dec [deg]';
 end
-Xi = s*(Xi+offx);
-Yi = s*(Yi+offy);
-rpra = s*(rpra+offx);
-rpdec = s*(rpdec+offy);
-ra = s*(ra+offx);
-dec = s*(dec+offy);
 
 pcolor(Xi,Yi,log10(abs(img))); shading flat;
 hold on
