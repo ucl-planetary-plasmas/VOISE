@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.5 2012/06/12 16:36:09 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.6 2012/06/13 16:58:47 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -113,7 +113,7 @@ end
 yhat = cspice_vhat(north-dot(zhat,north)*zhat);
 % rotate by ORIENTAT corresponding to the position angle of
 % image y axis (deg. e of n)
-[yhatr(1),yhatr(2),yhatr(3)] = rot3d(zhat,HST.ORIENTAT,yhat(1),yhat(2),yhat(3));
+yhatr = rot3d(zhat,HST.ORIENTAT,yhat);
 %yhat = yhatr;
 % angle between celestial north and its projection onto the image plane
 %tprojnorth = acosd(dot(north,cspice_vhat(north-dot(zhat,north)*zhat)))
@@ -127,7 +127,7 @@ fprintf(1,'angle(y/xhat,y/xhatr)=%.2f,%.2f\n', ...
 fprintf(1,'xhat(r).yhat(r)      =%.2g,%.2g\n',[dot(xhat,yhat), dot(xhatr,yhatr)])
 end
 % rotated axes
-xhat=xhatr; yhat=yhatr;
+xhat = xhatr; yhat = yhatr;
 
 % ref pixel position (xrp,yrp) should be zero
 xrp = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
@@ -182,6 +182,8 @@ planetaxis = planet2Earth*[0;0;1];
 else
 planetaxis = EarthtoJ2000*(planet2Earth*[0;0;1]);
 end
+
+
 % angle between planet axis and projection onto the image plane
 tprojplanetaxis = acosd(dot(planetaxis,cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat)));
 fprintf(1,'tprojplanetaxis      = %12.2g deg\n', tprojplanetaxis);
@@ -191,8 +193,12 @@ planetaxis = cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat);
 fprintf(1,'planetaxis (Earth r) = %12.6f, %12.6f, %12.6f\n', planetaxis);
 xplanetaxis = dot(planetaxis,xhat);
 yplanetaxis = dot(planetaxis,yhat);
+planetaxis3d = planetaxis;
 planetaxis = [xplanetaxis,yplanetaxis];
 fprintf(1,'planetaxis (image)   = %12.6f, %12.6f\n', planetaxis);
+
+spheroidGrid(planetaxis3d,a,b,xhat,yhat,zhat);
+
 
 % poles computed in world (ra/dec) and transformed to pixel coordinates
 if ~isJ2000,
@@ -291,7 +297,9 @@ theta = linspace(0,360,100);
 ellx = b*sind(theta);
 elly = a*cosd(theta);
 % rotation by tilt
-[ellx,elly] = rot2d(tilt,ellx,elly);
+ell = rot2d(tilt,[ellx;elly]);
+ellx = ell(1,:);
+elly = ell(2,:);
 
 opts = {'fontsize',12,'fontweight','normal'}; %,'color','black'};
 
@@ -356,7 +364,12 @@ params.planet = planet;
 cspice_kclear
 
 
-function [X,Y] = rot2d(alpha,x,y)
+function P = rot2d(alpha,P)
+
+% P is a 2xN vector
+
+x = P(1,:);
+y = P(2,:);
 
 ca = cosd(alpha);
 sa = sind(alpha);
@@ -364,10 +377,18 @@ sa = sind(alpha);
 X = x*ca - y*sa;
 Y = x*sa + y*ca;
 
+P(1,:) = X;
+P(2,:) = Y;
 
-function [X,Y,Z] = rot3d(u,alpha,x,y,z)
+
+function P = rot3d(u,alpha,P)
 
 % from http://en.wikipedia.org/wiki/Rotation_matrix
+
+% P is a 3xN vector
+x = P(1,:);
+y = P(2,:);
+z = P(3,:);
 
 ca = cosd(alpha);
 sa = sind(alpha);
@@ -400,3 +421,7 @@ Y = R(2,1)*x + R(2,2)*y + R(2,3)*z;
 Z = R(3,1)*x + R(3,2)*y + R(3,3)*z;
 
 end
+
+P(1,:) = X;
+P(2,:) = Y;
+P(3,:) = Z;
