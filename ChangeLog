@@ -1,3 +1,31 @@
+2012-07-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getLTC.m (1.1):
+	  Utility function to get limb, terminator and cusp points of the
+	  observed object given the equatorial radius and eccentricity, the
+	  direction of the observer and the direction of the sun.  More
+	  work to be done!
+
+2012-07-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/spheroidGrid.m (1.1):
+	  Given a planeet description (rotation axis and equatorial, polar
+	  radii) as well as an observin frame wheere zhat is the obsering
+	  direcion and (xhat,yhat) is the sky-plane, returns a grid frame
+	  of the planet in the direction of observation.
+
+2012-07-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/setUpSpice4Planet.m (1.1):
+	  Utility routine to set up SPICE necessary kernels for specified
+	  planet.
+
+2012-06-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTPlanetParams.m (1.6):
+	  Change input/output of rot2d/rot3d from 2/3 coordinates vectors
+	  to a single coordinate matrix.
+
 2012-06-13  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/cmpHSTSpiceTimeDelays.m (1.5):
