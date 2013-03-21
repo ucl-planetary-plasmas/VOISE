@@ -2,7 +2,7 @@ function [planet] = setUpSpice4Planet(HST)
 % function [planet] = setUpSpice4Planet(HST)
 
 %
-% $Id: setUpSpice4Planet.m,v 1.1 2012/07/02 14:07:21 patrick Exp $
+% $Id: setUpSpice4Planet.m,v 1.2 2013/03/21 11:35:49 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -46,10 +46,10 @@ cspice_furnsh([spiceKernelsPath 'de421.bsp']);
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/
 switch planet.name,
   case 'jupiter'
-    cspice_furnsh([spiceKernelsPath 'jup291.bsp']);
+    cspice_furnsh([spiceKernelsPath 'jup294.bsp']);
   case 'saturn'
-    cspice_furnsh([spiceKernelsPath 'sat353.bsp']);
-		cspice_furnsh([spiceKernelsPath 'cpck19Jan2012.tpc']);
+    cspice_furnsh([spiceKernelsPath 'sat354.bsp']);
+		cspice_furnsh([spiceKernelsPath 'cpck19Mar2013.tpc']);
   case 'uranus'
     cspice_furnsh([spiceKernelsPath 'ura095.bsp']);
 end
