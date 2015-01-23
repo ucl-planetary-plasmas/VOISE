@@ -1,4 +1,4 @@
-# $Id: webVOISEdemo1.dat,v 1.5 2011/02/16 12:59:06 patrick Exp $
+# $Id: VOISEdemo1.dat,v 1.1 2015/01/23 10:24:07 patrick Exp $
 # Demo configuration file for mat-file image north_proj.mat
 # Initial phase parameters
 iNumSeeds = 12
