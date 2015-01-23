@@ -2,7 +2,7 @@
 % webVOISEdemo2: script for demo2 with config webVOISEdemo2.dat
 %
 
-% $Id: webVOISEdemo2.m,v 1.4 2012/04/16 16:54:28 patrick Exp $
+% $Id: webVOISEdemo2.m,v 1.5 2015/01/23 10:25:05 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -20,6 +20,6 @@
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-webVOISE('../share/webVOISEdemo2.dat');
+webVOISE('../share/VOISEdemo2.dat');
 
 quit
