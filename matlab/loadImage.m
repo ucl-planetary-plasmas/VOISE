@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.15 2012/06/13 11:45:07 patrick Exp $
+% $Id: loadImage.m,v 1.16 2015/02/08 19:39:58 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -101,7 +101,9 @@ try
 
     % get HST parameters if available
     params = getHSTInfo(params);
-    params = getHSTPlanetParams(params);
+    if isfield(params,'HST') && ~isempty(params.HST)
+      params = getHSTPlanetParams(params);
+    end
     %pause
 
     [nr, nc] = size(params.W);
@@ -115,6 +117,7 @@ try
     % pixel coordinates (indices j)
     [Xj,Yj] = meshgrid(1:nc, 1:nr);
 
+if 0
     HST = params.HST;
     % reference pixel image coordinates 
     rpx = HST.CRPIX1;
@@ -159,6 +162,7 @@ if 0
     hold off
     xlabel(xlbl);
     ylabel(ylbl);
+end
 end
 
   else, % neither mat-file nor fits-file
