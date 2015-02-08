@@ -30,6 +30,8 @@ function params = getDefaultVOISEParams()
 %
 %   initSeeds      : function (string or handle) to draw initial seeds
 %                                                            (@randomSeeds)
+%   pcClipping     : percentage Clipping [left,right,bottom,top]
+%                                                            (empty)
 %   iNumSeeds      : number of initial seeds                 (12)
 %   RNGiseed       : initial value for Random Number Generator
 %                                                            (10)
@@ -82,7 +84,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.10 2012/04/16 16:54:27 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.11 2015/02/08 19:35:28 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -116,6 +118,7 @@ params.pixelUnit       = {'pixels','pixels'};
 % VOISE algorithm parameters 
 % Initialise
 params.initSeeds       = @randomSeeds;
+params.pcClipping      = [];
 params.iNumSeeds       = 12;
 params.RNGiseed        = 10;
 params.initAlgo        = 2;
@@ -153,6 +156,14 @@ params.oDir            = [];               % output directory
 params.oMatFile        = 'voise.mat';      % output mat filename
 params.oLogFile        = 'voise.log';      % log filename
 params.oMovFile        = 'voise.avi';      % movie filename
+
+% filterImage
+params.winSize         = [];               % size of the filtering
+params.filter          = [];               % type of filter
+% log filter
+params.noiseThres      = [];
+% histEq
+params.histEqBin       = [];
 
 % Diagnostics/Report parameters
 %
