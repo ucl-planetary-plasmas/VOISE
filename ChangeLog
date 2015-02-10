@@ -1,3 +1,53 @@
+2015-02-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* Makefile.am (1.4), configure.ac (1.29):
+	  Propagate changed names for targets.
+
+2015-02-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* mcc/Makefile.am (1.2):
+	  Keep log files for each matlab compilation.  Renamed targets
+
+2015-02-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/VOISEdemo3.dat (1.1):
+	  New demo with HST image of Uranus.
+
+2015-02-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/VOISEdemo1.dat (1.2), share/VOISEdemo2.dat (1.2):
+	  Added copyright.
+
+2015-02-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/loadImage.m (1.16):
+	  Call function to set the HST planet parameters only when the
+	  structure HST is initialised.
+
+2015-02-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getDefaultVOISEParams.m (1.11):
+	  Added default empty value for preprocessing and clipping
+	  parameters.
+
+2015-02-08  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/preprocessImage.m (1.1), matlab/webVOISE.m.in (1.8):
+	  Added a call to new function preprocessImage to perform various
+	  image pre-processing on demand.
+
+2015-01-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/webVOISEdemo1.m (1.5), matlab/webVOISEdemo2.m (1.5):
+	  Reflected name change for configuration files.
+
+2015-01-23  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/VOISEdemo1.dat (1.1), share/VOISEdemo2.dat (1.1),
+	  share/webVOISEdemo1.dat (1.6[DEAD]), share/webVOISEdemo2.dat
+	  (1.7[DEAD]):
+	  Renamed files.
+
 2013-03-22  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/getOptimalCorrel.m (1.1):
