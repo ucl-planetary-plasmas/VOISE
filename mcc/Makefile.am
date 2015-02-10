@@ -1,7 +1,7 @@
 
 if HAVE_MCC
 
-mccVOISE: webVOISE VOISE verifyImage
+mccVOISE: VOISE gVOISE verifyImage
 
 MCC = mcc
 MCCFLAGS = -m -v
@@ -10,7 +10,7 @@ MCCFLAGSNOJVM = -R '-nojvm,-nodisplay' -m -v
 
 matlabdir = $(top_srcdir)/matlab
 
-WEBVOISE_SRC = \
+VOISE_SRC = \
 $(matlabdir)/webVOISE.m \
 $(matlabdir)/startup.m \
 $(matlabdir)/addSeedsToVR.m \
@@ -47,44 +47,53 @@ $(matlabdir)/initVD.m \
 $(matlabdir)/VOISE.m \
 $(matlabdir)/isXinW.m \
 $(matlabdir)/loadImage.m \
-$(matlabdir)/fitswrite.m
+$(matlabdir)/fitswrite.m \
+$(matlabdir)/imageUtils/filterImage.m \
+$(matlabdir)/imageUtils/histEq.m
+
 
 VERIFYIMAGE_SRC = \
 $(matlabdir)/verifyImage.m \
 $(matlabdir)/loadImage.m \
 $(matlabdir)/startup.m
 
-VOISE: $(WEBVOISE_SRC)
-	$(MCC) $(MCCFLAGS) $^ -o $@
+VOISE: $(VOISE_SRC)
+	$(MCC) $(MCCFLAGSNODISPLAY) $^ -o $@
+	mv readme.txt readme-VOISE.txt
+	mv mccExcludedFiles.log mccExcludedFiles-VOISE.log
 	-rm -f *.o*
 
-webVOISE: $(WEBVOISE_SRC)
-	$(MCC) $(MCCFLAGSNODISPLAY) $^ -o $@
+gVOISE: $(VOISE_SRC)
+	$(MCC) $(MCCFLAGS) $^ -o $@
+	mv readme.txt readme-gVOISE.txt
+	mv mccExcludedFiles.log mccExcludedFiles-gVOISE.log
 	-rm -f *.o*
 
 verifyImage: $(VERIFYIMAGE_SRC)
 	$(MCC) $(MCCFLAGSNOJVM) $^ -o $@
+	mv readme.txt readme-verifyImage.txt
+	mv mccExcludedFiles.log mccExcludedFiles-verifyImage.log
 	-rm -f *.o*
 
 
-webdemo1: webVOISE
-	@echo "*********** testing webVOISE demo1 ***********"
-	./run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
+gdemo1: gVOISE
+	@echo "*********** testing gVOISE demo1 ***********"
+	./run_gVOISE.sh $(MATLABROOT) ../share/VOISEdemo1.dat
 
-webdemo2: webVOISE
-	@echo "*********** testing webVOISE demo2 ***********"
-	./run_webVOISE.sh $(MATLABROOT) ../share/webVOISEdemo2.dat
+gdemo2: gVOISE
+	@echo "*********** testing gVOISE demo2 ***********"
+	./run_gVOISE.sh $(MATLABROOT) ../share/VOISEdemo2.dat
 
 demo1: VOISE
 	@echo "*********** testing VOISE demo1 ***********"
-	./run_VOISE.sh $(MATLABROOT) ../share/webVOISEdemo1.dat
+	./run_VOISE.sh $(MATLABROOT) ../share/VOISEdemo1.dat
 
 demo2: VOISE
 	@echo "*********** testing VOISE demo2 ***********"
-	./run_VOISE.sh $(MATLABROOT) ../share/webVOISEdemo2.dat
+	./run_VOISE.sh $(MATLABROOT) ../share/VOISEdemo2.dat
 
+gcheck: gdemo1 gdemo2
 check: demo1 demo2
-checkweb: webdemo1 webdemo2
 
 endif
 
