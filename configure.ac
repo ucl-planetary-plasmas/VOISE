@@ -70,11 +70,11 @@ You have further options available since MATLAB compiler is available
 
   make mccVOISE        Compile VOISE with MATLAB compiler mcc
   make dist-mccVOISE   Create standalone distro for this architecture
-  make demo1           Run demo1
-  make demo2           Run demo2
-  make check           Run demo1 and demo2
-  make webdemo1        Run demo1 without display
-  make webdemo2        Run demo2 without display
-  make checkweb        Run demo1 and demo2 without display
+  make demo1           Run demo1 without graphic diagnostic
+  make demo2           Run demo2 without graphic diagnostic
+  make check           Run demo1 and demo2 
+  make gdemo1          Run demo1 with graphic diagnostic
+  make gdemo2          Run demo2 with graphic diagnostic
+  make gcheck          Run gdemo1 and gdemo2
 ])
 fi
