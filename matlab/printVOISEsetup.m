@@ -2,7 +2,7 @@ function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
 %
-% $Id: printVOISEsetup.m,v 1.7 2012/04/16 16:54:27 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.8 2015/02/10 12:12:43 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -44,6 +44,13 @@ fprintf(1,'   ylim               = %g %s, %g %s\n', ...
         params.ylim(1), params.pixelUnit{2}, ... 
         params.ylim(2), params.pixelUnit{2});
 fprintf(1,'   Wlim               = %g, %g\n\n', params.Wlim);
+
+fprintf(1,' * Seeding parameters\n');
+fprintf(1,'   ---------------\n\n');
+fprintf(1,'   Seeds number       = %d\n', params.iNumSeeds);
+fprintf(1,'   Seeds clipping     = [%.1f,%.1f,%.1f,%.1f]\n', params.pcClipping);
+fprintf(1,'   Seeding function   = %s\n\n', func2str(params.initSeeds));
+
 
 fprintf(1,' * Dividing parameters\n');
 fprintf(1,'   -------------------\n\n');
