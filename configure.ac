@@ -19,19 +19,6 @@ AC_MSG_NOTICE
 AC_MSG_NOTICE([Configuring $PACKAGE_STRING for $target])
 AC_MSG_NOTICE
 
-
-# Checks for programs.
-AC_CHECK_PROG([mcc],[mcc],[yes],)
-AM_CONDITIONAL([HAVE_MCC],[test x$mcc = xyes])
-
-# Checks for libraries.
-
-# Checks for header files.
-
-# Checks for typedefs, structures, and compiler characteristics.
-
-# Checks for library functions.
-
 # Get and set MATLABROOT variable
 AC_ARG_VAR(MATLABROOT,[MATLAB software root installation])
 if test -z "$MATLABROOT"; then 
@@ -47,6 +34,22 @@ EOF
 	AC_MSG_RESULT([$MATLABROOT])
 fi
 AC_SUBST(MATLABROOT)
+
+# Checks for programs.
+AC_CHECK_PROG([MCC],[mcc],[mcc])
+if test -z "$MCC"; then
+  AC_PATH_PROG([MCC],[mcc],[""],[$MATLABROOT/bin])
+fi
+AM_CONDITIONAL([HAVE_MCC],[test -n "$MCC"])
+
+# Checks for libraries.
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
 
 
 dnl Generate Makefiles
