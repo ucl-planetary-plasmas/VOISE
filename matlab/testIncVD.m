@@ -5,7 +5,7 @@ function VD = testIncVD(nr,nc,ns,initSeeds,varargin)
 % VD = testIncVD(100,100,12,@randomSeeds);
 
 %
-% $Id: testIncVD.m,v 1.4 2012/04/16 16:54:28 patrick Exp $
+% $Id: testIncVD.m,v 1.5 2015/02/11 17:33:41 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -68,15 +68,17 @@ function VD = testSeq(W, ns, initSeeds, varargin)
 
 if exist('initSeeds') & isa(initSeeds, 'function_handle'),
   [initSeeds, msg] = fcnchk(initSeeds);
-  S = initSeeds(nr, nc, ns, varargin{:});
+  [S,VDlim] = initSeeds(nr, nc, ns, varargin{:});
 else
   error('initSeeds not defined or not a Function Handle');
 end
 
-VD = computeVD(nr, nc, S);
+VD = computeVD(nr, nc, S, VDlim);
 
 plotVDOp(VD, W, @(x) median(x))
 pause
+
+ns = size(S,1);
 
 if 0
 ks = ns:-1:4;
