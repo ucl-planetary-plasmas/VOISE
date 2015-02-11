@@ -7,7 +7,7 @@ function benchVD()
 % Voronoi diagrams are built with large number numbers of seeds.
 
 %
-% $Id: benchVD.m,v 1.11 2012/04/16 16:54:27 patrick Exp $
+% $Id: benchVD.m,v 1.12 2015/02/11 17:50:02 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -44,7 +44,7 @@ rand('twister',10);
 
 if exist('initSeeds') & isa(initSeeds, 'function_handle'),
   [initSeeds, msg] = fcnchk(initSeeds);
-  S = initSeeds(nr, nc, endSeed);
+  [S,VDlim] = initSeeds(nr, nc, endSeed);
 else
   error('initSeeds not defined or not a Function Handle');
 end
@@ -56,7 +56,7 @@ for i=1:length(nsf)
   s = S([1:nsf(i)],:);
 	ns = size(s,1);
   tStart = tic;
-  VDf = computeVDFast(nr, nc, s);
+  VDf = computeVDFast(nr, nc, s, VDlim);
   tVDf(i) = toc(tStart);
   fprintf(1,'full   %4d seeds (%4d:%4d) %8.1f s\n', ...
 	        ns, 1, nsf(i), tVDf(i));
@@ -74,7 +74,7 @@ tVDa = zeros(size(nsa));
 % initial seeds
 s = S([1:nsa(1)],:);
 tStart = tic;
-VDa = computeVD(nr, nc, s);
+VDa = computeVD(nr, nc, s, VDlim);
 tVDa(1) = toc(tStart);
 fprintf(1,'init   %4d seeds (%4d:%4d) %8.1f s\n', ...
         size(s,1), 1, nsa(1), tVDa(1));
