@@ -14,7 +14,7 @@ function webVOISE(VOISEconf)
 % iFile = ../share/input/sampleint.fits
 % oDir = ../share/output/sampleint/
 
-% $Id: webVOISE.m.in,v 1.8 2015/02/08 19:34:02 patrick Exp $
+% $Id: webVOISE.m.in,v 1.9 2015/02/11 16:25:29 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -45,11 +45,8 @@ warning('off','MATLAB:HandleGraphics:noJVM');
 % load VOISE parameters from configuration file
 params = readVOISEconf(VOISEconf);
 
-% load input image
+% load input image and pre-process misc. filtering if required
 params = loadImage(params);
-
-% misc. filtering if required
-params = preProcessImage(params);
 
 % create directory if necessary
 if ~exist(params.oDir,'dir')
