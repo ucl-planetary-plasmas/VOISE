@@ -25,6 +25,8 @@ function params = getDefaultVOISEParams()
 %   pixelSize      : pixel size along (x,y)                  ([1,1])
 %   pixelUnit      : units for pixel size along (x,y)        ({'pixels','pixels'})
 %
+%   colormap       : name of the colormap for the image      (jet)
+%
 %
 % * VOISE initial phase parameters
 %
@@ -84,7 +86,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.12 2015/02/11 16:17:52 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.13 2015/02/11 16:19:27 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
