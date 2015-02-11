@@ -2,7 +2,7 @@ function params = plotVOISE(VD, params, ic)
 % function params = plotVOISE(VD, params, ic)
 
 %
-% $Id: plotVOISE.m,v 1.6 2012/04/16 16:54:27 patrick Exp $
+% $Id: plotVOISE.m,v 1.7 2015/02/11 16:23:06 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -28,7 +28,7 @@ y = params.y;
 
 if isempty(VD), % original image
 	W = params.W;
-else, % median operator
+else, % median operator on VD
   W = getVDOp(VD, params.W, @(x) median(x));
 end
 
@@ -38,18 +38,27 @@ axis equal
 %axis off
 set(gca,'clim',params.Wlim);
 %colorbar
-%set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
 set(gca,'xlim', params.xlim, 'ylim', params.ylim);
+colormap(params.colormap);
 
-if ~isempty(VD) & ic~=4,
-hold on
-[vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
-sx = (max(params.x)-min(params.x))/(VD.xM-VD.xm);
-sy = (max(params.y)-min(params.y))/(VD.yM-VD.ym);
-plot((vx-VD.xm)*sx+min(params.x),(vy-VD.ym)*sy+min(params.y),'-k','LineWidth',0.5)
-hold off
+if ~isempty(VD),
+  % scaling factors from VD to image axes
+  W = VD.W;
+  sx = (max(params.x)-min(params.x))/(W.xM-W.xm);
+  sy = (max(params.y)-min(params.y))/(W.yM-W.ym);
+
+  S = VD.S;
+  h = line([S.xm,S.xm,S.xM,S.xM,S.xm],[S.ym,S.yM,S.yM,S.ym,S.ym]);
+  set(h,'Color',[.5,.5,.5],'LineWidth',0.05);
+
+  if ic~=4,
+  hold on
+  [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
+  plot((vx-W.xm)*sx+min(params.x),(vy-W.ym)*sy+min(params.y),...
+       '-k','LineWidth',0.5)
+  hold off
+  end
 end
-
 
 if isempty(VD), % original image
   title('Original image')
