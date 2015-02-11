@@ -84,7 +84,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.11 2015/02/08 19:35:28 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.12 2015/02/11 16:17:52 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -114,6 +114,8 @@ params.ylim            = [];
 params.imageOrigo      = [0, 0];
 params.pixelSize       = [1, 1];
 params.pixelUnit       = {'pixels','pixels'};
+% colormap
+params.colormap        = jet;
 
 % VOISE algorithm parameters 
 % Initialise
