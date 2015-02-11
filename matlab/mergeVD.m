@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.18 2015/02/11 16:13:48 patrick Exp $
+% $Id: mergeVD.m,v 1.19 2015/02/11 16:16:23 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,7 +21,7 @@ function [VD, params] = mergeVD(VD, params)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % miscellaneous information about VOISE
-global voise
+global voise timing
 
 % do not attempt to merge if mergePctile < 0
 if params.mergePctile<0,
@@ -30,9 +30,9 @@ else
   mergePctile = params.mergePctile;
 end
 
-if params.mergeAlgo == 2 && exist([voise.root '/share/VOISEtiming.mat'],'file'),
-  timing = load([voise.root '/share/VOISEtiming.mat']);
-end
+%if params.mergeAlgo == 2 && exist([voise.root '/share/VOISEtiming.mat'],'file'),
+%  timing = load([voise.root '/share/VOISEtiming.mat']);
+%end
 
 % Similarity parameters dmu defined for region i and 
 % homogeneous neighbours j
