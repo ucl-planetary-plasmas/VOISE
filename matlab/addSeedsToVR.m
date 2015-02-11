@@ -2,7 +2,7 @@ function S = addSeedsToVR(VD, sk, params)
 % function S = addSeedsTOVR(VD, sk, params)
 
 %
-% $Id: addSeedsToVR.m,v 1.5 2012/04/16 16:54:27 patrick Exp $
+% $Id: addSeedsToVR.m,v 1.6 2015/02/11 16:27:12 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -57,7 +57,7 @@ for i = 1:size(V,1),
 	% list all immediate neighbour seeds (sk, N(sk), S added)
 	Sxs = [xs; xn(:); Sx(:)]; 
 	Sys = [ys; yn(:); Sy(:)]; 
-	if isXinW([x,y], VD) & ...  
+	if isXinW([x,y], VD.S) && ...  
 	   all((Sxs-x).^2+(Sys-y).^2 > params.d2Seeds*ones(size(Sxs))),
 	    Sx = [Sx; x];
 	    Sy = [Sy; y];
@@ -71,7 +71,8 @@ clf
 
 plot(xs,ys,'ok', 'MarkerSize',8)
 text(xs,ys, num2str(sk), 'verticalalignment', 'bottom');
-set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca,'xlim',[W.xm W.xM], 'ylim', [W.ym W.yM]);
 hold on
 for i=1:length(ns),
   plot(xn(i),yn(i),'xk', 'MarkerSize',8)
