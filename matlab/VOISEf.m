@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISEf(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISEf.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: VOISEf.m,v 1.4 2015/02/11 16:02:53 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -36,16 +36,18 @@ if params.movDiag, % init movie
 end
 
 [nr, nc] = size(params.W);
+ns       = params.iNumSeeds;
+clipping = params.pcClipping;
 
 if exist('initSeeds') & isa(initSeeds, 'function_handle'),
 	[initSeeds, msg] = fcnchk(initSeeds);
-  S = initSeeds(nr, nc, ns, varargin{:});
+  [S,VDlim] = initSeeds(nr, nc, ns, params);
 else
   error('initSeeds not defined or not a Function Handle');
 end
 
 % Initialise VD
-IVD = computeVDFast(nr, nc, S);
+IVD = computeVDFast(nr, nc, S, VDlim);
 % save 
 save([params.oDir params.oMatFile], '-append', 'IVD'); 
 % plot 
