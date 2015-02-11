@@ -3,7 +3,6 @@ if HAVE_MCC
 
 mccVOISE: VOISE gVOISE verifyImage
 
-MCC = mcc
 MCCFLAGS = -m -v
 MCCFLAGSNODISPLAY = -R '-nodisplay' -m -v
 MCCFLAGSNOJVM = -R '-nojvm,-nodisplay' -m -v
