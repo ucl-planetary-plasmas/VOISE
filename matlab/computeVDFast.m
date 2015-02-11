@@ -1,8 +1,8 @@
-function VD = computeVDFast(nr, nc, S)
-% function VD = computeVDFast(nr, nc, S)
+function VD = computeVDFast(nr, nc, S, VDlim)
+% function VD = computeVDFast(nr, nc, S, VDlim)
 
 %
-% $Id: computeVDFast.m,v 1.7 2012/04/16 16:54:27 patrick Exp $
+% $Id: computeVDFast.m,v 1.8 2015/02/11 15:50:00 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -25,10 +25,16 @@ VD.nr = nr;
 VD.nc = nc;
 
 % set limits of W
-VD.xm = 1;
-VD.ym = 1;
-VD.xM = nc;
-VD.yM = nr;
+VD.W.xm = 1;
+VD.W.ym = 1;
+VD.W.xM = nc;
+VD.W.yM = nr;
+
+% Set limits of VD seeds
+VD.S.xm = VDlim.xm;
+VD.S.xM = VDlim.xM;
+VD.S.ym = VDlim.ym;
+VD.S.yM = VDlim.yM;
 
 % initialise grid for image points coordinates
 xi = 1:nc;
@@ -39,7 +45,7 @@ yi = 1:nr;
 [VD.x, VD.y] = meshgrid(xi,yi);
 
 % check whether all seeds are in W
-inW = isXinW(S, VD);
+inW = isXinW(S, VD.W);
 if ~isempty(find(~inW)),
   s = sprintf('Error: seeds outside the image limits\n');
   ii = find(~inW);
@@ -59,7 +65,7 @@ VD.Sy = S(VD.Sk, 2);
 % Calculate Voronoi Diagram for current seeds
 [V, C] = voronoin([VD.Sx(VD.Sk), VD.Sy(VD.Sk)]);
 
-% allocate cells for seed's neighbour list`
+% allocate cells for seed's neighbour list
 Nk = cell(ns, 1);
 for s = 1:ns, % for each seed s
   %fprintf(1,'seed %d:\n', s);

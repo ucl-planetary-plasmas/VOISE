@@ -1,8 +1,8 @@
-function VD = computeVD(nr, nc, S)
-% function VD = computeVD(nr, nc, S)
+function VD = computeVD(nr, nc, S, VDlim)
+% function VD = computeVD(nr, nc, S, VDlim)
 
 %
-% $Id: computeVD.m,v 1.5 2012/04/16 16:54:27 patrick Exp $
+% $Id: computeVD.m,v 1.6 2015/02/11 15:50:00 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,7 +21,7 @@ function VD = computeVD(nr, nc, S)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-VD = initVD(nr, nc, S);
+VD = initVD(nr, nc, S, VDlim);
 
 ns = size(S, 1);
 for k = 3:ns,

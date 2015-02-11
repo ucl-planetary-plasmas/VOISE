@@ -1,8 +1,8 @@
-function VD = initVD(nr, nc, S)
-% function VD = initVD(nr, nc, S)
+function VD = initVD(nr, nc, S, VDlim)
+% function VD = initVD(nr, nc, S, VDlim)
 
 %
-% $Id: initVD.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: initVD.m,v 1.4 2015/02/11 15:50:00 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -25,10 +25,16 @@ VD.nr = nr;
 VD.nc = nc;
 
 % set limits of W
-VD.xm = 1;
-VD.ym = 1;
-VD.xM = nc;
-VD.yM = nr;
+VD.W.xm = 1;
+VD.W.ym = 1;
+VD.W.xM = nc;
+VD.W.yM = nr;
+
+% Set limits of VD seeds
+VD.S.xm = VDlim.xm;
+VD.S.xM = VDlim.xM;
+VD.S.ym = VDlim.ym;
+VD.S.yM = VDlim.yM;
 
 % initialise grid for image points coordinates
 xi = 1:nc;
@@ -58,7 +64,7 @@ if 0
 end
 
 % check whether all seeds are in W
-inW = isXinW(S, VD);
+inW = isXinW(S, VD.W);
 if ~isempty(find(~inW)),
   s = sprintf('Error: seeds outside the image limits\n');
 	ii = find(~inW);
