@@ -1,3 +1,137 @@
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/benchVD.m (1.12):
+	  Modified calls to computeVD's corresponding to the latest API.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m (1.22), matlab/getDefaultVOISEParams.m (1.14),
+	  matlab/printVOISEsetup.m (1.9):
+	  Added support for parameter pixfluct to support uniformSeeds.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/uniformSeeds.m (1.7):
+	  Changed the API, the function takes now 4th and 5th arguments
+	  (seed clipping percentage from each edge [left,right,bottom,top],
+	  and relative fluctuation for randomising the uniform
+	  tesselation), and returns a 2nd argument (seed location limits in
+	  the image corresponding to the seed clipping percentage).
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testIncVD.m (1.5):
+	  Modified calls to computeVD's corresponding to the latest API.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/seedDist.m (1.9):
+	  Use the new structure for image limits.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/addSeedsToVR.m (1.6):
+	  Modified code to use the structure returned during seed
+	  initialisation.  Use the new structure for image limits.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/loadImage.m (1.17), matlab/webVOISE.m.in (1.9):
+	  Moved call to preProcessingImage into loadImage function.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotVOISE.m (1.7):
+	  Added call to colormap.  Added a line to show the seed clipping
+	  region.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getVRvertices.m (1.4), matlab/plotDefaultVOISE.m (1.6):
+	  Use the new structure for image limits.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getDefaultVOISEParams.m (1.13):
+	  Added comment on the colormap parameter.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getDefaultVOISEParams.m (1.12):
+	  Added a parameter for the colormap of the image.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/mergeVDFast.m (1.8):
+	  Modified calls to computeVD's corresponding to the latest API.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/mergeVD.m (1.19):
+	  Changed code for timing data declared as global variable.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/divideVD.m (1.15), matlab/mergeVD.m (1.18),
+	  matlab/divideVDFast.m (1.8), matlab/getCentroidVD.m (1.16),
+	  matlab/getCentroidVDFast.m (1.6):
+	  Modified calls to computeVD's corresponding to the latest API.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/isXinC.m (1.4):
+	  Fixed relational operators from element-wise to short-circuit
+	  ones when possible.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/isXinW.m (1.4):
+	  Modified code to use the structure returned during seed
+	  initialisation.  Fixed relational operators from element-wise to
+	  short-circuit ones when possible.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m (1.21), matlab/VOISEf.m (1.4):
+	  Modified calls to computeVD's correspondingly.  Added global
+	  timing to load timing data only once at beginning.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/computeVD.m (1.6), matlab/computeVDFast.m (1.8),
+	  matlab/initVD.m (1.4):
+	  Modified code to limit new seeds inside the region defined by the
+	  clipping percentage returned during seeds initialisation.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/randomSeeds.m (1.8):
+	  Changed the API, the function takes now a 4th argument (seed
+	  clipping percentage from each edge [left,right,bottom,top]),
+	  returns a 2nd argument (seed location limits in the image
+	  corresponding to the seed clipping percentage).
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* mcc/Makefile.am (1.3):
+	  Do not set MCC as configure will do it.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.30):
+	  Improved configuration check for the Matlab compiler mcc and set
+	  Makefile variable MCC.
+
+2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/Makefile.am (1.5):
+	  Added files to distribute VOISEdemo3.
+
+2015-02-10  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/printVOISEsetup.m (1.8):
+	  Added information section about VOISE seeding.
+
 2015-02-10  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* Makefile.am (1.4), configure.ac (1.29):
