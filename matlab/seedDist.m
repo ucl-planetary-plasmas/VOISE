@@ -2,7 +2,7 @@ function seedDist(VD,params)
 % function seedDist(VD,params)
 
 %
-% $Id: seedDist.m,v 1.8 2012/04/16 16:54:28 patrick Exp $
+% $Id: seedDist.m,v 1.9 2015/02/11 16:27:46 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -20,11 +20,13 @@ function seedDist(VD,params)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-sx = (max(params.x)-min(params.x))/(VD.xM-VD.xm);
-sy = (max(params.y)-min(params.y))/(VD.yM-VD.ym);
+% % scaling factors from VD to image axes
+W = VD.W;
+sx = (max(params.x)-min(params.x))/(W.xM-W.xm);
+sy = (max(params.y)-min(params.y))/(W.yM-W.ym);
 
-X = (VD.Sx(VD.Sk)-VD.xm)*sx+min(params.x);
-Y = (VD.Sy(VD.Sk)-VD.ym)*sy+min(params.y);
+X = (VD.Sx(VD.Sk)-W.xm)*sx+min(params.x);
+Y = (VD.Sy(VD.Sk)-W.ym)*sy+min(params.y);
 
 subplot(111);
 plot(X,Y,'o')
@@ -65,7 +67,8 @@ Hi = zeros(size(Ri));
 
 for i=1:length(ti)-1,
   for j=1:length(ri)-1,
-	  Hi(i,j) = length(find(R>=Ri(i,j) & R<Ri(i+1,j+1) & T>=Ti(i,j) & T<Ti(i+1,j+1)));
+	  Hi(i,j) = length(find(R>=Ri(i,j) & R<Ri(i+1,j+1) & ...
+		                      T>=Ti(i,j) & T<Ti(i+1,j+1)));
 	end
 end
 

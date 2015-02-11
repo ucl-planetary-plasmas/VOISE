@@ -2,7 +2,7 @@ function [V,I] = getVRvertices(VD, s)
 % function [V,I] = getVRvertices(VD, s)
 
 %
-% $Id: getVRvertices.m,v 1.3 2011/03/26 17:16:55 patrick Exp $
+% $Id: getVRvertices.m,v 1.4 2015/02/11 16:21:37 patrick Exp $
 %
 % Copyright (c) 2008-2011 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -53,7 +53,8 @@ hold on
 plot(xn, yn,'ok','MarkerSize',5)
 plot(V([1:end 1],1), V([1:end 1],2), '-dk', 'MarkerSize',5)
 hold off
-set(gca, 'xlim', [VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca, 'xlim', [W.xm W.xM], 'ylim', [W.ym W.yM]);
 %pause
 end
 
@@ -80,7 +81,8 @@ else
 plot(V(:,1), V(:,2), '-dk', 'MarkerSize',5)
 end
 hold off
-set(gca, 'xlim', [VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca, 'xlim', [W.xm W.xM], 'ylim', [W.ym W.yM]);
 if ~isempty(find(crs==-1)), 
   crs'
   pause
