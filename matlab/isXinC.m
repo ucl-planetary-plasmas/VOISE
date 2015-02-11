@@ -16,7 +16,7 @@ function inC = isXinC(X, rsu,  s, A, VD)
 % Vol. 18, No 10, October 1997
 
 %
-% $Id: isXinC.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: isXinC.m,v 1.4 2015/02/11 16:12:10 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,13 +47,13 @@ for i = find(inC)', % for all equidistant points X cocircular-filtered
   x = X(i,1);
 	y = X(i,2);
 
-	if ~isempty(rsu) & s~= rsu(i,2),
+	if ~isempty(rsu) && s~= rsu(i,2),
 	  str = sprintf('Error: s=%d expected in C(s,A), found s=%d', rsu(i,2), s);
 		%error(str);
 		fprintf(1,'%s\n',str); pause
 	end
 
-  if ~isfinite(x) | ~isfinite(y), % collinear seeds r, s, u
+  if ~isfinite(x) || ~isfinite(y), % colinear seeds r, s, u
 	  % NEEDS more work!!!
 		% coordinates of seed r
 		r1 = VD.Sx(rsu(i,1)); r2 = VD.Sy(rsu(i,1));
@@ -92,7 +92,7 @@ for i = find(inC)', % for all equidistant points X cocircular-filtered
       %   a*x+b*y>=c  \sim   d(X,S) <= d(X,R)
       % ~(a*x+b*y>=c) \sim ~(d(X,S) <= d(X,R))
       %   a*x+b*y< c  \sim   d(X,S) >  d(X,R)
-      if a*x+b*y-c<0.0 & abs(a*x+b*y-c)>1e4*eps, % check *really* negative
+      if a*x+b*y-c<0.0 && abs(a*x+b*y-c)>1e4*eps, % check *really* negative
 		    % d(X,R)<d(X,S) implies X not in C(s,A)
 		    inC(i) = inC(i) & false;
 				break;
@@ -117,7 +117,8 @@ for i = find(inC)', % for all equidistant points X cocircular-filtered
 			text(s1,s2,num2str(s),'verticalalignment','bottom');
 			text(r1,r2,num2str(r),'verticalalignment','bottom');
 			text(x,y,'X','verticalalignment','bottom');
-			set(gca,'xlim',[VD.xm VD.xM],'ylim',[VD.ym VD.yM]);
+			W = VD.W;
+			set(gca,'xlim',[W.xm W.xM],'ylim',[W.ym W.yM]);
 			pause
 			end
     end % loop over seed r in A
