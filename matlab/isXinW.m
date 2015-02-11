@@ -1,5 +1,5 @@
-function inW = isXinW(X, VD)
-% function inW = isXinW(X, VD)
+function inW = isXinW(X, W)
+% function inW = isXinW(X, W)
 % 
 % Check whether the n points X(n, 2) are within the image limits
 % 
@@ -11,7 +11,7 @@ function inW = isXinW(X, VD)
 % Vol. 18, No 10, October 1997
 
 %
-% $Id: isXinW.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: isXinW.m,v 1.4 2015/02/11 16:10:08 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -38,9 +38,9 @@ for i = 1:size(X,1),
   x = X(i,1);
 	y = X(i,2);
 
-  if ~isfinite(x) | ~isfinite(y), % point at infinity 
+  if ~isfinite(x) || ~isfinite(y), % point at infinity 
 	  inW(i) = false;
-	elseif x<VD.xm | x>VD.xM | y<VD.ym | y>VD.yM, % point outside image range
+	elseif x<W.xm || x>W.xM || y<W.ym || y>W.yM, % point out of range
 	  inW(i) = false;
 	end
 
