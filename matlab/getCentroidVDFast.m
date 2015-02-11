@@ -2,7 +2,7 @@ function CVD = getCentroidVDFast(VD, params)
 % function CVD = getCentroidVDFast(VD, params)
 
 %
-% $Id: getCentroidVDFast.m,v 1.5 2012/04/16 16:54:27 patrick Exp $
+% $Id: getCentroidVDFast.m,v 1.6 2015/02/11 16:14:50 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -48,11 +48,11 @@ for k = VD.Sk',
 end
 %pause
 % compute centroid Voronoi Diagram 
-CVD = computeVDFast(nr, nc, Sc);
+CVD = computeVDFast(nr, nc, Sc, VD.W);
 
 iter = 1;
 while max(abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + ...
-          abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk))) > 1e-2 & iter<params.regMaxIter, 
+          abs(CVD.Sy(CVD.Sk)-VD.Sy(Sk))) > 1e-2 && iter<params.regMaxIter, 
   % copy CVD to old VD
   VD = CVD;
   Sc = zeros(0,2);
@@ -66,7 +66,7 @@ while max(abs(CVD.Sx(CVD.Sk)-VD.Sx(Sk)) + ...
 		end
   end
   %pause
-  CVD = computeVDFast(nr, nc, Sc);
+  CVD = computeVDFast(nr, nc, Sc, VD.W);
 	iter = iter + 1;
 end
 fprintf(1,'Centroid Voronoi Diagram computed\n')

@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.15 2012/04/16 16:54:27 patrick Exp $
+% $Id: getCentroidVD.m,v 1.16 2015/02/11 16:14:50 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,7 +21,7 @@ function VD = getCentroidVD(VD, params)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % miscellaneous information about VOISE
-global voise
+global voise timing
 
 % do not attempt to regularise if regMaxIter < 1
 if params.regMaxIter < 1,
@@ -30,9 +30,9 @@ else
   regMaxIter = params.regMaxIter;
 end
 
-if params.regAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
-  timing = load([voise.root '/share/VOISEtiming.mat']);
-end
+%if params.regAlgo == 2 && exist([voise.root '/share/VOISEtiming.mat'],'file'),
+%  timing = load([voise.root '/share/VOISEtiming.mat']);
+%end
 
 fprintf(1,'*** Starting regularisation phase\n')
 
@@ -70,14 +70,14 @@ while ~stopReg,
 	regDist{iReg} = dist;
 	regDist2{iReg} = dist2;
 
-  if max(dist) > 1 & iReg<=params.regMaxIter, 
+  if max(dist) > 1 && iReg<=params.regMaxIter, 
     fprintf(1,'Iter %2d Computing regularised Voronoi Diagram for %d seeds\n',...
 		        iReg, size(Sc,1));
     switch params.regAlgo,
 	    case 0, % incremental
-		    VD = computeVD(nr, nc, Sc);
+		    VD = computeVD(nr, nc, Sc, VD.W);
 		  case 1, % full
-		    VD = computeVDFast(nr, nc, Sc);
+		    VD = computeVDFast(nr, nc, Sc, VD.W);
 		  case 2, % timing based
 		    ns = size(Sc,1);
 	      tf = polyval(timing.ptVDf, ns);
@@ -86,9 +86,9 @@ while ~stopReg,
 		            1, ns, 1, ns, tf, ti);
 			  tStart = tic;
 			  if tf < ti, % full faster than incremental
-			    VD = computeVDFast(nr, nc, Sc);
+			    VD = computeVDFast(nr, nc, Sc, VD.W);
 			  else, % incremental faster full
-			    VD = computeVD(nr, nc, Sc);
+			    VD = computeVD(nr, nc, Sc, VD.W);
 			  end
 			  fprintf(1,'(Used %6.1f s)\n', toc(tStart));
 	  end
@@ -120,7 +120,8 @@ axis equal
 axis off
 set(gca,'clim',params.Wlim);
 %colorbar
-set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca,'xlim',[W.xm W.xM], 'ylim', [W.ym W.yM]);
 
 hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));

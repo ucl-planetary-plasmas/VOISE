@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.14 2012/04/16 16:54:27 patrick Exp $
+% $Id: divideVD.m,v 1.15 2015/02/11 16:13:48 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,7 +21,7 @@ function [VD, params]  = divideVD(VD, params)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % miscellaneous information about VOISE
-global voise
+global voise timing
 
 % do not attempt to divide if dividePctile < 0
 if params.dividePctile<0,
@@ -30,9 +30,9 @@ else
   dividePctile = params.dividePctile;
 end
 
-if params.divideAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
-  timing = load([voise.root '/share/VOISEtiming.mat']);
-end
+%if params.divideAlgo == 2 && exist([voise.root '/share/VOISEtiming.mat'],'file'),
+%  timing = load([voise.root '/share/VOISEtiming.mat']);
+%end
 
 fprintf(1,'*** Starting dividing phase\n')
 
@@ -91,7 +91,7 @@ while ~stopDiv,
 						VD.Sy = [VD.Sy; S(k,2)];
 					end
 				end
-				VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy]);
+				VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy], VD.S);
 			case 2, % timing based
 			  ns = length(VD.Sk);
 			  tf = polyval(timing.ptVDf, ns+nSa);
@@ -106,7 +106,7 @@ while ~stopDiv,
 						  VD.Sy = [VD.Sy; S(k,2)];
 					  end
 				  end
-				  VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy]);
+				  VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy], VD.S);
         else, % incremental faster than full
           for k = 1:size(S,1),
 					  if isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
@@ -151,7 +151,9 @@ axis equal
 axis off
 set(gca,'clim',params.Wlim);
 %colorbar
-set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca,'xlim',[W.xm W.xM], 'ylim', [W.ym W.yM]);
+colormap(params.colormap);
 
 hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));

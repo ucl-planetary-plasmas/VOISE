@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.17 2012/04/16 16:54:27 patrick Exp $
+% $Id: mergeVD.m,v 1.18 2015/02/11 16:13:48 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -30,7 +30,7 @@ else
   mergePctile = params.mergePctile;
 end
 
-if params.mergeAlgo == 2 & exist([voise.root '/share/VOISEtiming.mat'],'file'),
+if params.mergeAlgo == 2 && exist([voise.root '/share/VOISEtiming.mat'],'file'),
   timing = load([voise.root '/share/VOISEtiming.mat']);
 end
 
@@ -188,7 +188,7 @@ while ~stopMerge,
         end
 			case 1, % full
 			  Skeep = setdiff(VD.Sk, Sk);
-				VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)]);
+				VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)],VD.S);
 			case 2, % timing based
 			  ns = length(VD.Sk);
 			  Skeep = setdiff(VD.Sk, Sk);
@@ -199,7 +199,7 @@ while ~stopMerge,
 				tStart = tic;
 				if tf < ti, % full faster than incremental
 				  Skeep = setdiff(VD.Sk,Sk);
-					VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)]);
+					VD = computeVDFast(VD.nr, VD.nc, [VD.Sx(Skeep), VD.Sy(Skeep)],VD.S);
 				else, % incremental faster than full
           for k = Sk(:)',
             VD  = removeSeedFromVD(VD, k);
@@ -232,7 +232,8 @@ axis equal
 axis off
 set(gca,'clim',params.Wlim);
 %colorbar
-set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca,'xlim',[W.xm W.xM], 'ylim', [W.ym W.yM]);
 
 hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));

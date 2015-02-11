@@ -2,7 +2,7 @@ function [VD, params]  = divideVDFast(VD, params)
 % function [VD,params] = divideVDFast(VD, params)
 
 %
-% $Id: divideVDFast.m,v 1.7 2012/04/16 16:54:27 patrick Exp $
+% $Id: divideVDFast.m,v 1.8 2015/02/11 16:14:50 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -71,7 +71,7 @@ while ~stopDiv,
 			  VD.Sy = [VD.Sy; S(k,2)];
 			end
 		end
-		VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy]);
+		VD = computeVDFast(VD.nr, VD.nc, [VD.Sx, VD.Sy], VD.S);
 	  params = plotCurrentVD(VD, params, iDiv);
 	  iDiv = iDiv+1;
   else
@@ -98,7 +98,8 @@ axis equal
 axis off
 set(gca,'clim',params.Wlim);
 %colorbar
-set(gca,'xlim',[VD.xm VD.xM], 'ylim', [VD.ym VD.yM]);
+W = VD.W;
+set(gca,'xlim',[W.xm W.xM], 'ylim', [W.ym W.yM]);
 
 hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
