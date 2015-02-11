@@ -1,12 +1,12 @@
-function [S,varargout] = randomSeeds(nr,nc,ns,varargin)
-% function [S[,pc]] = randomSeeds(nr,nc,ns[,'pc',pc])
-% 
-% string 'pc' followed by a value for pc is optional.
-% pc is a percentage to indicate the relative fluctuation introduced
-% in the randomisation of the regular tesselation (default pc = 0.02)
+function [S,VDlim] = randomSeeds(nr,nc,ns,clipping)
+% function [S,VDlim] = randomSeeds(nr,nc,ns,clipping)
+%
+% clipping is defined as percentage of the image size from each edge, i.e.
+% the vector of length four with [left,right,bottom,top]
+% default is a 2% default clipping from all edge [left,right,bottom,top]
 
 %
-% $Id: randomSeeds.m,v 1.7 2012/04/16 16:54:27 patrick Exp $
+% $Id: randomSeeds.m,v 1.8 2015/02/11 15:43:26 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -24,14 +24,29 @@ function [S,varargout] = randomSeeds(nr,nc,ns,varargin)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-pc = getfield(parseArgs(struct('pc',0.02), varargin{:}),'pc');
+if ~exist('clipping','var') || isempty(clipping),
+  % 2% default clipping from all edge [left,right,bottom,top]
+  clipping = [2, 2, 2, 2];
+end
+pc = clipping/100;
 
 % initialise array S(ns,2) 
 % seed s has coordinates (x,y) = S(s, 1:2) 
+% where 1 < x < nc and 1 < y < nr
+% i.e. no seeds on the border of the image
 
-% no seeds in the 100*pc % from the boundary of the image
-S = round([(nc-2*pc*nc)*(rand(ns,1))+pc*nc, ...
-           (nr-2*pc*nr)*(rand(ns,1))+pc*nr]);
+xm = floor(2 + (nc-3) * pc(1));
+xM = ceil(2 + (nc-3) * (1-pc(2)));
+ym = floor(2 + (nr-3) * pc(3));
+yM = ceil(2 + (nr-3) * (1-pc(4)));
+
+%fprintf(1,'(xm, xM, ym, yM) = (%d, %d, %d, %d)\n',xm,xM,ym,yM);
+
+% uniform distribution over open range (boundary values not included)
+%S = round([randraw('uniform', [xm, xM], ns, 1), ...
+%           randraw('uniform', [ym, yM], ns, 1)]);
+S = round([xm+(xM-xm)*rand(ns, 1), ...
+           ym+(yM-ym)*rand(ns, 1)]);
 
 % iterate until all seeds are different
 uniqueSeeds=false;
@@ -42,8 +57,10 @@ while ~uniqueSeeds,
     ii = find(S(k,1)==S([k+1:end-1],1) & S(k,2)==S([k+1:end-1],2));
     if ~isempty(ii),
       ns = length(ii);
-      S(k+ii,:) = round([(nc-2*pc*nc)*(rand(ns,1))+pc*nc, ...
-                         (nr-2*pc*nr)*(rand(ns,1))+pc*nr]);
+%      S(k+ii,:) = round([randraw('uniform', [xm, xM], ns, 1), ...
+%                         randraw('uniform', [ym, yM], ns, 1)]);
+      S(k+ii,:) = round([xm+(xM-xm)*rand(ns, 1), ...
+                         ym+(yM-ym)*rand(ns, 1)]);
       nIdentical = nIdentical+ns;
     end
   end
@@ -55,6 +72,8 @@ while ~uniqueSeeds,
 
 end
 
-if nargout > 1,
-  varargout{1} = pc;
-end
+% initialise VD seed limit structure
+VDlim.xm = xm;
+VDlim.xM = xM;
+VDlim.ym = ym;
+VDlim.yM = yM;
