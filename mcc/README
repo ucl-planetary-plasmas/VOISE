@@ -1,0 +1,42 @@
+MATLAB Compiler
+
+1. Prerequisites for Deployment 
+
+  Read any of the readme*.txt files: 
+
+	  -readme-gVOISE.txt, 
+	  -readme-VOISE.txt, 
+	  -readme-verifyImage.txt
+
+	They should contain the necessary instructions for deployment of standalone
+	MATLAB compiled application for your specific platform.
+
+
+2.  How to run gVOISE (graphic VOISE), VOISE and verifyImage
+
+  Each compiled application APP has a corresponding shell script run_APP.sh 
+	for temporarily setting environment variables and executing.
+
+  To run the shell script, type
+   
+	     ./run_APP.sh <mcr_directory> <argument_list>
+
+       
+    at Linux or Mac command prompt. <mcr_directory> is the directory 
+    where the MATLAB runtime is installed or the directory where 
+    MATLAB is installed on the machine. <argument_list> is all the 
+    arguments you want to pass to your application. For example, 
+
+       ./run_gVOISE.sh <mcr_directory> <VOISE_config_file>
+       ./run_VOISE.sh <mcr_directory> <VOISE_config_file>
+       ./run_verifyImage.sh <mcr_directory> <image_file>
+
+    If you have version 8.4 of the MATLAB runtime installed in 
+    /mathworks/home/application/v84, run the shell script as:
+    
+       ./run_gVOISE.sh /mathworks/home/application/v84 ../share/VOISEdemo3.dat
+       
+    If you have MATLAB installed in /mathworks/devel/application/matlab, 
+    run the shell script as:
+    
+       ./run_gVOISE.sh /mathworks/devel/application/matlab -MCRInstaller.zip VOISEdemo3.dat
