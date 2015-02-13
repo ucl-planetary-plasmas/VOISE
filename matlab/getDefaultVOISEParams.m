@@ -34,7 +34,8 @@ function params = getDefaultVOISEParams()
 %                                                            (@randomSeeds)
 %   pcClipping     : percentage Clipping [left,right,bottom,top]
 %                                                            (empty)
-%   pcClipping     : percentage Fluctuation                  (empty)
+%   radFluct       : Radius of fluctuation in pixels for seed shaking
+%                                                            (empty)
 %   iNumSeeds      : number of initial seeds                 (12)
 %   RNGiseed       : initial value for Random Number Generator
 %                                                            (10)
@@ -87,7 +88,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.14 2015/02/11 17:46:24 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.15 2015/02/13 12:56:23 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -124,7 +125,7 @@ params.colormap        = jet;
 % Initialise
 params.initSeeds       = @randomSeeds;
 params.pcClipping      = [];
-params.pixfluct        = [];
+params.radFluct        = [];
 params.iNumSeeds       = 12;
 params.RNGiseed        = 10;
 params.initAlgo        = 2;
