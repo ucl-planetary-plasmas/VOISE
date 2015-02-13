@@ -34,7 +34,12 @@ $(matlabdir)/getDefaultVOISEParams.m \
 $(matlabdir)/readVOISEconf.m \
 $(matlabdir)/printVOISEsetup.m \
 $(matlabdir)/getEquidistantPoint.m \
+$(matlabdir)/setVDlim.m \
+$(matlabdir)/shakeSeeds.m \
 $(matlabdir)/randomSeeds.m \
+$(matlabdir)/poissonSeeds.m \
+$(matlabdir)/uniformSeeds.m \
+$(matlabdir)/boardSeeds.m \
 $(matlabdir)/getVDOp.m \
 $(matlabdir)/removeSeedFromVD.m \
 $(matlabdir)/getVRclosure.m \
