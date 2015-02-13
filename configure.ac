@@ -53,7 +53,7 @@ AM_CONDITIONAL([HAVE_MCC],[test -n "$MCC"])
 
 
 dnl Generate Makefiles
-AC_CONFIG_FILES([Makefile matlab/Makefile mcc/Makefile share/Makefile])
+AC_CONFIG_FILES([Makefile matlab/Makefile mcc/Makefile share/Makefile doc/Makefile])
 
 AC_CONFIG_FILES([matlab/start_VOISE.m:matlab/start_VOISE.m.in], [])
 
@@ -63,15 +63,15 @@ AC_OUTPUT
 
 AC_MSG_NOTICE([
 
-The configure script has set up MATLAB version of VOISE.
+The configure script has set up the MATLAB version of VOISE.
 ])
 
-if test x$mcc = xyes; then 
+if test  -n "$MCC"; then 
 AC_MSG_NOTICE([
 
-You have further options available since MATLAB compiler is available
+You have further options available since the MATLAB compiler mcc is available
 
-  make mccVOISE        Compile VOISE with MATLAB compiler mcc
+  make mccVOISE        Compile standalone VOISE with MATLAB compiler mcc
   make dist-mccVOISE   Create standalone distro for this architecture
   make demo1           Run demo1 without graphic diagnostic
   make demo2           Run demo2 without graphic diagnostic
@@ -79,5 +79,12 @@ You have further options available since MATLAB compiler is available
   make gdemo1          Run demo1 with graphic diagnostic
   make gdemo2          Run demo2 with graphic diagnostic
   make gcheck          Run gdemo1 and gdemo2
+])
+else
+AC_MSG_NOTICE([
+
+The MATLAB compiler mcc was not detected, VOISE cannot be compiled as a
+standalone application
+
 ])
 fi
