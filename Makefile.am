@@ -21,7 +21,7 @@ dist-mccVOISE: mccVOISE
 	@rm -rf $(ROOT)
 	@mkdir -p $(ROOT) $(ROOT)/mcc $(ROOT)/share $(ROOT)/share/input $(ROOT)/share/output $(ROOT)/doc
 	@cp -pr AUTHORS ChangeLog NEWS README $(ROOT)
-	@cp -pr mcc/Makefile mcc/*VOISE* mcc/*verifyImage* $(ROOT)/mcc
+	@cp -pr mcc/Makefile mcc/*VOISE* mcc/*verifyImage* mcc/README $(ROOT)/mcc
 	@cp -p share/VOISEtiming.mat share/VOISEdemo*.dat $(ROOT)/share
 	@cp -p share/input/north_proj.mat $(ROOT)/share/input
 	@cp -p share/input/sampleint.fits $(ROOT)/share/input
