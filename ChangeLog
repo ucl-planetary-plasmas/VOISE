@@ -1,3 +1,84 @@
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getCentroidVD.m (1.17), matlab/mergeVD.m (1.20):
+	  Set colormap defined in the VOISE parameters.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getDefaultVOISEParams.m (1.16):
+	  Set poissonSeeds as the default seed init function.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/printVOISEsetup.m (1.10):
+	  Added poissonSeeds in the list of functions with scalar number of
+	  seeds.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* mcc/Makefile.am (1.4):
+	  Added new files in the list of source files to compile.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* share/VOISEdemo4.dat (1.1):
+	  Added setting for demo with HST image of Uranus without
+	  preprocessing.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* Makefile.am (1.5):
+	  Added doc under autoconf/automake control.  Extended mcc-dist
+	  target to contain reference material (papers and posters).
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* configure.ac (1.32):
+	  Fixed notification message for MCC.  Added doc under
+	  autoconf/automake control.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* doc/Makefile.am (1.1):
+	  Added doc directory under control of autoconf/automake.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getDefaultVOISEParams.m (1.15):
+	  Added parameter radFluct for the shakeSeeds function.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/poissonSeeds.m (1.7):
+	  Implemented the Poisson disk sampling algorithm as described in
+	  http://devmag.org.za/2009/05/03/poisson-disk-sampling/
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m (1.23), matlab/VOISEf.m (1.5):
+	  Added calls to setVDlim and shakeSeeds.  Cleaned the input and
+	  output arguments of initSeeds call.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/boardSeeds.m (1.7), matlab/fig4Seeds.m (1.7),
+	  matlab/randomSeeds.m (1.9), matlab/uniformSeeds.m (1.8):
+	  Removed initialisation of the VD limits structure and cleaned the
+	  input and output arguments.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/shakeSeeds.m (1.1):
+	  New function to shake or perturb the position of the seeds from
+	  their initial value, useful when using a regular grid such as
+	  uniform or board type seeding.
+
+2015-02-13  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/setVDlim.m (1.1):
+	  New function to initialise the VD limits structure to be called
+	  prior to seeding.
+
 2015-02-11  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* configure.ac (1.31):
