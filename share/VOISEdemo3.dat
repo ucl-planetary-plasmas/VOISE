@@ -1,6 +1,8 @@
-# Demo configuration file for fits-file image sampleint.fits
+# Demo configuration file for HST image STIS_orbit_17.fits
 #
-# $Id: VOISEdemo3.dat,v 1.1 2015/02/10 12:01:34 patrick Exp $
+# with preprocessing
+#
+# $Id: VOISEdemo3.dat,v 1.2 2015/02/13 15:16:44 patrick Exp $
 #
 # Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 # All Rights Reserved.
@@ -20,20 +22,20 @@
 
 # Initial phase parameters
 iNumSeeds = 15
-pcClipping = [25, 25, 25 25]
+pcClipping = [33, 33, 33 33]
 RNGiseed = 12
 # Dividing phase parameters
-dividePctile = 99
-d2Seeds = 10
+dividePctile = 90
+d2Seeds = 5
 # Merging phase parameters
-mergePctile = 96
-dmu = 0.01
-thresHoldLength = 0.1
+mergePctile = 50
+dmu = 0.1
+thresHoldLength = 0.2
 # Regularisation phase parameters
 regMaxIter = 2
 # I/O parameters
 iFile = ../share/input/STIS_orbit_17.fits
-oDir = ../share/output/stis17
+oDir = ../share/output/stis17/
 # Image parameters
 imageOrigo = [0, 0]
 pixelSize  = [1, 1]
