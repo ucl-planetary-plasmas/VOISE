@@ -2,7 +2,7 @@ function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
 %
-% $Id: printVOISEsetup.m,v 1.9 2015/02/11 17:46:24 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.10 2015/02/13 14:50:34 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,7 +47,8 @@ fprintf(1,'   Wlim               = %g, %g\n\n', params.Wlim);
 
 fprintf(1,' * Seeding parameters\n');
 fprintf(1,'   ---------------\n\n');
-if strcmp(func2str(params.initSeeds),'randomSeeds'),
+if strcmp(func2str(params.initSeeds),'poissonSeeds') || ...
+   strcmp(func2str(params.initSeeds),'randomSeeds'),
   fprintf(1,'   Seeds number       = %d\n', params.iNumSeeds(1));
 else
   nsx = params.iNumSeeds(1);
