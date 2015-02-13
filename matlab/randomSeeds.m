@@ -1,12 +1,8 @@
-function [S,VDlim] = randomSeeds(nr,nc,ns,clipping)
-% function [S,VDlim] = randomSeeds(nr,nc,ns,clipping)
-%
-% clipping is defined as percentage of the image size from each edge, i.e.
-% the vector of length four with [left,right,bottom,top]
-% default is a 2% default clipping from all edge [left,right,bottom,top]
+function S = randomSeeds(nr,nc,ns,VDlim)
+% function S = randomSeeds(nr,nc,ns,VDlim)
 
 %
-% $Id: randomSeeds.m,v 1.8 2015/02/11 15:43:26 patrick Exp $
+% $Id: randomSeeds.m,v 1.9 2015/02/13 12:31:40 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -24,25 +20,13 @@ function [S,VDlim] = randomSeeds(nr,nc,ns,clipping)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-if ~exist('clipping','var') || isempty(clipping),
-  % 2% default clipping from all edge [left,right,bottom,top]
-  clipping = [2, 2, 2, 2];
-end
-pc = clipping/100;
+xm = VDlim.xm;
+xM = VDlim.xM;
+ym = VDlim.ym;
+yM = VDlim.yM;
 
-% initialise array S(ns,2) 
+% initialise array S(ns,2) with uniform distribution over open range
 % seed s has coordinates (x,y) = S(s, 1:2) 
-% where 1 < x < nc and 1 < y < nr
-% i.e. no seeds on the border of the image
-
-xm = floor(2 + (nc-3) * pc(1));
-xM = ceil(2 + (nc-3) * (1-pc(2)));
-ym = floor(2 + (nr-3) * pc(3));
-yM = ceil(2 + (nr-3) * (1-pc(4)));
-
-%fprintf(1,'(xm, xM, ym, yM) = (%d, %d, %d, %d)\n',xm,xM,ym,yM);
-
-% uniform distribution over open range (boundary values not included)
 %S = round([randraw('uniform', [xm, xM], ns, 1), ...
 %           randraw('uniform', [ym, yM], ns, 1)]);
 S = round([xm+(xM-xm)*rand(ns, 1), ...
@@ -71,9 +55,3 @@ while ~uniqueSeeds,
   end
 
 end
-
-% initialise VD seed limit structure
-VDlim.xm = xm;
-VDlim.xM = xM;
-VDlim.ym = ym;
-VDlim.yM = yM;

@@ -1,14 +1,10 @@
-function [S,varargout] = boardSeeds(nr,nc,ns,varargin)
-% function [S[,pc]] = boardSeeds(nr,nc,ns[,'pc',pc])
+function S = boardSeeds(nr,nc,ns,VDlim)
+% function S = boardSeeds(nr,nc,ns,VDlim)
 % 
-% string 'pc' followed by a (2 element) vector pc is optional.
-% pc(1) is a percentage that indicate the size of regular tesselation
-% ns = size(pc(1)*nr,pc(1)*nc) (default pc(1) = 0.1)
-% pc(2) is a percentage to indicate the relative fluctuation introduced
-% in the randomisation of the regular tesselation (default pc(2) = 0.075)
+% ns = [nsx, nsy] and total is nsx * nsy
 
 %
-% $Id: boardSeeds.m,v 1.6 2012/04/16 16:54:27 patrick Exp $
+% $Id: boardSeeds.m,v 1.7 2015/02/13 12:31:40 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -26,11 +22,20 @@ function [S,varargout] = boardSeeds(nr,nc,ns,varargin)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-pc = getfield(parseArgs(struct('pc',[0.1,0.075]) , varargin{:}),'pc');
+xm = VDlim.xm;
+xM = VDlim.xM;
+ym = VDlim.ym;
+yM = VDlim.yM;
 
-% regular tesselation with ns = pc(1)*nr x pc(1)*nc
-xi = round(linspace(pc(1)/2*nc,(1-pc(1)/2)*nc, 2*round(nc*pc(1))-1));
-yi = round(linspace(pc(1)/2*nr,(1-pc(1)/2)*nr, 2*round(nr*pc(1))-1));
+if length(ns) == 1,
+  ns = ns*ones(2,1);
+end
+nsx = ns(1);
+nsy = ns(2);
+
+% uniform tesselation over regular mesh
+xi = round(linspace(xm, xM, 2*nsx);
+yi = round(linspace(ym, yM, 2*nsy);
 
 [x, y] = meshgrid(xi,yi);
 x = x(:);
@@ -39,13 +44,4 @@ y = y(:);
 % initialise array S(ns,2) 
 % seed s has coordinates (x,y) = S(s, 1:2) 
 S = [x([1:2:end]), y([1:2:end])];
-ns = size(S,1);
 
-if pc(2), % random fluctuation of 100*pc(2) % of distance between seeds
-  r = round([pc(2)*nc/4*(2*rand(ns,1)-1), pc(2)*nr/4*(2*rand(ns,1)-1)]);
-  S = S + r;
-end
-
-if nargout > 1,
-  varargout{1} = pc;
-end
