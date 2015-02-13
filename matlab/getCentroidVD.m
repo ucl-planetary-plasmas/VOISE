@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.16 2015/02/11 16:14:50 patrick Exp $
+% $Id: getCentroidVD.m,v 1.17 2015/02/13 14:55:15 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -127,6 +127,9 @@ hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
 plot(vx,vy,'-k','LineWidth',0.5)
 hold off
+
+colormap(params.colormap);
+
 
 title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iReg))
 

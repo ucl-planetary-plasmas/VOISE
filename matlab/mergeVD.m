@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.19 2015/02/11 16:16:23 patrick Exp $
+% $Id: mergeVD.m,v 1.20 2015/02/13 14:55:15 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -239,6 +239,8 @@ hold on
 [vx,vy]=voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
 plot(vx,vy,'-k','LineWidth',1)
 hold off
+
+colormap(params.colormap);
 
 title(sprintf('card(S) = %d  (iteration %d)', length(VD.Sk), iMerge))
 
