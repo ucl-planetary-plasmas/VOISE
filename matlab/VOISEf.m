@@ -4,7 +4,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISEf(params, ns, initSeeds, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISEf.m,v 1.4 2015/02/11 16:02:53 patrick Exp $
+% $Id: VOISEf.m,v 1.5 2015/02/13 12:35:46 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -38,10 +38,15 @@ end
 [nr, nc] = size(params.W);
 ns       = params.iNumSeeds;
 clipping = params.pcClipping;
+radfluct = params.radFluct;
 
 if exist('initSeeds') & isa(initSeeds, 'function_handle'),
-	[initSeeds, msg] = fcnchk(initSeeds);
-  [S,VDlim] = initSeeds(nr, nc, ns, params);
+  [initSeeds, msg] = fcnchk(initSeeds);
+  VDlim = setVDlim(nr,nc,clipping);
+  S = initSeeds(nr, nc, ns, VDlim);
+  if ~isempty(radfluct),
+    S = shakeSeeds(S,nr,nc,VDlim,radfluct);
+  end
 else
   error('initSeeds not defined or not a Function Handle');
 end

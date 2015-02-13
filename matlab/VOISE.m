@@ -11,7 +11,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.22 2015/02/11 17:46:24 patrick Exp $
+% $Id: VOISE.m,v 1.23 2015/02/13 12:35:46 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -64,13 +64,18 @@ end
 [nr, nc] = size(params.W);
 ns       = params.iNumSeeds;
 clipping = params.pcClipping;
+radfluct = params.radFluct;
 
 % init seed of Mersenne-Twister RNG
 RandStream.setGlobalStream(RandStream('mt19937ar','seed',params.RNGiseed));
 
 if isa(params.initSeeds, 'char') | isa(params.initSeeds, 'function_handle'),
-	[initSeeds, msg] = fcnchk(params.initSeeds);
-  [S,VDlim] = initSeeds(nr, nc, ns, clipping);
+  [initSeeds, msg] = fcnchk(params.initSeeds);
+  VDlim = setVDlim(nr,nc,clipping);
+  S = initSeeds(nr, nc, ns, VDlim);
+  if ~isempty(radfluct),
+    S = shakeSeeds(S,nr,nc,VDlim,radfluct);
+  end
 	ns = size(S,1);
 else
   error('initSeeds not defined or not a Function Handle');
