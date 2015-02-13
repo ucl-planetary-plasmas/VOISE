@@ -31,7 +31,7 @@ function params = getDefaultVOISEParams()
 % * VOISE initial phase parameters
 %
 %   initSeeds      : function (string or handle) to draw initial seeds
-%                                                            (@randomSeeds)
+%                                                            (@poissonSeeds)
 %   pcClipping     : percentage Clipping [left,right,bottom,top]
 %                                                            (empty)
 %   radFluct       : Radius of fluctuation in pixels for seed shaking
@@ -88,7 +88,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.15 2015/02/13 12:56:23 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.16 2015/02/13 14:51:40 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -123,7 +123,7 @@ params.colormap        = jet;
 
 % VOISE algorithm parameters 
 % Initialise
-params.initSeeds       = @randomSeeds;
+params.initSeeds       = @poissonSeeds;
 params.pcClipping      = [];
 params.radFluct        = [];
 params.iNumSeeds       = 12;
