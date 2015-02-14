@@ -26,10 +26,10 @@ dist-mccVOISE: mccVOISE
 	@cp -p share/input/north_proj.mat $(ROOT)/share/input
 	@cp -p share/input/sampleint.fits $(ROOT)/share/input
 	@cp -p share/input/STIS_orbit_17.fits $(ROOT)/share/input
-	@cp -p share/doc/j_1365-2966_2009_15218.pdf $(ROOT)/doc
-	@cp -p share/doc/limbfit-draft.pdf $(ROOT)/doc
-	@cp -p share/doc/poster-agufm09.pdf $(ROOT)/doc
-	@cp -p share/doc/poster-agufm12.pdf $(ROOT)/doc
+	@cp -p doc/j_1365-2966_2009_15218.pdf $(ROOT)/doc
+	@cp -p doc/limbfit-draft.pdf $(ROOT)/doc
+	@cp -p doc/poster-agufm09.pdf $(ROOT)/doc
+	@cp -p doc/poster-agufm12.pdf $(ROOT)/doc
 	@tar -cvf $(ROOT).tar $(ROOT)
 	@bzip2 -9 $(ROOT).tar
 	@rm -rf $(ROOT)
