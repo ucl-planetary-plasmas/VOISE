@@ -4,7 +4,7 @@ function S = boardSeeds(nr,nc,ns,VDlim)
 % ns = [nsx, nsy] and total is nsx * nsy
 
 %
-% $Id: boardSeeds.m,v 1.7 2015/02/13 12:31:40 patrick Exp $
+% $Id: boardSeeds.m,v 1.8 2015/02/14 14:53:21 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -34,14 +34,16 @@ nsx = ns(1);
 nsy = ns(2);
 
 % uniform tesselation over regular mesh
-xi = round(linspace(xm, xM, 2*nsx);
-yi = round(linspace(ym, yM, 2*nsy);
+xi = round(linspace(xm, xM, 2*nsx));
+yi = round(linspace(ym, yM, 2*nsy));
 
-[x, y] = meshgrid(xi,yi);
-x = x(:);
-y = y(:);
+[xo, yo] = meshgrid(xi([1:2:end]),yi([1:2:end]));
+[xe, ye] = meshgrid(xi([2:2:end]),yi([2:2:end]));
+
+x = [xo(:);xe(:)];
+y = [yo(:);ye(:)];
 
 % initialise array S(ns,2) 
 % seed s has coordinates (x,y) = S(s, 1:2) 
-S = [x([1:2:end]), y([1:2:end])];
+S = [x(:), y(:)];
 
