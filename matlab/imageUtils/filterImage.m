@@ -1,5 +1,5 @@
-function Y = filterImage(X,winSize,op,varargin)
-% function Y = filterImage(X,winSize,op,varargin)
+function Y = filterImage(X,winSize,op)
+% function Y = filterImage(X,winSize,op)
 % 
 %  X       : image
 %  winSize : size of (pixel-centred) kernel (should be odd in both dims)
@@ -21,7 +21,7 @@ function Y = filterImage(X,winSize,op,varargin)
 
 
 %
-% $Id: filterImage.m,v 1.3 2012/04/16 16:54:15 patrick Exp $
+% $Id: filterImage.m,v 1.4 2015/03/13 15:51:44 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -78,17 +78,40 @@ ic = fix(-wnc/2):fix(wnc/2);
 
 if ~isempty(op), % filter with a given function
 
-  for i=1:nr,
-    for j=1:nc,
-	    % calculate indices for window at (i,j)
-	    I = ir+i;  
-		  J = ic+j;
-			% Xwin contains the image points within window at (i,j)
-		  Xwin = X(I(I>=1 & I<=nr),J(J>=1 & J<=nc));
-		  % compute filtered value at (i,j) 
-		  Y(i,j) = op(Xwin(:), varargin{:});
+  switch func2str(op),
+
+	  case {'mean','median'},
+
+      for i=1:nr,
+        for j=1:nc,
+	        % calculate indices for window at (i,j)
+	        I = ir+i;  
+		      J = ic+j;
+			    % Xwin contains the image points within window at (i,j)
+		      Xwin = X(I(I>=1 & I<=nr), J(J>=1 & J<=nc));
+		      % compute filtered value at (i,j) 
+		      Y(i,j) = op(Xwin(:));
+	      end
+      end
+
+    otherwise,
+
+      [Ir,Ic] = meshgrid(ir, ic);
+      for i=1:nr,
+        for j=1:nc,
+	        % calculate indices for window at (i,j)
+	        I = ir+i;  
+		      J = ic+j;
+			    % Xwin contains the image points within window at (i,j)
+		      Xwin = X(I(I>=1 & I<=nr), J(J>=1 & J<=nc));
+			    Iwin = Ir(I>=1 & I<=nr, J>=1 & J<=nc);
+			    Jwin = Ic(I>=1 & I<=nr, J>=1 & J<=nc);
+		      % compute filtered value at (i,j) 
+		      Y(i,j) = op(Xwin,winSize,Iwin,Jwin);
+	      end
+      end
+
 	  end
-  end
 
 else, % filter with a discrete kernel (matrix)
 
