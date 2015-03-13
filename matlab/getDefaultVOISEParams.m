@@ -77,6 +77,16 @@ function params = getDefaultVOISEParams()
 %   oLogFile       : VOISE log filename                      ('voise.log')
 %   oMovFile       : VOISE movie filename                    ('voise.avi')
 %
+% * image pre-processing
+%
+%   winSize        : size of the filtering                   (empty)
+%   filter         : filter name or mask matrix              (empty)
+% 
+%   noiseThres     : noise threshold for log transform       (empty)
+%
+%   histEqBin      : number of bins for histogram equalisation
+%                                                            (empty)
+%
 % * Diagnostics/reporting parameters
 %
 %   logVOISE       : log flag                                (true)
@@ -88,7 +98,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.16 2015/02/13 14:51:40 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.17 2015/03/13 09:39:28 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
