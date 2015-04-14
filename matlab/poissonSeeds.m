@@ -5,7 +5,7 @@ function S = poissonSeeds(nr,nc,ns,VDlim)
 % http://devmag.org.za/2009/05/03/poisson-disk-sampling/
 
 %
-% $Id: poissonSeeds.m,v 1.7 2015/02/13 12:55:31 patrick Exp $
+% $Id: poissonSeeds.m,v 1.8 2015/04/14 11:59:00 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -30,7 +30,7 @@ yM = VDlim.yM;
 
 % Poisson disk algorithm described in
 % http://devmag.org.za/2009/05/03/poisson-disk-sampling/
-% and implementattion based on the Matlab code found at
+% and implementation based on the Matlab code found at
 % http://cusacklabcomputing.blogspot.ca/2013/07/poisson-disc-2d-in-matlab.html
 
 width  = xM-xm;
