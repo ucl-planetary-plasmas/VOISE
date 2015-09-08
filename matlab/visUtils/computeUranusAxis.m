@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
 
 %
-% $Id: computeUranusAxis.m,v 1.4 2012/04/20 11:57:20 patrick Exp $
+% $Id: computeUranusAxis.m,v 1.5 2015/09/08 14:51:41 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,26 +20,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(ep
 % Public License for more details.
 %
 
-% generic kernel path
-spiceKernelsPath = getSpiceGenericKernelsPath();
-
-% Load a leapseconds kernel.
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-cspice_furnsh([spiceKernelsPath 'naif0010.tls']);
-
-% Load planetary ephemeris 
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
-cspice_furnsh([spiceKernelsPath 'de421.bsp']);
-
-% Load satellite ephemeris 
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/
-cspice_furnsh([spiceKernelsPath 'ura095.bsp']);
-
-% Load orientation data for planets, natural 
-% satellites, the Sun, and selected asteroids
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
-cspice_furnsh([spiceKernelsPath 'pck00010.tpc']);
-
+loadPlanetSpiceKernels('uranus');
 
 % Convert string date to cspice
 et = cspice_str2et(epoch);
