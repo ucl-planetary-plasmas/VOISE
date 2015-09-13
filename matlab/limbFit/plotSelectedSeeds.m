@@ -2,7 +2,7 @@ function plotSelectedSeeds(VD,params,fit)
 % function plotSelectedSeeds(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds.m,v 1.14 2012/04/17 19:34:57 patrick Exp $
+% $Id: plotSelectedSeeds.m,v 1.15 2015/09/13 20:21:31 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -58,7 +58,8 @@ if ~isempty(fit.Tlim),
 	  x0 = p(1); y0 = p(2);
 		x1 = x0+dr*cosd(fit.Tlim{i}(1)); y1 = y0+dr*sind(fit.Tlim{i}(1));
 		x2 = x0+dr*cosd(fit.Tlim{i}(2)); y2 = y0+dr*sind(fit.Tlim{i}(2));
-		h{i} = fill([x0;x1;x2],[y0;y1;y2],0.7*[1,1,1]);
+		x3 = x0+dr*cosd(mean(fit.Tlim{i})); y3 = y0+dr*sind(mean(fit.Tlim{i}));
+		h{i} = fill([x0;x1;x3;x2],[y0;y1;y3;y2],0.7*[1,1,1]);
 		alpha(h{i},.5);
 	end
 end
