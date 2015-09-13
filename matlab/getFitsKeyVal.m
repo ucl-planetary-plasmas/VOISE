@@ -12,7 +12,7 @@ function varargout = getFitsKeywordsValue(filename,keywords,verbose)
 % [pcx,pcy,cml,udate]
 
 %
-% $Id: getFitsKeyVal.m,v 1.3 2012/06/11 16:50:54 patrick Exp $
+% $Id: getFitsKeyVal.m,v 1.4 2015/09/13 20:23:26 patrick Exp $
 %
 % Copyright (c) 2011-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -30,7 +30,9 @@ function varargout = getFitsKeywordsValue(filename,keywords,verbose)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+warning('off','MATLAB:imagesci:fitsinfo:unknownFormat');
 info = fitsinfo(filename);
+warning('on','MATLAB:imagesci:fitsinfo:unknownFormat');
 
 values = cell(size(keywords));
 
