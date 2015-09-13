@@ -2,7 +2,7 @@ function fit = selectSeeds(fit,Sx,Sy,Sls)
 % function fit = selectSeeds(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds.m,v 1.10 2012/04/17 19:34:57 patrick Exp $
+% $Id: selectSeeds.m,v 1.11 2015/09/13 20:20:19 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -68,6 +68,7 @@ fprintf(1,'Total number of seeds: %d\n', length(Sls));
 fprintf(1,'Number Seeds on limb : %d\n', length(Sls(find(iSelect))))
 
 % finally angle selection
+% atan2 is the four quadrant arctangent -pi <= ATAN2(Y,X) <= pi.
 T = 180/pi*atan2(Y, X);
 
 if ~isempty(fit.Tlim),
