@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.4 2012/06/12 11:08:41 patrick Exp $
+% $Id: getHSTInfo.m,v 1.5 2015/09/13 20:24:40 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -25,7 +25,7 @@ iFile = params.iFile;
 % detect whether data is from HST
 TELESCOP = getFitsKeywordsValue(iFile,{'TELESCOP'});
 
-if ~isempty(TELESCOP) | strcmp(TELESCOP,'HST'),
+if ~isempty(TELESCOP) & strcmp(TELESCOP,'HST'),
   % instrument identifier
   HST.INSTRUME = getFitsKeywordsValue(iFile,{'INSTRUME'});
 	% proposer's target name
