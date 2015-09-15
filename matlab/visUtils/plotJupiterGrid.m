@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.16 2012/04/17 20:17:47 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.17 2015/09/15 18:30:34 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -125,7 +125,9 @@ scalfac = (1/(sedistAU*AU_km))*(180/pi)*3600;
 mfig = gcf;
 figure
 r = semiMaj_km*scalfac;
-[xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,selat,selon,sslat,sslon);
+se = struct('lat',selat,'lon',selon);
+ss = struct('lat',sslat,'lon',sslon);
+[xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,se,ss);
 %xc',yc'
 figure(mfig)
 

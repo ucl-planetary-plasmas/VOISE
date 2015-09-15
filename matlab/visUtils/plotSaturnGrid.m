@@ -2,7 +2,7 @@ function plotSaturnGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 % function plotSaturnGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 
 %
-% $Id: plotSaturnGrid.m,v 1.2 2012/04/20 11:59:26 patrick Exp $
+% $Id: plotSaturnGrid.m,v 1.3 2015/09/15 18:30:34 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -121,7 +121,9 @@ scalfac = (1/(sedistAU*AU_km))*(180/pi)*3600;
 mfig = gcf;
 figure
 r = semiMaj_km*scalfac;
-[xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,selat,selon,sslat,sslon);
+se = struct('lat',selat,'lon',selon);
+ss = struct('lat',sslat,'lon',sslon);
+[xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,se,ss);
 %xc',yc'
 figure(mfig)
 
