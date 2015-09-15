@@ -1,8 +1,8 @@
-function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
-% function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
+function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
+% function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
 
 %
-% $Id: ltc.m,v 1.3 2012/04/17 20:17:47 patrick Exp $
+% $Id: ltc.m,v 1.4 2015/09/15 18:01:11 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -22,11 +22,12 @@ function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,olat,olon,slat,slon)
 
 theta = linspace(0,2*pi,5000);
 
+
 % deg into rad
-olat = olat*pi/180;
-olon = olon*pi/180;
-slat = slat*pi/180;
-slon = slon*pi/180;
+olat = obs.lat*pi/180;
+olon = obs.lon*pi/180;
+slat = sun.lat*pi/180;
+slon = sun.lon*pi/180;
 
 dlon = slon-olon;
 
@@ -147,7 +148,7 @@ ytd = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
 end
 end
 
-plot(xc,yc,'o',xll,yll,'-',xld,yld,'--');%,...
+plot(xc,yc,'o',xll,yll,'-',xld,yld,'--');%,xtl,ytl,'-',xtd,ytd,'--');
      %xtl,ytl,'-',xtd,ytd,'--',xc,yc,'o'); %,x2,y2,'-o',xis,yis,xjs,yjs);
 
 if 0
