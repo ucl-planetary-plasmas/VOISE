@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(epoch)
 
 %
-% $Id: computeSaturnAxis.m,v 1.3 2012/04/20 11:57:20 patrick Exp $
+% $Id: computeSaturnAxis.m,v 1.4 2015/09/15 18:09:10 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,25 +20,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(ep
 % Public License for more details.
 %
 
-% generic kernel path
-spiceKernelsPath = getSpiceGenericKernelsPath();
-
-% Load a leapseconds kernel.
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-cspice_furnsh([spiceKernelsPath 'naif0010.tls']);
-
-% Load planetary ephemeris 
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
-cspice_furnsh([spiceKernelsPath 'de421.bsp']);
-
-% Load satellite ephemeris 
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/
-cspice_furnsh([spiceKernelsPath 'sat353.bsp']);
-
-% Load orientation data for planets, natural 
-% satellites, the Sun, and selected asteroids
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
-cspice_furnsh([spiceKernelsPath 'pck00010.tpc']);
+loadPlanetSpiceKernels('saturn');
 
 
 % Convert string date to cspice
@@ -92,7 +74,7 @@ obsrvr = 'Earth';
 [ssolar, trgepc, srfvec] = cspice_subslr(method,target,et,fixeref,abcorr,obsrvr);
 end
 
-% Uranian Central Meridian Longitude
+% Kronian Central Meridian Longitude
 % CML is defined by the longitude of Saturn facing the Earth at a certain time.
 rotate = cspice_pxform('J2000', 'IAU_SATURN', et);
 sysIIIstate = rotate*state(1:3);
@@ -143,7 +125,7 @@ sedist  = norm(seposn);
 selong  = atan2(seposn(2), seposn(1))*180/pi;
 selat   = 90 - acos(seposn(3)/sedist)*180/pi;
 
-% Jovian Central Meridian Longitude
+% Kronian Central Meridian Longitude
 % CML is defined by the longitude of Saturn facing the Earth at a certain time.
 target   = 'EARTH';
 frame    = 'J2000';
