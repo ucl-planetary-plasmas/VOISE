@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeSaturnAxis(epoch)
 
 %
-% $Id: computeSaturnAxis.m,v 1.4 2015/09/15 18:09:10 patrick Exp $
+% $Id: computeSaturnAxis.m,v 1.5 2015/09/16 13:40:53 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -191,6 +191,7 @@ else
 fprintf(1,'Epoch                         = %s\n', cspice_et2utc(et,'C',0));
 fprintf(1,'Sub-Earth latitude, longitude = %12.4f, %12.4f\n', selat, selong);
 fprintf(1,'Sub-Solar latitude, longitude = %12.4f, %12.4f\n', sslat, sslong);
+fprintf(1,'Earth-Saturn distance = %.4f AU (1 AU = %.3f km)\n',sedistAU,AU2km);
 end
 
 %  It's always good form to unload kernels after use,
