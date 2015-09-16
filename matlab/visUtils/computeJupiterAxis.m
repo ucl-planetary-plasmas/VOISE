@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 
 %
-% $Id: computeJupiterAxis.m,v 1.10 2012/04/25 10:20:16 patrick Exp $
+% $Id: computeJupiterAxis.m,v 1.11 2015/09/16 13:41:35 patrick Exp $
 %
 % Copyright (c) 2008-2012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,28 +20,7 @@ function [sslat,sslong,selat,selong,sedistAU,AU2km]=computeJupiterAxis(epoch)
 % Public License for more details.
 %
 
-% generic kernel path
-persistent spiceKernelsPath
-
-spiceKernelsPath = '/home/patrick/research/codes/spice/data/';
-
-% Load a leapseconds kernel.
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-cspice_furnsh([spiceKernelsPath 'naif0010.tls']);
-
-% Load planetary ephemeris 
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
-cspice_furnsh([spiceKernelsPath 'de421.bsp']);
-
-% Load satellite ephemeris 
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/
-cspice_furnsh([spiceKernelsPath 'jup267.bsp']);
-
-% Load orientation data for planets, natural 
-% satellites, the Sun, and selected asteroids
-% ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/
-cspice_furnsh([spiceKernelsPath 'pck00010.tpc']);
-
+loadPlanetSpiceKernels('jupiter');
 
 % Convert string date to cspice
 et = cspice_str2et(epoch);
@@ -60,16 +39,80 @@ observer = 'JUPITER';
 ssposn = state(1:3);
 ssdist  = norm(ssposn);
 % modulo to get longitude 
-sslong  = mod(atan2(ssposn(2), ssposn(1))*180/pi, 360)
-sslong  = atan2(ssposn(2), ssposn(1))*cspice_dpr
-sslat = 90 - acos(ssposn(3)/ssdist)*180/pi;
+%sslong  = mod(atan2(ssposn(2), ssposn(1))*180/pi, 360);
+sslong  = atan2(ssposn(2), ssposn(1))*cspice_dpr;
+sslat = 90 - acos(ssposn(3)/ssdist)*cspice_dpr;
+%ssdist,[sslong,sslat]
+
+% converts rectangular coordinates to latitudinal coordinates.
+[radius, lon, lat] = cspice_reclat(ssposn);
+%radius,[lon lat]*cspice_dpr
+
+% converts rectangular coordinates to planetographic coordinates.
+radii = cspice_bodvrd('JUPITER','RADII',3);
+re = radii(1);
+f = (radii(1)-radii(2))/radii(2);
+[lon, lat, alt] = cspice_recpgr('JUPITER', ssposn, re, f);
+%alt,[lon lat]*cspice_dpr
+
+if 0
+%
+% compute sub-solar point
+%
+method = 'Near point: ellipsoid';
+target = 'SUN';
+fixref = 'IAU_JUPITER';
+%abcorr = 'LT+S';
+obsrvr = 'JUPITER';
+[spoint, trgepc, srfvec] = cspice_subpnt(method,target,et,fixref,abcorr,obsrvr);
+method = 'Near point: ellipsoid';
+target = 'JUPITER';
+fixref = 'IAU_JUPITER';
+abcorr = 'LT+S';
+obsrvr = 'Earth';
+[ssolar, trgepc, srfvec] = cspice_subslr(method,target,et,fixeref,abcorr,obsrvr);
+end
+
+
+% Jovian Central Meridian Longitude
+% CML is defined by the longitude of Jupiter facing the Earth at a certain time.
+rotate = cspice_pxform('J2000', 'IAU_JUPITER', et);
+sysIIIstate = rotate*state(1:3);
+% modulo to get longitude
+CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360)
+%lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*180/pi
 
 % and Earth
 target   = 'EARTH';
 frame    = 'IAU_JUPITER';
 abcorr   = 'NONE';
 observer = 'JUPITER';
+% in IAU_JUPITER frame the rotation axis of Saturn is state(1:3)=(0,0,1)
 [state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
+
+if 0
+seposn = state(1:3);
+sedist  = norm(seposn);
+% modulo to get longitude
+%selong  = mod(atan2(seposn(2), seposn(1))*180/pi, 360);
+selong  = atan2(seposn(2), seposn(1))*180/pi;
+selat   = 90 - acos(seposn(3)/sedist)*180/pi;
+
+% Jovian Central Meridian Longitude
+% CML is defined by the longitude of Jupiter facing the Earth at a certain time.
+target   = 'EARTH';
+frame    = 'J2000';
+abcorr   = 'NONE';
+observer = 'JUPITER';
+[state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
+rotate = cspice_pxform('J2000', 'IAU_JUPITER', et);
+sysIIIstate = rotate*state(1:3);
+sysIIIdist = norm(sysIIIstate);
+% modulo to get longitude
+CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360)
+%lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*180/pi
+end
+
 
 % Calculation of the angle between celestial north and Jupiter rotation axis 
 % as seen along the line of sight Earth-Jupiter
@@ -101,11 +144,28 @@ end
 
 seposn = state(1:3);
 sedist  = norm(seposn);
-selong  = mod(atan2(seposn(2), seposn(1))*180/pi, 360);
+% modulo to get longitude
+%selong  = mod(atan2(seposn(2), seposn(1))*180/pi, 360);
+selong  = atan2(seposn(2), seposn(1))*180/pi;
 selat   = 90 - acos(seposn(3)/sedist)*180/pi;
 
+% Jovian Central Meridian Longitude
+% CML is defined by the longitude of Jupiter facing the Earth at a certain time.
+target   = 'EARTH';
+frame    = 'J2000';
+abcorr   = 'NONE';
+observer = 'JUPITER';
+[state , ltime] = cspice_spkezr(target, et, frame, abcorr, observer);
+rotate = cspice_pxform('J2000', 'IAU_JUPITER', et);
+sysIIIstate = rotate*state(1:3);
+sysIIIdist = norm(sysIIIstate);
+% modulo to get longitude
+CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360)
+%lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*180/pi
 
+% Sun-Earth in AU
 sedistAU = cspice_convrt(sedist,'KM','AU');
+% AU in km
 AU2km = cspice_convrt(1,'AU','KM');
 
 % Transform position of Jupiter axis to Radial Tangential Normal coordinates
@@ -146,7 +206,7 @@ end
 % get Jupiter axis / sun direction angular separation
 axis_sun_ang = acos(-1.0*rvec(3))*180/pi;
 
-if 0
+if 0,
 fprintf(1,'%s%s\n',char(' '*ones(1,17)), ...
         'UTC   Subsol Lat  Subsol Long   Subear Lat  Subear Long');
 fprintf(1,'%s %12.6f %12.6f %12.6f %12.6f\n', ...
