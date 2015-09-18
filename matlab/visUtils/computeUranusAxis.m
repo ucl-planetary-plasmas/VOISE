@@ -2,7 +2,7 @@ function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(ep
 % function [sslat,sslong,selat,selong,CML,psi,sedistAU,AU2km]=computeUranusAxis(epoch)
 
 %
-% $Id: computeUranusAxis.m,v 1.6 2015/09/16 13:40:53 patrick Exp $
+% $Id: computeUranusAxis.m,v 1.7 2015/09/18 13:09:05 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -79,6 +79,7 @@ rotate = cspice_pxform('J2000', 'IAU_URANUS', et);
 sysIIIstate = rotate*state(1:3);
 % modulo to get longitude
 CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360);
+fprintf(1,'CML(III) %12.4f\n', CML);
 %lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*180/pi
 
 % and Earth
@@ -135,7 +136,8 @@ rotate = cspice_pxform('J2000', 'IAU_URANUS', et);
 sysIIIstate = rotate*state(1:3);
 sysIIIdist = norm(sysIIIstate);
 % modulo to get longitude
-CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360)
+CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*180/pi, 360);
+fprintf(1,'CML(III) %12.4f\n', CML);
 %lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*180/pi
 
 % Sun-Earth in AU
