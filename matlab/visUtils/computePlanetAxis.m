@@ -1,7 +1,7 @@
 function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 % function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.3 2015/09/18 13:34:24 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.4 2015/09/18 14:02:14 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -35,7 +35,7 @@ loadPlanetSpiceKernels(planet);
 % convert UTC to ephemeris time 
 et = cspice_str2et(epoch);
 
-% Sub-solar point
+% Sub-solar point calculation
 % Get position of Sun with respect to planet 
 fprintf(1,'Sub-Solar Point\n');
 target = 'SUN';
@@ -82,7 +82,6 @@ obsrvr = 'EARTH';
 [spcrad,spclon,spclat] = cspice_reclat(spoint);
 fprintf(1,'spcrad %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
 
-if 1
 % compute sub-solar point
 method = 'Near point: ellipsoid';
 method = 'Intercept:  ellipsoid';
@@ -110,20 +109,20 @@ obsrvr = 'EARTH';
 [spoint,trgepc,srfvec] = cspice_subslr(method,target,et,fixref,abcorr,obsrvr);
 [spcrad,spclon,spclat] = cspice_reclat(spoint);
 fprintf(1,'spcalt %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
-end
 
 %%%% NOT WORKING!!!!
 % Central Meridian Longitude
 % CML defined as longitude of the planet facing the Earth at a certain time
 rotate = cspice_pxform('J2000',IAU_PLANET,et);
-sysIIIstate = rotate*state(1:3);
+sysIIIssposn = rotate*ssposn(1:3);
 % modulo to get longitude
-CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*deg2rad, 360);
+CML  = mod(atan2(sysIIIssposn(2), sysIIIssposn(1))*deg2rad, 360);
 fprintf(1,'CML(III) %12.4f\n', CML);
-%lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*deg2rad
+%lat = 90 - acos(sysIIIssposn(3)/sysIIIdist)*deg2rad
 %%%%% END NOT WORKING!!!!
 
-% and Earth
+% and Sub Earth Point
+% Get position of Earth with respect to planet 
 target   = 'EARTH';
 frame    = IAU_PLANET;
 abcorr   = 'NONE';
@@ -131,10 +130,17 @@ obsrvr   = PLANET;
 % in planet's IAU frame the rotation axis of the planet is planetRotAxis=(0,0,1)
 [state,ltime] = cspice_spkezr(target,et,frame,abcorr,obsrvr);
 
+seposn = state(1:3);
+sedist  = norm(seposn);
+% modulo to get longitude
+%se.lon  = mod(atan2(seposn(2), seposn(1))*deg2rad, 360);
+se.lon  = atan2(seposn(2), seposn(1))*deg2rad;
+se.lat   = 90 - acos(seposn(3)/sedist)*deg2rad;
+
 % Calculation of the angle between celestial North and planet's rotation axis 
 % as seen along the line of sight from Earth to planet
 % In planet's IAU coordinates system
-lineOfSight = -cspice_vhat(state(1:3));
+lineOfSight = -cspice_vhat(seposn);
 planetRotAxis = [0;0;1];
 
 % matrix to transform from Earth referential to planet's referential
@@ -159,16 +165,10 @@ else, % clockwise
   psi = 360-acosd(cosa);
 end
 
-seposn = state(1:3);
-sedist  = norm(seposn);
-% modulo to get longitude
-%se.lon  = mod(atan2(seposn(2), seposn(1))*deg2rad, 360);
-se.lon  = atan2(seposn(2), seposn(1))*deg2rad;
-se.lat   = 90 - acos(seposn(3)/sedist)*deg2rad;
 
 %%%%% WORKING!!!!
 % planet's Central Meridian Longitude
-% CML is defined by the longitude of the planet facing the Earth at a certain time.
+% CML is defined as longitude of the planet facing the Earth at a certain time
 target   = 'EARTH';
 frame    = 'J2000';
 abcorr   = 'NONE';
@@ -181,9 +181,9 @@ sysIIIdist = norm(sysIIIstate);
 CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*deg2rad, 360);
 fprintf(1,'CML(III) %12.4f\n', CML);
 %lat = 90 - acos(sysIIIstate(3)/sysIIIdist)*deg2rad
-%%%%%% NOT WORKING!!!!
+%%%%%% WORKING!!!!
 
-% Sun-Earth in AU
+% Planet-Earth in AU
 sedistAU = cspice_convrt(sedist,'KM','AU');
 % AU in km
 AU2km = cspice_convrt(1,'AU','KM');
@@ -235,7 +235,7 @@ else
 fprintf(1,'Epoch                         = %s\n', cspice_et2utc(et,'C',0));
 fprintf(1,'Sub-Earth latitude, longitude = %12.4f, %12.4f\n', se.lat, se.lon);
 fprintf(1,'Sub-Solar latitude, longitude = %12.4f, %12.4f\n', ss.lat, ss.lon);
-fprintf(1,'Earth-Planet distance = %.4f AU (1 AU = %.3f km)\n',sedistAU,AU2km);
+fprintf(1,'Earth-%s distance = %.4f AU (1 AU = %.3f km)\n',Planet,sedistAU,AU2km);
 end
 
 %  It's always good form to unload kernels after use,
