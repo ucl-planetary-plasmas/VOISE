@@ -1,7 +1,7 @@
 function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 % function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.2 2015/09/18 13:09:37 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.3 2015/09/18 13:34:24 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -37,6 +37,7 @@ et = cspice_str2et(epoch);
 
 % Sub-solar point
 % Get position of Sun with respect to planet 
+fprintf(1,'Sub-Solar Point\n');
 target = 'SUN';
 frame  = IAU_PLANET;
 abcorr = 'NONE';
@@ -56,9 +57,16 @@ ssposn = state(1:3);
 [ss.lon,ss.lat] = deal(ss.lon*deg2rad,ss.lat*deg2rad);
 fprintf(1,'ssdist %10.f lat %+9.5f lon %+9.5f\n',ssdist,[ss.lat,ss.lon]);
 %fprintf(1,'delta  %+10g  %+12.5g   %+12.5g\n',ssdist-ssdist1,ss.lat-ss.lat1,ss.lon-ss.lon1)
+% re, f are equatorial radius and flattening of the planet
+radii = cspice_bodvrd(PLANET,'RADII',3);
+re = radii(1);
+f = (radii(1)-radii(3))/radii(1);
+% converts rectangular coordinates to planetographic coordinates
+[lon,lat,alt] = cspice_recpgr(PLANET,ssposn,re,f);
+fprintf(1,'alt    %10.f lat %+9.5f lon %+9.5f\n',alt,[lat,lon]*deg2rad);
 
 method = 'Near point: ellipsoid';
-method = 'Intercept:  ellipsoid';
+%method = 'Intercept:  ellipsoid';
 target = PLANET;
 fixref = IAU_PLANET;
 abcorr = 'NONE';
@@ -69,19 +77,10 @@ obsrvr = 'EARTH';
 [spoint,trgepc,srfvec] = cspice_subslr(method,target,et,fixref,abcorr,obsrvr);
 [spcrad,spclon,spclat] = cspice_reclat(spoint);
 fprintf(1,'spcrad %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
-
 obsrvr = 'EARTH';
 [spoint,trgepc,srfvec] = cspice_subpnt(method,target,et,fixref,abcorr,obsrvr);
 [spcrad,spclon,spclat] = cspice_reclat(spoint);
 fprintf(1,'spcrad %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
-
-% re, f are equatorial radius and flattening of the planet
-radii = cspice_bodvrd(PLANET,'RADII',3);
-re = radii(1);
-f = (radii(1)-radii(3))/radii(1);
-% converts rectangular coordinates to planetographic coordinates
-[lon, lat, alt] = cspice_recpgr(PLANET, ssposn, re, f);
-fprintf(1,'alt    %10.f lat %+9.5f lon %+9.5f\n',alt,[lat,lon]*deg2rad);
 
 if 1
 % compute sub-solar point
@@ -90,16 +89,15 @@ method = 'Intercept:  ellipsoid';
 target = PLANET;
 fixref = IAU_PLANET;
 abcorr = 'LT+S';
-abcorr = 'CN+S';
-abscor = 'NONE';
+%abcorr = 'CN+S';
+%abscor = 'NONE';
 obsrvr = 'SUN';
 % Compute the sub-observer point on a target body at a specified epoch
 % tionally corrected for light time and stellar aberration.
-[spoint, trgepc, srfvec] = cspice_subpnt(method,target,et,fixref,abcorr,obsrvr);
-[spcrad, spclon, spclat] = cspice_reclat(spoint);
+[spoint,trgepc,srfvec] = cspice_subpnt(method,target,et,fixref,abcorr,obsrvr);
+[spcrad,spclon,spclat] = cspice_reclat(spoint);
 fprintf(1,'spcrad %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
-
-[spglon, spglat, spgalt] = cspice_recpgr(target, spoint, re, f);
+[spglon,spglat,spgalt] = cspice_recpgr(target,spoint,re,f);
 fprintf(1,'spgalt %10.f lat %+9.5f lon %+9.5f\n',spgalt,[spglat,spglon]*deg2rad);
 
 method = 'Near point: ellipsoid';
@@ -109,15 +107,15 @@ abcorr = 'LT+S';
 obsrvr = 'EARTH';
 % Compute the sub-solar point using light time and stellar
 % aberration corrections. 
-[spoint, trgepc, srfvec] = cspice_subslr(method,target,et,fixref,abcorr,obsrvr);
-[spcrad, spclon, spclat] = cspice_reclat(spoint);
-fprintf(1,'spcalt %10.5f lat %.5f lon %.5f\n',spcrad,[spclat,spclon]*deg2rad);
+[spoint,trgepc,srfvec] = cspice_subslr(method,target,et,fixref,abcorr,obsrvr);
+[spcrad,spclon,spclat] = cspice_reclat(spoint);
+fprintf(1,'spcalt %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
 end
 
 %%%% NOT WORKING!!!!
 % Central Meridian Longitude
 % CML defined as longitude of the planet facing the Earth at a certain time
-rotate = cspice_pxform('J2000', IAU_PLANET, et);
+rotate = cspice_pxform('J2000',IAU_PLANET,et);
 sysIIIstate = rotate*state(1:3);
 % modulo to get longitude
 CML  = mod(atan2(sysIIIstate(2), sysIIIstate(1))*deg2rad, 360);
@@ -131,7 +129,7 @@ frame    = IAU_PLANET;
 abcorr   = 'NONE';
 obsrvr   = PLANET;
 % in planet's IAU frame the rotation axis of the planet is planetRotAxis=(0,0,1)
-[state , ltime] = cspice_spkezr(target, et, frame, abcorr, obsrvr);
+[state,ltime] = cspice_spkezr(target,et,frame,abcorr,obsrvr);
 
 % Calculation of the angle between celestial North and planet's rotation axis 
 % as seen along the line of sight from Earth to planet
@@ -175,8 +173,8 @@ target   = 'EARTH';
 frame    = 'J2000';
 abcorr   = 'NONE';
 obsrvr   = PLANET;
-[state , ltime] = cspice_spkezr(target, et, frame, abcorr, obsrvr);
-rotate = cspice_pxform('J2000', IAU_PLANET, et);
+[state,ltime] = cspice_spkezr(target,et,frame,abcorr,obsrvr);
+rotate = cspice_pxform('J2000',IAU_PLANET,et);
 sysIIIstate = rotate*state(1:3);
 sysIIIdist = norm(sysIIIstate);
 % modulo to get longitude
