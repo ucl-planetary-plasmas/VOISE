@@ -1,7 +1,7 @@
 function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 % function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.4 2015/09/18 14:02:14 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.5 2015/09/18 14:07:26 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -63,7 +63,7 @@ re = radii(1);
 f = (radii(1)-radii(3))/radii(1);
 % converts rectangular coordinates to planetographic coordinates
 [lon,lat,alt] = cspice_recpgr(PLANET,ssposn,re,f);
-fprintf(1,'alt    %10.f lat %+9.5f lon %+9.5f\n',alt,[lat,lon]*deg2rad);
+%fprintf(1,'alt    %10.f lat %+9.5f lon %+9.5f\n',alt,[lat,lon]*deg2rad);
 
 method = 'Near point: ellipsoid';
 %method = 'Intercept:  ellipsoid';
@@ -97,7 +97,7 @@ obsrvr = 'SUN';
 [spcrad,spclon,spclat] = cspice_reclat(spoint);
 fprintf(1,'spcrad %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
 [spglon,spglat,spgalt] = cspice_recpgr(target,spoint,re,f);
-fprintf(1,'spgalt %10.f lat %+9.5f lon %+9.5f\n',spgalt,[spglat,spglon]*deg2rad);
+%fprintf(1,'spgalt %10.f lat %+9.5f lon %+9.5f\n',spgalt,[spglat,spglon]*deg2rad);
 
 method = 'Near point: ellipsoid';
 target = PLANET;
@@ -122,6 +122,7 @@ fprintf(1,'CML(III) %12.4f\n', CML);
 %%%%% END NOT WORKING!!!!
 
 % and Sub Earth Point
+fprintf(1,'Sub-Earth Point\n');
 % Get position of Earth with respect to planet 
 target   = 'EARTH';
 frame    = IAU_PLANET;
@@ -136,6 +137,18 @@ sedist  = norm(seposn);
 %se.lon  = mod(atan2(seposn(2), seposn(1))*deg2rad, 360);
 se.lon  = atan2(seposn(2), seposn(1))*deg2rad;
 se.lat   = 90 - acos(seposn(3)/sedist)*deg2rad;
+fprintf(1,'sedist %10.f lat %+9.5f lon %+9.5f\n',sedist,[se.lat,se.lon]);
+
+method = 'Near point: ellipsoid';
+%method = 'Intercept:  ellipsoid';
+target = PLANET;
+fixref = IAU_PLANET;
+abcorr = 'NONE';
+abcorr = 'LT+S';
+obsrvr = 'EARTH';
+[spoint,trgepc,srfvec] = cspice_subpnt(method,target,et,fixref,abcorr,obsrvr);
+[spcrad,spclon,spclat] = cspice_reclat(spoint);
+fprintf(1,'spcrad %10.f lat %+9.5f lon %+9.5f\n',spcrad,[spclat,spclon]*deg2rad);
 
 % Calculation of the angle between celestial North and planet's rotation axis 
 % as seen along the line of sight from Earth to planet
