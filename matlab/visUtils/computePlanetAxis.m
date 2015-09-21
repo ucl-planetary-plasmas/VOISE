@@ -1,7 +1,7 @@
 function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 % function [ss,se,CML,psi,sedistAU,AU2km]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.6 2015/09/21 13:55:22 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.7 2015/09/21 14:03:55 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -27,7 +27,12 @@ IAU_PLANET = ['IAU_' PLANET];
 % conversion factor
 deg2rad = cspice_dpr;
 
-abcorr   = {'NONE','LT+S','CN+S'};
+%abcorr   = 'LT';
+%abcorr   = 'LT+S';
+abcorr   = 'CN+S';
+
+method = 'Near point: ellipsoid';
+%method = 'Intercept:  ellipsoid';
 
 % load necessary kernels
 loadPlanetSpiceKernels(planet);
@@ -40,7 +45,6 @@ et = cspice_str2et(epoch);
 fprintf(1,'Sub-Solar Point\n');
 target = 'SUN';
 frame  = IAU_PLANET;
-abcorr = 'CN+S';
 obsrvr = PLANET;
 % state=[x,y,z,vx,vy,vz]' matrix (6xn) and light time 'ltime' n-vector 
 % for ephemeris time 'et' n-vector.
@@ -65,11 +69,8 @@ f = (radii(1)-radii(3))/radii(1);
 [lon,lat,alt] = cspice_recpgr(PLANET,ssposn,re,f);
 %fprintf(1,'alt    %10.f lat %+9.5f lon %+9.5f\n',alt,[lat,lon]*deg2rad);
 
-%method = 'Near point: ellipsoid';
-method = 'Intercept:  ellipsoid';
 target = PLANET;
 fixref = IAU_PLANET;
-abcorr = 'LT+S';
 obsrvr = 'EARTH';
 % Compute sub-solar point using light time and stellar aberration corrections
 [spoint,trgepc,srfvec] = cspice_subslr(method,target,et,fixref,abcorr,obsrvr);
@@ -92,7 +93,6 @@ fprintf(1,'Sub-Earth Point\n');
 % Get position of Earth with respect to planet 
 target   = 'EARTH';
 frame    = IAU_PLANET;
-abcorr   = 'NONE';
 obsrvr   = PLANET;
 % in planet's IAU frame the rotation axis of the planet is planetRotAxis=(0,0,1)
 [state,ltime] = cspice_spkezr(target,et,frame,abcorr,obsrvr);
@@ -107,7 +107,6 @@ fprintf(1,'se   %10.f lat %+9.5f lon %+9.5f\n',sedist,[se.lat,se.lon]);
 
 target = PLANET;
 fixref = IAU_PLANET;
-abcorr = 'LT+S';
 obsrvr = 'EARTH';
 [spoint,trgepc,srfvec] = cspice_subpnt(method,target,et,fixref,abcorr,obsrvr);
 
@@ -158,7 +157,6 @@ fprintf(1,'psi       %+9.5f deg\n', psi);
 % CML is defined as longitude of the planet facing the Earth at a certain time
 target   = 'EARTH';
 frame    = 'J2000';
-abcorr   = 'NONE';
 obsrvr   = PLANET;
 [state,ltime] = cspice_spkezr(target,et,frame,abcorr,obsrvr);
 rotate = cspice_pxform('J2000',IAU_PLANET,et);
@@ -222,7 +220,7 @@ else
 fprintf(1,'Epoch                         = %s\n', cspice_et2utc(et,'C',0));
 fprintf(1,'Sub-Earth latitude, longitude = %12.4f, %12.4f\n', se.lat, se.lon);
 fprintf(1,'Sub-Solar latitude, longitude = %12.4f, %12.4f\n', ss.lat, ss.lon);
-fprintf(1,'Earth-%s distance = %.4f AU (1 AU = %.3f km)\n',Planet,sedistAU,AU2km);
+fprintf(1,'Earth-%s distance = %.4f AU (%.0f km)\n',Planet,sedistAU,sedistAU*AU2km);
 end
 
 %  It's always good form to unload kernels after use,
