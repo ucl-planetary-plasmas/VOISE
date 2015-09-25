@@ -1,7 +1,7 @@
 function [ss,se]=computePlanetAxis(planet,epoch)
 % function [ss,se]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.11 2015/09/25 13:45:53 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.12 2015/09/25 15:06:47 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -193,7 +193,7 @@ CML = c2grlon(opclon);
 fprintf(1,'CML(III)                 = %+9.4f deg\n', CML*r2d);
 
 % Return CML
-se.CML = CML;
+se.CML = CML*r2d;
 
 
 % Calculation of the apparent angle between celestial North and the planet's
@@ -240,7 +240,7 @@ fprintf(1,'diff                     = %+9.2f deg\n', (psi-psi1)*r2d);
 end
 
 % Return psi
-se.psi = psi;
+se.psi = psi*r2d;
 
 % Transform position of planet's axis to Radial Tangential Normal coordinates
 % Set up RTN definitions in planet's coordinates
