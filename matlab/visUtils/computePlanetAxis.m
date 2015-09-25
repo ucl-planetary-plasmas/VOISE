@@ -1,7 +1,7 @@
 function [ss,se]=computePlanetAxis(planet,epoch)
 % function [ss,se]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.9 2015/09/24 17:43:20 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.10 2015/09/25 10:04:04 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -196,17 +196,18 @@ fprintf(1,'CML(III)        %+9.5f deg\n', CML*r2d);
 se.CML = CML;
 
 
-% Calculation in planet's IAU coordinates of the angle between celestial North
-% and planet's rotation axis as seen along the line-of-sight Earth to planet
-% lineOfSight: normalised direction from earth to planet
+% Calculation of the apparent angle between celestial North and the planet's
+% rotation axis seen from Earth 
+
+% nSky: normal vector to Earth sky plane pointing from planet to Earth
 if 0,
 % seposn: position of Earth with respect to planet
-lineOfSight = -cspice_vhat(seposn);
+nSky = cspice_vhat(seposn);
 % matrix to transform from Earth referential to planet's referential
 Earth2PlanetRef = cspice_pxfrm2('IAU_EARTH',IAU_PLANET,et,et);
 else
 % obspos: observer's position relative to the center of the target
-lineOfSight = -cspice_vhat(obspos);
+nSky = cspice_vhat(obspos);
 % matrix to transform from Earth referential to planet's referential
 Earth2PlanetRef = cspice_pxfrm2('IAU_EARTH',IAU_PLANET,et,se.trgepc);
 end
@@ -217,17 +218,16 @@ planetRotAxis = [0;0;1];
 % normalised direction of Earth rotation axis 
 EarthRotAxis = cspice_vhat(Earth2PlanetRef*[0;0;1]);
 
-% psi is the angle between the projections of Earth and planet's rotation axes
-% onto the Earth sky plane, i.e. the plane with normal defined as 
-% the line of sight from Earth to the planet
-projPlanetRotAxis = projVecOnPlane(planetRotAxis,lineOfSight);
-projEarthRotAxis = projVecOnPlane(EarthRotAxis,lineOfSight);
+% psi is the oriented angle (positive anti-clockwise) between the projections
+% of Earth and the planet's rotation axes onto the Earth sky plane 
+projPlanetRotAxis = projVecOnPlane(planetRotAxis,nSky);
+projEarthRotAxis = projVecOnPlane(EarthRotAxis,nSky);
 
 % cosine and sine of psi in a frame with anti-clockwise orientation
 cosa = dot(projEarthRotAxis,projPlanetRotAxis);
-sina = dot(cross(projEarthRotAxis,projPlanetRotAxis),-lineOfSight);
+sina = dot(cross(projEarthRotAxis,projPlanetRotAxis),nSky);
 psi = atan2(sina,cosa);
-fprintf(1,'psi              %+9.5f deg\n', psi*r2d);
+fprintf(1,'psi(NP)          %+9.5f deg\n', psi*r2d);
 
 if 0,
 if sina>0, % Angle(projEarthRotAxis,projPlanetRotAxis)>0 psi in [0,pi] 
@@ -235,7 +235,7 @@ if sina>0, % Angle(projEarthRotAxis,projPlanetRotAxis)>0 psi in [0,pi]
 else, % Angle(projEarthRotAxis,projPlanetRotAxis)<0 psi in [-pi,0]
   psi1 = -acos(cosa);
 end
-fprintf(1,'psi1             %+9.5f deg\n', psi1*r2d);
+fprintf(1,'psi1(NP)         %+9.5f deg\n', psi1*r2d);
 end
 
 % Return psi
