@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.6 2012/06/13 16:58:47 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.7 2015/09/27 18:57:48 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -37,9 +37,12 @@ radPerPixel = arcsecPerRad/HST.PLATESC;
 
 % Convert string date to double precision 
 et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
+% format YYY mmm dd HH:MM:SS 
+epoch = cspice_et2utc(et,'C',0)
+%epoch = datestr(datenum(epoch,'YYYY mmm dd HH:MM:SS'),'yyyy mm dd HH MM SS');
 
 % flag for calculation in J2000
-if 0,
+if 1,
 isJ2000 = true;
 else
 isJ2000 = false;
@@ -132,6 +135,8 @@ xhat = xhatr; yhat = yhatr;
 % ref pixel position (xrp,yrp) should be zero
 xrp = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
 yrp = atan2(dot(refpixposn,yhat), planetdist)*radPerPixel;
+% positive means nearer to Earth than planet centre
+zrp = planetdist+dot(refpixposn,zhat)
 fprintf(1,'xrp, yrp          = %12.6g, %12.6g pixel\n', xrp, yrp);
 
 if 1
@@ -139,6 +144,8 @@ if 1
 % with respect to (0,0) that corresponds to refpixposn
 Xpc = atan2(dot(planetposn,xhat), planetdist)*radPerPixel + rpx;
 Ypc = atan2(dot(planetposn,yhat), planetdist)*radPerPixel + rpy; 
+% positive means nearer to Earth than planet centre
+Zpc = planetdist+dot(planetposn,zhat)
 end
 
 pc = [xpc-HST.CRPIX1, ypc-HST.CRPIX2];
@@ -188,17 +195,57 @@ end
 tprojplanetaxis = acosd(dot(planetaxis,cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat)));
 fprintf(1,'tprojplanetaxis      = %12.2g deg\n', tprojplanetaxis);
 fprintf(1,'cos(tprojplanetaxis) = %12.2g\n', cosd(tprojplanetaxis)),
+planetaxis3d = planetaxis;
 % projection of the planet axis onto the plane of the image
 planetaxis = cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat);
 fprintf(1,'planetaxis (Earth r) = %12.6f, %12.6f, %12.6f\n', planetaxis);
 xplanetaxis = dot(planetaxis,xhat);
 yplanetaxis = dot(planetaxis,yhat);
-planetaxis3d = planetaxis;
+xplanetaxis/yplanetaxis
+pause
 planetaxis = [xplanetaxis,yplanetaxis];
 fprintf(1,'planetaxis (image)   = %12.6f, %12.6f\n', planetaxis);
 
-spheroidGrid(planetaxis3d,a,b,xhat,yhat,zhat);
+[xmg,ymg,zmg,xpg,ypg,zpg,N,S] = spheroidGrid(planetaxis3d,a,b,xhat,yhat,zhat);
 
+% add offset to planet centre
+xmg = xmg+planetposn(1); ymg = ymg+planetposn(2); zmg = zmg+planetposn(3);
+Xmg =zeros(size(xmg)); Ymg =zeros(size(xmg)); Zmg =zeros(size(xmg));
+for i=1:length(xmg(:)),
+  % projection onto the image plane
+  posn = [xmg(i);ymg(i);zmg(i)];
+  Xmg(i) = atan2(dot(posn,xhat), planetdist)*radPerPixel + rpx;
+  Ymg(i) = atan2(dot(posn,yhat), planetdist)*radPerPixel + rpy;
+  % positive means nearer to Earth than planet centre
+  Zmg(i) = planetdist+dot(posn,zhat);
+end
+Xmg(Zmg<0) = NaN;
+Ymg(Zmg<0) = NaN;
+
+% add offset to planet centre
+xpg = xpg+planetposn(1); ypg = ypg+planetposn(2); zpg = zpg+planetposn(3);
+Xpg =zeros(size(xpg)); Ypg =zeros(size(xpg)); Zpg =zeros(size(xpg));
+for i=1:length(xpg(:)),
+  % projection onto the image plane
+  posn = [xpg(i);ypg(i);zpg(i)];
+  Xpg(i) = atan2(dot(posn,xhat), planetdist)*radPerPixel + rpx;
+  Ypg(i) = atan2(dot(posn,yhat), planetdist)*radPerPixel + rpy;
+  % positive means nearer to Earth than planet centre
+  Zpg(i) = planetdist+dot(posn,zhat);
+end
+Xpg(Zpg<0) = NaN;
+Ypg(Zpg<0) = NaN;
+
+% North pole
+XN = atan2(dot(N,xhat), planetdist)*radPerPixel + rpx;
+YN = atan2(dot(N,yhat), planetdist)*radPerPixel + rpy;
+ZN = planetdist+dot(N,zhat)
+ZN = dot(N,zhat)
+
+% South pole
+XS = atan2(dot(S,xhat), planetdist)*radPerPixel + rpx;
+YS = atan2(dot(S,yhat), planetdist)*radPerPixel + rpy;
+ZS = dot(S,zhat)
 
 % poles computed in world (ra/dec) and transformed to pixel coordinates
 if ~isJ2000,
@@ -271,20 +318,18 @@ end
 end
 end
 
-if 1,
-% correction for projection on the plane
-a = a*cosd(tprojplanetaxis);
-b = b*cosd(tprojplanetaxis);
-end
+% correction for projection on the plane of the polar radii
+bp = b*cosd(tprojplanetaxis);
 
 % projection of semi-major and semi minor axis in pixels
 a = atan2(a,planetdist)*radPerPixel;
 b = atan2(b,planetdist)*radPerPixel;
+bp = atan2(bp,planetdist)*radPerPixel;
 % tilt in the plane of the image with respect to x axis
 tilt = atan2(planetaxis(2),planetaxis(1))*degPerRad;
 
-fprintf(1,'planetary disc  a, b = %12.1f, %12.1f pixel, tilt = %5.1f deg\n',...
-a,b,tilt);
+fprintf(1,'planet disc  a, b, bp  = %12.1f, %12.1f, %12.1f pixel, tilt = %5.1f deg\n',...
+a,b,bp,tilt);
 
 if strcmp(planet.name,'saturn'),
 % correction for projection on the plane
@@ -301,11 +346,12 @@ ell = rot2d(tilt,[ellx;elly]);
 ellx = ell(1,:);
 elly = ell(2,:);
 
+
 opts = {'fontsize',12,'fontweight','normal'}; %,'color','black'};
 
-% north-south pole axis
-xAxis = [1;-1]*planetaxis(1)*b;
-yAxis = [1;-1]*planetaxis(2)*b;
+% north-south pole axis in the image
+xAxis = [1;-1]*planetaxis(1)*bp;
+yAxis = [1;-1]*planetaxis(2)*bp;
 
 if 0
 plot(ellx,elly,xAxis,yAxis)
@@ -324,11 +370,107 @@ end
 clear h
 close
 
+[ss,se]=computePlanetAxis(planet.name,epoch);
 
+% get limb, terminator and cusp point assuming rotation axis is measured
+% from y-axis, needs a rotation of tilt+90 deg
+[ll,ld,tl,td,cusp]=getLTC(a,e,se,ss);
+pause
+if 1
+% rotation by tilt+90 deg to take into account that getLTC returns the geometry
+% with rotation axis vertical and that tilt is with respect to x-axis
+tmp = rot2d(tilt+90,[ll{1};ll{2}]);
+ll{1} = tmp(1,:);
+ll{2} = tmp(2,:);
+tmp = rot2d(tilt+90,[ld{1};ld{2}]);
+ld{1} = tmp(1,:);
+ld{2} = tmp(2,:);
+tmp = rot2d(tilt+90,[tl{1};tl{2}]);
+tl{1} = tmp(1,:);
+tl{2} = tmp(2,:);
+tmp = rot2d(tilt+90,[td{1};td{2}]);
+td{1} = tmp(1,:);
+td{2} = tmp(2,:);
+tmp = rot2d(tilt+90,[cusp{1};cusp{2}]);
+cusp{1} = tmp(1,:);
+cusp{2} = tmp(2,:);
+end
+
+plot(Xmg,Ymg,'k-');
+hold on
+plot(Xpg,Ypg,'k-');
+XN = dot(N,xhat);
+YN = dot(N,yhat);
+ZN = dot(N,zhat);
+XS = dot(S,xhat);
+YS = dot(S,yhat);
+ZS = dot(S,zhat);
+if 0
+plot([XN,XS]+Xpc,[YN,YS]+Ypc,'bx')
+text(XN+Xpc,YN+Ypc,'N')
+text(XS+Xpc,YS+Ypc,'S')
+end
+% cusp, limb and terminator
+plot(cusp{1}+Xpc,cusp{2}+Ypc,'ko','Markersize',10);
+plot(ll{1}+Xpc,ll{2}+Ypc,'c-',tl{1}+Xpc,tl{2}+Ypc,'m-','Linewidth',2);
+plot(ld{1}+Xpc,ld{2}+Ypc,'c--',td{1}+Xpc,td{2}+Ypc,'m--','Linewidth',1);
+hold off
+disp('problem')
+pause
+
+% get image and axes
 W = params.W;
+[nr,nc] = size(W);
 clf
-X = [1:size(W,2)];
-Y = [1:size(W,1)];
+X = [1:nc];
+Y = [1:nr];
+
+if ~strcmp(planet.name,'jupiter'),
+% create an image with the template ellipse centered
+Wt = zeros(size(W));
+[Xgrid, Ygrid] = meshgrid([1:size(W,2)]-Xpc,[1:size(W,1)]-Ypc);
+XYrot = rot2d(-tilt-90,[Xgrid(:)';Ygrid(:)']);
+Xgrid = reshape(XYrot(1,:), size(Xgrid));
+Ygrid = reshape(XYrot(2,:), size(Ygrid));
+Wt(Xgrid.^2/a^2+Ygrid.^2/b^2<=1) = 1;
+
+figure
+subplot(121),
+imagesc(X,Y,log10(abs(W))),
+axis xy
+axis square
+
+subplot(122),
+imagesc(X,Y,Wt)
+axis xy
+axis square
+
+figure
+
+%[i,j] = getOptimalCorrel(W, Wt);
+ss = 4;
+[i,j] = getOptimalCorrel(W(1:ss:end,1:ss:end), Wt(1:ss:end,1:ss:end));
+i = ss*i; j = ss*j;
+
+%rpx = rpx+j; rpy = rpy+i;
+xpc = xpc+j; ypc = ypc+i;
+xn = xn +j; yn = yn+i;
+xs = xs +j; ys = ys+i;
+xeq = xeq+j; yeq = yeq+i;
+xmerid = xmerid+j; ymerid = ymerid+i;
+Xpc = Xpc+j; Ypc = Ypc+i;
+Xmg = Xmg+j; Ymg = Ymg+i;
+Xpg = Xpg+j; Ypg = Ypg+i;
+if strcmp(planet.name,'saturn'),
+for i=1:length(rings),
+  xrmn{i} = xrmn{i}+j; yrmn{i} = yrmn{i}+i;
+	xrmx{i} = xrmx{i}+j; yrmx{i} = yrmx{i}+i;
+end
+end
+
+end
+
+figure
 imagesc(X,Y,log10(abs(W)))
 axis xy
 hold on
@@ -349,12 +491,24 @@ end
 
 % using HST ref pixel, y-axis orientation, plate scale and SPICE
 plot(Xpc,Ypc,'kx','markersize',10), text(Xpc,Ypc,'(Xpc,Ypc)',opts{:})
-plot(ellx+Xpc,elly+Ypc,'k-',xAxis+Xpc,yAxis+Ypc,'g-')
+%plot(ellx+Xpc,elly+Ypc,'k-',xAxis+Xpc,yAxis+Ypc,'g-')
 text(xAxis+Xpc,yAxis+Ypc,['NAxis';'SAxis'],opts{:},'color','k')
+plot(Xmg,Ymg,'k-'); % meridian
+plot(Xpg,Ypg,'k-'); % parallel
+
+% cusp, limb and terminator
+plot(cusp{1}+Xpc,cusp{2}+Ypc,'wo','Markersize',10);
+plot(ll{1}+Xpc,ll{2}+Ypc,'y-',ld{1}+Xpc,ld{2}+Ypc,'y--','Linewidth',2);
+plot(tl{1}+Xpc,tl{2}+Ypc,'w-',td{1}+Xpc,td{2}+Ypc,'w--','Linewidth',2);
 
 hold off
 axis equal
 %pause
+
+
+fac = 1.15;
+set(gca,'xlim',[max(1,xpc-fac*max(a,b)), min(nc,xpc+fac*max(a,b))])
+set(gca,'ylim',[max(1,ypc-fac*max(a,b)), min(nr,ypc+fac*max(a,b))])
 
 % Embed planet structure into params
 params.planet = planet;
