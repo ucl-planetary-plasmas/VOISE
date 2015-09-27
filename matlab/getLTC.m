@@ -1,13 +1,13 @@
-function [ll,ld,tl,td,cusp]=getLTC(r,e,olat,olon,slat,slon)
-% function [ll,ld,tl,td,cusp]=getLTC(r,e,olat,olon,slat,slon)
+function [ll,ld,tl,td,cusp]=getLTC(r,e,obs,sun)
+% function [ll,ld,tl,td,cusp]=getLTC(r,e,obs,sun)
 % 
 % r equatorial radius
 % e excentricity
-% olat, olon observer's latitude and longitude in the observed planet's frame
-% slat, slon sun's latitude and longitude in the observed planet's frame
+% obs observer's latitude and longitude in the observed planet's frame
+% sun sun's latitude and longitude in the observed planet's frame
 
 %
-% $Id: getLTC.m,v 1.1 2012/07/02 14:14:39 patrick Exp $
+% $Id: getLTC.m,v 1.2 2015/09/27 19:02:55 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -29,10 +29,10 @@ function [ll,ld,tl,td,cusp]=getLTC(r,e,olat,olon,slat,slon)
 theta = linspace(0,2*pi,361);
 
 % deg into rad
-olat = olat*pi/180;
-olon = olon*pi/180;
-slat = slat*pi/180;
-slon = slon*pi/180;
+olat = obs.lat*pi/180;
+olon = obs.lon*pi/180;
+slat = sun.lat*pi/180;
+slon = sun.lon*pi/180;
 
 % longitude difference
 dlon = slon-olon;
@@ -56,6 +56,7 @@ yhats = [cos(dlon)*sin(slat);-sin(dlon)*sin(slat);cos(slat)];
 zhats = [cos(dlon)*cos(slat);-sin(dlon)*cos(slat);-sin(slat)];
 end
 
+% 
 sdir = zhats-dot(zhats,zhato)*zhato
 [dot(sdir,xhato);dot(sdir,yhato);dot(sdir,zhato)]
 xsundir = [0;dot(sdir,xhato)]
@@ -125,23 +126,25 @@ DL = cos(slat)*sin(dlon)*xl+...
 else
 % normal to the spheroid surface for the limb point
 % ns = (-a/b yl0 snnllat, b/a xl0, a/b yl0 csnllat)
+% ns = (-a/b yl0 sin(olt), b/a xl0, a/b yl0 cos(olat))
 % direction to the sun
 % dirsun (cos(slat)cos(dlon),-cos(slat)sin(dlon),-sin(slat))
 % ns.dirsun > 0 in the light
 % ns.dirsun < 0 in the shade
 % ns.dirsun == 0 cusp
-dirsun = [cos(slat)*cos(dlon);-cos(slat)*sin(dlon);-sin(slat)];
-DL = -1/sqrt(1-eL^2)*yl0*snnllat*cos(slat)*cos(dlon)-...
-     sqrt(1-eL^2)*xl0*cos(slat)*sin(dlon)-...
-		 1/sqrt(1-eL^2)*yl0*csnllat*sin(slat);
+c = cos(olat); s = sin(olat); ee = e*cos(olat); X = xl; Y = yl;
+%c = csnllat; s = snnllat; ee = eL; X = xl0; Y = yl0;
+dirsun = [cos(slat)*cos(dlon);-cos(slat)*sin(dlon);sin(slat)]
+DL = -1/sqrt(1-ee^2)*Y*s*cos(slat)*cos(dlon)-...
+     sqrt(1-e^2)*X*cos(slat)*sin(dlon)-...
+		 1/sqrt(1-ee^2)*Y*c*sin(slat);
 end
 % limb in the light
-xll = xl; xll(DL>0) = NaN;
-yll = yl; yll(DL>0) = NaN;
+xll = xl; xll(DL<0) = NaN;
+yll = yl; yll(DL<0) = NaN;
 % limb in the shade
-xld = xl; xld(DL<0) = NaN;
-yld = yl; yld(DL<0) = NaN;
-xld(DL==0)
+xld = xl; xld(DL>=0) = NaN;
+yld = yl; yld(DL>=0) = NaN;
 
 % embed into cells
 ll = {xll(:)',yll(:)'};
@@ -151,7 +154,7 @@ ld = {xld(:)',yld(:)'};
 xt0 = r*cos(theta);
 yt0 = r*sqrt(1-e^2*cos(slat)^2)*sin(theta);
 
-% Excentricity of the terminator
+% Eccentricity of the terminator
 eT = eLimb(e,slat);
 % terminator in its own plane
 %xt0 = r*cos(theta);
@@ -253,14 +256,15 @@ end
 DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
 
 plot(theta,DL,theta,DT);
+xlabel('theta'), legend('DL','DT');
 pause
 
 % visible terminator
-xtl = xt; xtl(DT>0) = NaN;
-ytl = yt; ytl(DT>0) = NaN;
+xtl = xt; xtl(DT<0) = NaN;
+ytl = yt; ytl(DT<0) = NaN;
 % hidden terminator
-xtd = xt; xtd(DT<=0) = NaN;
-ytd = yt; ytd(DT<=0) = NaN;
+xtd = xt; xtd(DT>=0) = NaN;
+ytd = yt; ytd(DT>=0) = NaN;
 % embed into cells
 tl = {xtl(:)',ytl(:)'};
 td = {xtd(:)',ytd(:)'};
@@ -356,7 +360,8 @@ xm = x(:,is); ym = y(:,is); zm = z(:,is);
 % parallels
 xp = x(is,:)'; yp = y(is,:)'; zp = z(is,:)';
 
-figure
+pause
+%figure
 
 mesh(x(is,is),y(is,is),z(is,is))
 alpha(0.5)
