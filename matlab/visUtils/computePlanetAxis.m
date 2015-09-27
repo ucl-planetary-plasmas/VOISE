@@ -1,7 +1,7 @@
 function [ss,se]=computePlanetAxis(planet,epoch)
 % function [ss,se]=computePlanetAxis(planet,epoch)
 %
-% $Id: computePlanetAxis.m,v 1.12 2015/09/25 15:06:47 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.13 2015/09/27 19:09:54 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -116,8 +116,12 @@ fprintf(1,'supg %9.f lat %+9.4f lon %+9.4f\n',supgal,[supglt,supgln]*r2d);
 
 % Return sub-solar point parameters
 [ss.rad,ss.lon,ss.lat] = deal(ssrad,sslon*r2d,sslat*r2d); 
-[ss.rad,ss.lon,ss.lat] = deal(supcrd,c2grlon(supcln)*r2d,supclt*r2d); 
+[ss.rad,ss.lon,ss.lat] = deal(spcrad,c2grlon(spclon)*r2d,spclat*r2d); 
 ss.trgepc = trgepc;
+
+% Planet-Sun in AU
+ss.distkm = supcrd;
+ss.distAU = cspice_convrt(ss.distkm,'KM','AU');
 
 % and Sub-Earth Point
 fprintf(1,'Sub-Earth Point\n');
@@ -167,7 +171,7 @@ fprintf(1,'opg  %9.f lat %+9.4f lon %+9.4f\n',opgalt,[opglat,opglon]*r2d);
 
 % Return sub-Earth point parameters
 [se.rad,se.lon,se.lat] = deal(serad,selon*r2d,selat*r2d); 
-[se.rad,se.lon,se.lat] = deal(opcrad,c2grlon(opclon)*r2d,opclat*r2d); 
+[se.rad,se.lon,se.lat] = deal(spcrad,c2grlon(spclon)*r2d,spclat*r2d); 
 se.trgepc = trgepc;
 
 % Planet-Earth in AU
