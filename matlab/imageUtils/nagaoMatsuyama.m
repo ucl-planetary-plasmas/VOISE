@@ -14,7 +14,7 @@ function Y = nagaoMatsuyama(Xwin,winSize,Iwin,Jwin)
 % [http://dx.doi.org/10.1016/0146-664X(79)90102-3]
 
 %
-% $Id: nagaoMatsuyama.m,v 1.1 2015/03/13 15:49:05 patrick Exp $
+% $Id: nagaoMatsuyama.m,v 1.2 2015/09/27 18:24:23 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -117,6 +117,8 @@ for i=1:9,
 	neighbours = neighbours(~isnan(neighbours));
 	localMean(i) = mean(neighbours);
 	localVar(i) = var(neighbours);
+%	localMean(i) = median(neighbours);
+%	localVar(i) = iqr(neighbours);
 end
 [~,imin] = min(localVar);
 Y = localMean(imin);
