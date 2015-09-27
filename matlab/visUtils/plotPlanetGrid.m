@@ -2,7 +2,7 @@ function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
 % function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
 
 %
-% $Id: plotPlanetGrid.m,v 1.3 2015/09/26 19:28:29 patrick Exp $
+% $Id: plotPlanetGrid.m,v 1.4 2015/09/27 19:13:52 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -81,17 +81,28 @@ axis equal
 axis tight
 xlabel('x [arcsec]')
 ylabel('y [arcsec]')
-%title(sprintf('[%.2f,%.2f]x[%.2f,%.2f] [arcsec]',min(x),max(x),min(y),max(y)));
-%title(sprintf('%.2fx%.2f [arcsec]',max(x)-min(x),max(y)-min(y)));
 title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
       datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
-tic
-drawPlanetGrid(planet,epoch,ss,se,orientat,dlat,dlon,semiMaj_km,ecc);
-toc
 else
-tic
-drawPlanetGrid(planet,epoch,ss,se,orientat,dlat,dlon,semiMaj_km,ecc);
-toc
+% Scaling factor to convert from km to arcsec on Earth observer's sky
+km2asec = (1/se.distkm)*(180/pi)*3600;
+A = viewmtx(90+se.CML,se.lat);
+A(4,4) = 1/km2asec;
+[X,Y,Z]=ellipsoid(0,0,0,semiMaj_km,semiMaj_km,semiMaj_km*sqrt(1-ecc^2));
+[m,n] = size(X);
+x4d = [X(:),Y(:),Z(:),ones(m*n,1)]';
+x3d = A*x4d;
+x2 = zeros(m,n); y2 = zeros(m,n); z2 = zeros(m,n);
+x2(:) = x3d(1,:)./x3d(4,:);
+y2(:) = x3d(2,:)./x3d(4,:);
+z2(:) = x3d(3,:)./x3d(4,:);
+[x2,y2] = Rotate(se.psi-orientat,x2,y2);
+surfl(x2,y2,z2,[90+ss.lon,ss.lat]);
+colormap(copper)
+shading flat,
+alpha(0.5),
+view(0,90)
+%mesh(x2,y2,z2,zeros(size(x2)));hidden off, alpha(1), view(0,90)
 axis xy;
 axis equal
 axis tight
@@ -100,6 +111,10 @@ ylabel('y [arcsec]')
 title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
       datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
 end
+
+tic
+drawPlanetGrid(planet,epoch,ss,se,orientat,dlat,dlon,semiMaj_km,ecc);
+toc
 
 
 
@@ -119,9 +134,10 @@ phiobs = 2*pi - se.CML*pi/180;
 
 % Sub-solar colatitude in radians
 thesun = pi/2 - ss.lat*pi/180;
+% Sun CML in a right-handed system [0,2pi]
+phisun = 2*pi - ss.lon*pi/180;
 
-% Scaling factor to convert from km to arcsec on the plane of 
-% the Earth observer's sky
+% Scaling factor to convert from km to arcsec on Earth observer's sky
 km2asec = (1/se.distkm)*(180/pi)*3600;
 
 % Calculate the viewing angle
@@ -135,7 +151,9 @@ fprintf(1,'psi %f orientat %f alpha %f (deg)\n',se.psi,orientat,alpha);
 hold on
 
 if 0,
-A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi);
+A = viewmtx(90+se.CML,se.lat)
+A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi)
+pause
 A(4,4) = 1/km2asec;
 [X,Y,Z]=ellipsoid(0,0,0,semiMaj_km,semiMaj_km,semiMaj_km*sqrt(1-ecc^2));
 [m,n] = size(X);
@@ -155,6 +173,41 @@ pause
 close(f);
 end
 
+% Sub-Earth and subsolar points
+rad = [se.rad,ss.rad];
+the = [theobs,thesun];
+phi = [phiobs,phisun];
+x = rad .* sin(the) .* cos(phi);
+y = rad .* sin(the) .* sin(phi);
+z = rad .* cos(the);
+if 0
+A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi);
+A(4,4) = 1/km2asec;
+[m,n] = size(x);
+x2 = zeros(m,n); y2 = zeros(m,n); z2 = zeros(m,n);
+x4d = [x(:),y(:),z(:),ones(m*n,1)]';
+x3d = A*x4d;
+x2(:) = x3d(1,:)./x3d(4,:);
+y2(:) = x3d(2,:)./x3d(4,:);
+z2(:) = x3d(3,:)./x3d(4,:);
+else
+xsky = -x*sin(phiobs) + y*cos(phiobs);
+ysky = (-x*cos(phiobs)-y*sin(phiobs))*cos(theobs)+z*sin(theobs);
+zsky = (x*cos(phiobs)+y*sin(phiobs))*sin(theobs)+z*cos(theobs);
+x2 = km2asec*xsky;
+y2 = km2asec*ysky;
+z2 = km2asec*zsky;
+end
+% rotation of sky plane
+x2,y2,z2
+[xsky,ysky] = Rotate(alpha,x2,y2);
+xsky,ysky
+plot(xsky(1),ysky(1),'kx','Markersize',5)
+plot(xsky(2),ysky(2),'ko','Markersize',5)
+pause
+
+
+
 % Grid curves of constant latitude
 for the = ([dlat:dlat:180-dlat])*pi/180,
 %for the = ([90+se.lat])*pi/180,
@@ -171,7 +224,11 @@ for the = ([dlat:dlat:180-dlat])*pi/180,
 	Yv = ysky; Yv(~flag_vang) = NaN;
 	% rotation of sky plane
 	[Xv,Yv] = Rotate(alpha,Xv,Yv);
+	if the==pi/2,
+	plot(Xv,Yv,'b-','LineWidth',2);
+	else
   plot(Xv,Yv,'k-','LineWidth',.5);
+	end
 	if 0, % hidden lines
 	Xh = xsky; Xh(flag_vang) = NaN;
 	Yh = ysky; Yh(flag_vang) = NaN;
@@ -213,8 +270,9 @@ for phi = [0:dlon:360-dlon]*pi/180,
 	end
 end
 
+if 0,
 % Calculate the limb, i.e. the edge of the planet disc on the sky
-the = linspace(0,pi,200);
+the = linspace(0,pi,500);
 
 discrim = abs(cos(the).*cos(theobs))-(1-ecc^2)*abs(sin(the)*sin(theobs));
 f=figure; plot(the,discrim), title('discrim limb'), pause, close(f)
@@ -227,28 +285,19 @@ f=figure; plot(the,phi_rel), pause, close(f)
 phi1 =  phi_rel + phiobs;
 phi2 = -phi_rel + phiobs;
 
-if 1,
 phi = [phi1,fliplr(phi2)];
 the = [the,fliplr(the)];
-else
-phi = [phi1];
-the = [the];
-end
+
 f=figure; plot(the,phi), title('limb the(phi)'), pause, close(f)
 
 [r,x,y,z,xsky,ysky,zsky] = spherical2Sky(semiMaj_km,ecc, ...
                                     the,phi,theobs,phiobs,km2asec);
 plotSky(theobs,phiobs,x,y,z,xsky,ysky,zsky)
-
-if 0,
-xsky(zsky<0) = NaN;
-ysky(zsky<0) = NaN;
-end
-[min(zsky),max(zsky)]
+fprintf(1,'Limb zsky min/max= %f/%f\n',[min(zsky),max(zsky)]);
 % rotation
 [xsky,ysky] = Rotate(alpha,xsky,ysky);
 %plot(xsky, ysky, 'r-', -xsky, ysky, 'r-','LineWidth',1);
-plot(xsky, ysky, 'r-', 'LineWidth',2);
+plot(xsky, ysky, 'w-', 'LineWidth',2);
 pause
 
 %return
@@ -265,39 +314,29 @@ phi_rel = acos(-cos(the).*cos(thesun)./((1-ecc^2)*sin(the)*sin(thesun)));
 % Retrieve the longitudes of the points on the 
 % terminator, taking into account the difference between
 % the longitude of the Earth (obs) and Sun
-
 fprintf(1,'Sun is at relative longitude %.4f to sub-Earth point\n', ssedlon);
 
 phi1 =  phi_rel + phiobs + ssedlon*pi/180.;
 phi2 = -phi_rel + phiobs + ssedlon*pi/180.;
 
-if 1,
 phi = [phi1,fliplr(phi2)];
 the = [the,fliplr(the)];
-else
-phi = [phi1];
-the = [the];
-end
+
 f=figure; plot(the,phi), title('terminator the(phi)'), pause, close(f)
 
 [r,x,y,z,xsky,ysky,zsky] = spherical2Sky(semiMaj_km,ecc, ...
                                          the,phi,theobs,phiobs,km2asec);
-
 plotSky(theobs,phiobs,x,y,z,xsky,ysky,zsky)
-
-if 0,
-xsky(zsky*sign(ssedlon)<0) = NaN;
-ysky(zsky*sign(ssedlon)<0) = NaN;
-end
-[min(zsky),max(zsky)]
+fprintf(1,'Terminator zsky min/max= %f/%f\n',[min(zsky),max(zsky)]);
 % rotation
 [xsky,ysky] = Rotate(alpha,xsky,ysky);
 Xv = xsky; Xv(zsky*sign(grl2srl(ssedlon))<0) = NaN;
 Yv = ysky; Yv(zsky*sign(grl2srl(ssedlon))<0) = NaN;
 Xh = xsky; Xh(zsky*sign(grl2srl(ssedlon))>=0) = NaN;
 Yh = ysky; Yh(zsky*sign(grl2srl(ssedlon))>=0) = NaN;
-plot(Xv, Yv, 'g-','LineWidth',2);
+plot(Xv, Yv, 'y-','LineWidth',2);
 plot(Xh, Yh, 'g--','LineWidth',2);
+end
 
 
 % limb and terminator
@@ -310,11 +349,18 @@ close(f);
 f=figure;
 [ll,ld,tl,td,cusp]=getLTC(r,ecc,se,ss);
 fprintf(1,'cusp points x=%f,%f, y=%f,%f\n',cusp{1},cusp{2});
+plot(xll,yll,ll{1},ll{2}); pause
 close(f);
 
 % rotation
 [xc,yc] = Rotate(alpha,cusp{1},cusp{2});
-plot(xc,yc,'bx-','LineWidth',1,'MarkerSize',5);
+plot(xc,yc,'ko','LineWidth',1,'MarkerSize',10);
+if 1,
+[xll,yll] = Rotate(alpha,ll{1},ll{2});
+plot(xll,yll,'r-','LineWidth',2,'MarkerSize',10);
+[xtl,ytl] = Rotate(alpha,tl{1},tl{2});
+plot(xtl,ytl,'g-','LineWidth',2,'MarkerSize',10);
+end
 end
 
 hold off
@@ -347,6 +393,7 @@ ysky = km2asec*ysky;
 
 if nargout > 6,
 zsky = (x*cos(phiobs)+y*sin(phiobs))*sin(theobs)+z*cos(theobs);
+zsky = km2asec*zsky;
 varargout(1) = {zsky};
 end
 
