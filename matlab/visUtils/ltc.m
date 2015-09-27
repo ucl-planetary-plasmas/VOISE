@@ -2,7 +2,7 @@ function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
 % function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
 
 %
-% $Id: ltc.m,v 1.4 2015/09/15 18:01:11 patrick Exp $
+% $Id: ltc.m,v 1.5 2015/09/27 19:11:21 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -39,13 +39,15 @@ yp = r*sqrt(1-e^2)*sin(theta);
 xl = r*cos(theta);
 yl = r*sqrt(1-e^2*cos(olat)^2)*sin(theta);
 
-% cos and sin of latitude of normal to limb
+% cos and sin of latitude of normal to limb (Eq. 10 in planet proj)
 csnllat = (1-e^2)*cos(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 snnllat = sin(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 
 %180/pi*acos(csnllat)
 %180/pi*asin(snnllat)
 
+% algrebraic distance between a point of the limb's projection onto the
+% sky-plane
 DL = cos(slat)*sin(dlon)*xl+...
     (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)/(1-e^2)*cos(olat))*yl;
 
@@ -86,8 +88,8 @@ t1 = sqrt(r^2*(1-e^2*cos(olat)^2)/(u^2*(1-e^2*cos(olat)^2)+v^2));
 xc = u*[t1;-t1];
 yc = v*[t1;-t1];
 
-eL = eL(e,slat);
-t2 = sqrt(r^2*(1-eL^2)*(a*d-b*c)^2/((d*v+b*u)^2*(1-eL^2)+(c*v+a*u)^2));
+e_betasun = e_beta(e,slat);
+t2 = sqrt(r^2*(1-e_betasun^2)*(a*d-b*c)^2/((d*v+b*u)^2*(1-e_betasun^2)+(c*v+a*u)^2));
 
 x2 = -v*[t2;-t2];
 y2 = u*[t2;-t2];
@@ -106,6 +108,7 @@ yt = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
 DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
 
 plot(theta,DL,theta,DT);
+xlabel('theta'), legend('DL','DT')
 pause
 
 t=pi/2;
@@ -164,6 +167,10 @@ title(sprintf('\\beta_{obs}=%.1f \\beta_{sun}=%.1f \\Delta\\lambda=%.1f',...
       olat*180/pi, slat*180/pi, dlon*180/pi));
 end
 
-function e = eL(e,beta)
-
+function e = e_beta(e,beta)
+% Eq 16 in planetproj.tex note 
 e = e*sqrt(1-sin(beta)^2/(1-e^2*cos(beta)^2));
+
+function e = eL(e,beta)
+% eccentricity of projection in sky with latitude angle beta
+e = e*cos(beta);
