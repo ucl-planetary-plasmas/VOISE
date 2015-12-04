@@ -2,9 +2,9 @@ function fit = selectSeeds2(fit,Sx,Sy,Sls)
 % function fit = selectSeeds2(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds2.m,v 1.1 2015/12/04 15:41:15 patrick Exp $
+% $Id: selectSeeds2.m,v 1.2 2015/12/04 15:42:12 patrick Exp $
 %
-% Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
