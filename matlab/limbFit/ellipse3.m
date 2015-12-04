@@ -2,7 +2,7 @@ function r=ellipse3(xy,p)
 % function r=ellipse3(xy,p)
 
 %
-% $Id: ellipse3.m,v 1.1 2012/04/17 19:31:30 patrick Exp $
+% $Id: ellipse3.m,v 1.2 2015/12/04 15:34:08 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -23,7 +23,7 @@ function r=ellipse3(xy,p)
 global verbose
 
 if ~isempty(verbose) & length(verbose)>2 & verbose(3),
-  fprintf(1,'calling ellipse2 (xc,yc,a,b,t0)=(%.1f,%.1f,%.1f,%.1f,%.0f)\n',...
+  fprintf(1,'calling ellipse3 (xc,yc,a,b,t0)=(%.1f,%.1f,%.1f,%.1f,%.0f)\n',...
           p(1:5));
 end
 
