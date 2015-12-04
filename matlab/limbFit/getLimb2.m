@@ -2,7 +2,7 @@ function fit = getLimb2(VD,params,fit)
 % function fit = getLimb2(VD,params,fit)
 
 %
-% $Id: getLimb2.m,v 1.6 2012/04/16 15:45:15 patrick Exp $
+% $Id: getLimb2.m,v 1.7 2015/12/04 15:45:26 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -24,27 +24,49 @@ function fit = getLimb2(VD,params,fit)
 [imls, Sls] = getVDOp(VD, params.W, @(x) sqrt(length(x)));
 fprintf('min(Sls) %.2f max(Sls) %.2f\n', [min(Sls), max(Sls)]);
 
-% image axis
+% image coordinate axes
 x = params.x;
 y = params.y;
 
-% convert from image indices to coordinates
-Sx = (VD.Sx-VD.xm)/(VD.xM-VD.xm)*(max(x)-min(x))+min(x);
-Sy = (VD.Sy-VD.ym)/(VD.yM-VD.ym)*(max(y)-min(y))+min(y);
+% coordinates min, max
+xm = min(x); xM = max(x);
+ym = min(y); yM = max(y);
+
+% images indices min, max
+if isfield(VD,'xm'), % old API pre v1.2
+  im = VD.xm; iM = VD.xM;
+  jm = VD.ym; jM = VD.yM;
+else, % new API
+  im = VD.W.xm; iM = VD.W.xM;
+  jm = VD.W.ym; jM = VD.W.yM;
+end
+
+% convert from image pixel indices to coordinates
+Sx = (VD.Sx-im)/(iM-im)*(xM-xm)+xm;
+Sy = (VD.Sy-jm)/(jM-jm)*(yM-ym)+ym;
+
 
 % embed Sx,Sx,Sls in fit
 fit.Sx  = Sx(VD.Sk);
 fit.Sy  = Sy(VD.Sk);
 fit.Sls = Sls;
 
-fit = selectSeeds(fit,Sx,Sy,Sls);
+if strcmp(func2str(fit.model{1}),'ellipse4'),
+  fit = selectSeeds2(fit,Sx,Sy,Sls);
+else
+  fit = selectSeeds(fit,Sx,Sy,Sls);
+end
 
 % Removed unselected seeds
 Sx = Sx(fit.iSelect);
 Sy = Sy(fit.iSelect);
 Sls = Sls(fit.iSelect);
 
-plotSelectedSeeds(VD,params,fit);
+if strcmp(func2str(fit.model{1}),'ellipse4'),
+  plotSelectedSeeds2(VD,params,fit);
+else
+  plotSelectedSeeds(VD,params,fit);
+end
 pause
 
 
@@ -66,9 +88,9 @@ Sls = sqrt(S);
 W = 1./md2s;
 fit = fitLimb2(fit,Sx,Sy,W);
 
-% convert image units into pixel units
-fit.pxc = (fit.p(1)-min(x))/(max(x)-min(x))*(VD.xM-VD.xm)+VD.xm;
-fit.pyc = (fit.p(2)-min(y))/(max(y)-min(y))*(VD.yM-VD.ym)+VD.ym;
+% convert image coordinates to pixel indices
+fit.pxc = (fit.p(1)-xm)/(xM-xm)*(iM-im)+im;
+fit.pyc = (fit.p(2)-ym)/(yM-ym)*(jM-jm)+jm;
 
-fprintf(1,'limb centre %8.2f, %8.2f [pixels]\n', fit.pxc,fit.pyc);
+fprintf(1,'Ellipse(s) centre %8.2f, %8.2f [pixels]\n', fit.pxc,fit.pyc);
 
