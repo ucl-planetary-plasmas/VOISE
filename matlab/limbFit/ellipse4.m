@@ -2,9 +2,9 @@ function r=ellipse4(xy,p)
 % function r=ellipse4(xy,p)
 
 %
-% $Id: ellipse4.m,v 1.1 2015/12/04 15:36:08 patrick Exp $
+% $Id: ellipse4.m,v 1.2 2015/12/04 15:56:04 patrick Exp $
 %
-% Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it

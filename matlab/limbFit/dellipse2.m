@@ -2,9 +2,9 @@ function dr=dellipse2(xy,f,p,dp,func)
 % function dr=dellipse2(xy,f,p,dp,func)
 
 %
-% $Id: dellipse2.m,v 1.4 2015/11/30 17:17:10 patrick Exp $
+% $Id: dellipse2.m,v 1.5 2015/12/04 15:56:04 patrick Exp $
 %
-% Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
+% Copyright (c) 2010-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
 %
 % This program is free software; you can redistribute it and/or modify it
