@@ -2,7 +2,7 @@ function dr=dellipse3(xy,f,p,dp,func)
 % function dr=dellipse3(xy,f,p,dp,func)
 
 %
-% $Id: dellipse3.m,v 1.2 2015/11/30 17:18:13 patrick Exp $
+% $Id: dellipse3.m,v 1.3 2015/12/04 15:34:52 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -64,7 +64,7 @@ for i=1:m,
   % d/da
   dgda(i+[0,m]) = Q*[ci(i);sqrt(1-e^2)*si(i)];
   % d/de
-  dgde(i+[0,m]) = Q*[0;-e/sqrt(1-e^2)*si(i)];
+  dgde(i+[0,m]) = Q*[0;-a*e/sqrt(1-e^2)*si(i)];
   % d/dt0
   dgdt0(i+[0,m]) = Qp*[a*ci(i);b*si(i)];
   % d/dti
