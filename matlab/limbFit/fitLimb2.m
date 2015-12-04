@@ -8,7 +8,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 
 %
-% $Id: fitLimb2.m,v 1.12 2012/04/17 20:09:28 patrick Exp $
+% $Id: fitLimb2.m,v 1.13 2015/12/04 15:49:54 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -28,44 +28,94 @@ function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 global verbose
 
-% seeds position from Cartesian coordinates into polar coordinates
+% seeds position from Cartesian coordinates to polar coordinates
 % column vector of observed values
-R = sqrt(Sx(:).^2+Sy(:).^2);
+Rs = sqrt(Sx(:).^2+Sy(:).^2);
 % column vector or matrix of independent variables
-T = 180/pi*atan2(Sy(:),Sx(:));
+Ts = 180/pi*atan2(Sy(:),Sx(:));
 
-% arrange measurement, i.e. seed position (X,Y) as a single column vector
-% with all X's followed by Y's
+% arrange measurement, i.e. seed position (X,Y) as
+% a single column vector with all X's followed by Y's
 XY = [Sx(:); Sy(:)];
 
 % number of measurements
-m = length(Sx(:));
+ms = length(Sx(:));
 
 % column vector of statistical weights 
 if ~exist('Sw') | isempty(Sw),
   % constant=1 if none provided
-  W = [ones(size(R));ones(size(R))];
+  Ws = [ones(size(Rs));ones(size(Rs))];
 else
   % proportional to 1/sqrt(var)
-  W = [Sw(:);Sw(:)];
+  Ws = [Sw(:);Sw(:)];
 end
 
-% column vector of initial parameters
-p0       = [fit.p0(:); T(:)*pi/180];
-
-if length(fit.p0)==3,
-  [xc,yc,r,a] = circfit(Sx,Sy);
-	fprintf(1,'* circfit            Xc(%8.1f,%8.1f) R=%8.1f\n', xc,yc,r);
-	Par = CircleFitByTaubin([Sx(:),Sy(:)]);
-	fprintf(1,'* CircleFitByTaubin  Xc(%8.1f,%8.1f) R=%8.1f\n', Par);
-elseif length(fit.p0)==5,
+fprintf(1,'*** %d parameters fit\n', length(fit.p0));
+switch length(fit.p0),
+  case 3,
+    [xc,yc,r,a] = circfit(Sx,Sy);
+	  fprintf(1,'* circfit            Xc(%8.1f,%8.1f) R=%8.1f\n', xc,yc,r);
+	  Par = CircleFitByTaubin([Sx(:),Sy(:)]);
+	  fprintf(1,'* CircleFitByTaubin  Xc(%8.1f,%8.1f) R=%8.1f\n', Par);
+  case 5,
+if 0
   p = ellipse_fit(Sx, Sy);
-	fprintf(1,'* ellipse_fit        Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
-	[A,p] = EllipseFitByTaubin([Sx(:),Sy(:)]);
-	fprintf(1,'* EllipseFitByTaubin Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
-	[A,p] = EllipseDirectFit([Sx(:),Sy(:)]);
-	fprintf(1,'* EllipseDirectFit   Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.2f\n', p);
+  fprintf(1,'* ellipse_fit        Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.2f\n',p);
+  [A,p] = EllipseFitByTaubin([Sx(:),Sy(:)]);
+  fprintf(1,'* EllipseFitByTaubin Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.2f\n',p);
+  [A,p] = EllipseDirectFit([Sx(:),Sy(:)]);
+  fprintf(1,'* EllipseDirectFit   Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.2f\n',p);
 end
+    a = fit.p0(3);
+    if strcmp(func2str(fit.model{1}),'ellipse3'),
+	  e = fit.p0(4);
+	  b = a*sqrt(1-e^2);
+		else
+	  b = fit.p0(4);
+	  e = sqrt((a^2 - b^2)/a^2);
+		end
+	  % correct angle for eccentricity
+	  Ts = 180/pi*atan2(Sy(:),Sx(:)*sqrt(1-e^2));
+  case 8,
+	  global iModels
+	  iModels = fit.iModels;
+	  p = pause; pause on
+	  To = Ts;
+	  for i=1:2,
+		  a{i} = fit.p0(3+(i-1)*3);
+	    e{i} = fit.p0(4+(i-1)*3);
+		  b{i} = a{i}*sqrt(1-e{i}^2);
+		  % correct angle for eccentricity
+			im = iModels==i;
+	    Ts(im) = 180/pi*atan2(Sy(im),Sx(im)*sqrt(1-e{i}^2));
+		  if 0
+		    plot(To(im),pi/180*Ts(im),'o')
+		    fprintf(1,'press a key to continue...\n'); pause
+		  end
+	  end
+if 0,
+	for i=1:ms,
+	  plot([0,Sx(i)],[0,Sy(i)],'-x',...
+         [0,R(i)*cosd(To(i))],[0,R(i)*sind(To(i))],'-o',...
+		     [0,R(i)*cosd(Ts(i))],[0,R(i)*sind(Ts(i))],'-x',...
+				 [0,a{iModels(i)}*cosd(Ts(i))],[0,b{iModels(i)}*sind(Ts(i))],'-o');
+		axis square
+		legend({'1','2','3','4'})
+		fprintf(1,'press a key to continue...\n'); pause
+	end
+end
+if 0
+	fit.model{1}(XY,[fit.p0(:); To(:)*pi/180]);
+	figure
+	fit.model{1}(XY,[fit.p0(:); To(:)*pi/180]);
+	disp('ModelFun')
+	fprintf(1,'press a key to continue...\n'); pause
+end
+  pause(p);
+end
+
+% column vector of initial parameters, angles are in radians
+p0 = [fit.p0(:); Ts(:)*pi/180];
 
 % model function
 modelFun = fit.model{1};
@@ -75,15 +125,15 @@ modelJac = fit.model{2};
 % leasqr control parameters
 stol     = fit.stol;
 niter    = fit.niter;
-dp       = [fit.dp(:); ones(m,1)] ;
-fracprec = [fit.fracprec; zeros(m,1)];
-fracchg  = [fit.fracchg; Inf*ones(m,1)];
+dp       = [fit.dp(:); ones(ms,1)] ;
+fracprec = [fit.fracprec; zeros(ms,1)];
+fracchg  = [fit.fracchg; Inf*ones(ms,1)];
 options  = [fracprec, fracchg];
 
 verbose  = fit.verbose;
 
 [f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss] = ...
-  leasqr(XY, XY, p0, modelFun, stol, niter, W, dp, modelJac, options);
+  leasqr(XY, XY, p0, modelFun, stol, niter, Ws, dp, modelJac, options);
 
 % degrees of freedom
 nu = length(f) - length(p(dp==1));
@@ -95,9 +145,9 @@ sd = sqrt(diag(covp));
 psd(dp==1) = sd;
 
 % embed data in fit structure
-fit.t = T;
-fit.r = R;
-fit.w = W;
+fit.t = Ts;
+fit.r = Rs;
+fit.w = Ws;
 
 % embed fit results in fit structure
 fit.status = kvg;      % = 1 if convergence, = 0 otherwise
@@ -115,11 +165,18 @@ fit.nu     = nu;       % degrees of freedom
 fit.chi2   = chi2;     % reduced chi2 statistic
 
 fprintf(1,'status %d iter %d r2 %.2f chi2 %f\n', kvg, iter, r2, chi2);
-if length(fit.p0) == 5,
+
+switch length(fit.p0),
+
+  case 3,
+    fprintf(1,'params Xc(%8.1f,%8.1f) R=%8.1f\n', p(1:3));
+    fprintf(1,'stdev  Xc(%8.1f,%8.1f) R=%8.1f\n', psd(1:3))
+
+	case 5,
   % eccentricity parametrisation
   if strcmp(func2str(fit.model{1}),'ellipse3'),
-    fprintf(1,'params estimated     Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f tilt=%8.4f\n', p(1:5));
-    fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f tilt=%8.4f\n', psd(1:5))
+    fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n', p(1:5));
+    fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n', psd(1:5))
     a = p(3);
     e = p(4);
     p(4) = a * sqrt(1-e^2);
@@ -134,42 +191,68 @@ if length(fit.p0) == 5,
     fit.p = p;
     fit.psd = psd;
   end
-  fprintf(1,'params estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', p(1:5));
-  fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f tilt=%8.4f\n', psd(1:5))
-elseif length(fit.p0) == 3,
-  fprintf(1,'params estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', p(1:3));
-  fprintf(1,'stdev  estimated     Xc(%8.1f,%8.1f) R=%8.1f\n', psd(1:3))
+  fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.4f\n', p(1:5));
+  fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.4f\n', psd(1:5))
+
+  case 8,
+  fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n', p(1:5));
+	fprintf(1,'                             a=%8.1f e=%8.4f t=%8.4f\n', p(6:8));
+  fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n',psd(1:5));
+	fprintf(1,'                             a=%8.1f e=%8.4f t=%8.4f\n',psd(6:8));
+    a = p(3);
+    e = p(4);
+    p(4) = a * sqrt(1-e^2);
+    da = psd(3);
+    de = psd(4);
+    psd(4) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
+    a = p(6);
+    e = p(7);
+    p(7) = a * sqrt(1-e^2);
+    da = psd(6);
+    de = psd(7);
+    psd(7) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
+		if 0
+    fit.p = p;
+    fit.psd = psd;
+		end
+  fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f b=%8.4f t=%8.4f\n', p(1:5));
+	fprintf(1,'                             a=%8.1f b=%8.4f t=%8.4f\n',p(6:8));
+  fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f b=%8.4f t=%8.4f\n',psd(1:5));
+	fprintf(1,'                             a=%8.1f b=%8.4f t=%8.4f\n',psd(6:8));
 end
 
+% fitted angles
 phis = p(length(fit.p0)+1:end);
-fprintf(1,'                     phi mean, min, max     %8.4f %8.4f %8.4f\n', ...
+fprintf(1,' phi mean, min, max       =%8.4f, %8.4f, %8.4f\n', ...
         mean(phis), min(phis), max(phis) );
+% and errors on fitted angles
 phis = psd(length(fit.p0)+1:end);
-fprintf(1,'                    dphi mean, min, max     %8.4f %8.4f %8.4f\n', ...
+fprintf(1,'dphi mean, min, max       =%8.4f, %8.4f, %8.4f\n', ...
         mean(phis), min(phis), max(phis) );
 
 
+ix = 1:ms; iy = ms+1:ms+ms;
 if length(fit.p0)==3,
   % compute r
   xy = circle2(XY,fit.p);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	r = sqrt(x.^2+y.^2);
 	% compute distance to seed
 	d2seed = sqrt((x-Sx).^2+(y-Sy).^2);
 	% compute dr
-	xy = circle2(XY,fit.p-[0;0;fit.psd(3);zeros(m,1)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	xy = circle2(XY,fit.p-[0;0;fit.psd(3);zeros(ms,1)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	rm = sqrt(x.^2+y.^2);
-	xy = circle2(XY,fit.p+[0;0;fit.psd(3);zeros(m,1)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	xy = circle2(XY,fit.p+[0;0;fit.psd(3);zeros(ms,1)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	rM = sqrt(x.^2+y.^2);
 	dr = rM-rm;
 	% compute dtheta
 	xy = circle2(XY,fit.p-[zeros(3,1);fit.psd(4:end)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	tm = atan2(y,x);
 	xy = circle2(XY,fit.p+[zeros(3,1);fit.psd(4:end)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	tM = atan2(y,x);
 	dt = tM-tm;
 	% fix the angles that might be wrongly interpreted
@@ -179,24 +262,50 @@ if length(fit.p0)==3,
 elseif length(fit.p0)==5,
   % compute r
   xy = ellipse2(XY,fit.p);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	r = sqrt(x.^2+y.^2);
 	% compute distance to seed
 	d2seed = sqrt((x-Sx).^2+(y-Sy).^2);
 	% compute dr
-	xy = ellipse2(XY,fit.p-[0;0;fit.psd(3:4);0;zeros(m,1)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	xy = ellipse2(XY,fit.p-[0;0;fit.psd(3:4);0;zeros(ms,1)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	rm = sqrt(x.^2+y.^2);
-	xy = ellipse2(XY,fit.p+[0;0;fit.psd(3:4);0;zeros(m,1)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	xy = ellipse2(XY,fit.p+[0;0;fit.psd(3:4);0;zeros(ms,1)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	rM = sqrt(x.^2+y.^2);
 	dr = rM-rm;
 	% compute dtheta
 	xy = ellipse2(XY,fit.p-[zeros(5,1);fit.psd(6:end)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	tm = atan2(y,x);
 	xy = ellipse2(XY,fit.p+[zeros(5,1);fit.psd(6:end)]);
-	x = xy(1:m)-fit.p(1); y = xy(m+1:m+m)-fit.p(2);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
+	tM = atan2(y,x);
+	dt = tM-tm;
+	% fix the angles that might be wrongly interpreted
+	dt(dt<0) = dt(dt<0)+2*pi;
+	% compute infinitesimal volume rdrdtheta
+  dS = r.*dr.*dt;
+elseif length(fit.p0)==8,
+  xy = ellipse4(XY,fit.p);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
+	r = sqrt(x.^2+y.^2);
+	% compute distance to seed
+	d2seed = sqrt((x-Sx).^2+(y-Sy).^2);
+	% compute dr
+	xy = ellipse4(XY,fit.p-[0;0;fit.psd(3:4);0;fit.psd(6:7);0;zeros(ms,1)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
+	rm = sqrt(x.^2+y.^2);
+	xy = ellipse4(XY,fit.p+[0;0;fit.psd(3:4);0;fit.psd(6:7);0;zeros(ms,1)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
+	rM = sqrt(x.^2+y.^2);
+	dr = rM-rm;
+	% compute dtheta
+	xy = ellipse4(XY,fit.p-[zeros(8,1);real(fit.psd(9:end))]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
+	tm = atan2(y,x);
+	xy = ellipse4(XY,fit.p+[zeros(8,1);fit.psd(9:end)]);
+	x = xy(ix)-fit.p(1); y = xy(iy)-fit.p(2);
 	tM = atan2(y,x);
 	dt = tM-tm;
 	% fix the angles that might be wrongly interpreted
