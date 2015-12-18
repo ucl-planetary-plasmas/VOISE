@@ -2,7 +2,7 @@ function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
 % function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
 
 %
-% $Id: ltc.m,v 1.5 2015/09/27 19:11:21 patrick Exp $
+% $Id: ltc.m,v 1.6 2015/12/18 15:18:11 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -20,8 +20,7 @@ function [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc]=ltc(r,e,obs,sun)
 % Public License for more details.
 %
 
-theta = linspace(0,2*pi,5000);
-
+theta = linspace(0,2*pi,361);
 
 % deg into rad
 olat = obs.lat*pi/180;
@@ -29,9 +28,10 @@ olon = obs.lon*pi/180;
 slat = sun.lat*pi/180;
 slon = sun.lon*pi/180;
 
+% phase angle
 dlon = slon-olon;
 
-% planet 
+% planet
 xp = r*cos(theta);
 yp = r*sqrt(1-e^2)*sin(theta);
 
@@ -39,7 +39,7 @@ yp = r*sqrt(1-e^2)*sin(theta);
 xl = r*cos(theta);
 yl = r*sqrt(1-e^2*cos(olat)^2)*sin(theta);
 
-% cos and sin of latitude of normal to limb (Eq. 10 in planet proj)
+% cos and sin of latitude of normal to limb (Eqs. 10-11 in planet proj)
 csnllat = (1-e^2)*cos(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 snnllat = sin(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
 
@@ -80,14 +80,18 @@ yjs = [0 A(2,2)];
 xt = A(1,1)*xt0+A(1,2)*yt0;
 yt = A(2,1)*xt0+A(2,2)*yt0;
 
-% cusp points 
-u = (1-e^2)*cos(slat)*cos(dlon)*sin(olat)-sin(slat)*cos(olat);
-v = (1-e^2)*cos(slat)*sin(dlon);
+% cusp points Eq. 62
+%u = (1-e^2)*cos(slat)*cos(dlon)*sin(olat)-sin(slat)*cos(olat);
+%v = (1-e^2)*cos(slat)*sin(dlon);
+u = cos(slat)*cos(dlon)*sin(olat)-sin(slat)*cos(olat);
+v = cos(slat)*sin(dlon);
 
+% Eq. 63
 t1 = sqrt(r^2*(1-e^2*cos(olat)^2)/(u^2*(1-e^2*cos(olat)^2)+v^2));
 xc = u*[t1;-t1];
 yc = v*[t1;-t1];
 
+% 
 e_betasun = e_beta(e,slat);
 t2 = sqrt(r^2*(1-e_betasun^2)*(a*d-b*c)^2/((d*v+b*u)^2*(1-e_betasun^2)+(c*v+a*u)^2));
 
@@ -108,7 +112,7 @@ yt = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
 DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
 
 plot(theta,DL,theta,DT);
-xlabel('theta'), legend('DL','DT')
+xlabel('\theta'), legend('DL','DT')
 pause
 
 t=pi/2;
@@ -167,10 +171,11 @@ title(sprintf('\\beta_{obs}=%.1f \\beta_{sun}=%.1f \\Delta\\lambda=%.1f',...
       olat*180/pi, slat*180/pi, dlon*180/pi));
 end
 
+% eccentricity of the limb in its own plane
 function e = e_beta(e,beta)
 % Eq 16 in planetproj.tex note 
 e = e*sqrt(1-sin(beta)^2/(1-e^2*cos(beta)^2));
 
-function e = eL(e,beta)
 % eccentricity of projection in sky with latitude angle beta
+function e = eL(e,beta)
 e = e*cos(beta);

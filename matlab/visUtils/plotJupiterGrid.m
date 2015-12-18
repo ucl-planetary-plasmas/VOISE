@@ -2,7 +2,7 @@ function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 % function plotJupiterGrid(params, p, epoch, CML, PIXSIZE)
 
 %
-% $Id: plotJupiterGrid.m,v 1.17 2015/09/15 18:30:34 patrick Exp $
+% $Id: plotJupiterGrid.m,v 1.18 2015/12/18 15:18:50 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -30,7 +30,7 @@ dlon = 20;
 % Pixel coordinates for planet centre
 PCX = p(1); 
 PCY = p(2);
-fprintf(1,'Planet center %8.2f, %8.2f [pixels]\n', PCX,PCY);
+fprintf(1,'Planet centre %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
 % calculation of the subEarth and subSolar latitudes and longitudes
 [sslat,sslon,selat,selon,sedistAU,AU_km] = computeJupiterAxis(epoch);

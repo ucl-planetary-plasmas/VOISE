@@ -2,7 +2,7 @@ function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
 % function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
 
 %
-% $Id: plotPlanetGrid.m,v 1.4 2015/09/27 19:13:52 patrick Exp $
+% $Id: plotPlanetGrid.m,v 1.5 2015/12/18 15:19:35 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -30,12 +30,19 @@ dlon = 20/2;
 % Pixel coordinates for planet centre
 PCX = pc(1); 
 PCY = pc(2);
-fprintf(1,'Planet center %8.2f, %8.2f [pixels]\n', PCX,PCY);
+fprintf(1,'Planet centre %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
 % calculation of the subEarth and subSolar latitudes and longitudes
 [ss,se] = computePlanetAxis(planet,epoch);
-se.CML = CML;
-se.psi = psi;
+if exist('CML','var') && ~isempty(CML),
+  se.CML = CML;
+end
+if exist('psi','var') && ~isempty(psi),
+  se.psi = psi;
+end
+if ~exist('orientat','var') || isempty(orientat),
+  orientat = se.psi;
+end
 
 % conversion factor
 d2r = cspice_rpd;
@@ -199,9 +206,9 @@ y2 = km2asec*ysky;
 z2 = km2asec*zsky;
 end
 % rotation of sky plane
-x2,y2,z2
+%x2,y2,z2
 [xsky,ysky] = Rotate(alpha,x2,y2);
-xsky,ysky
+%xsky,ysky
 plot(xsky(1),ysky(1),'kx','Markersize',5)
 plot(xsky(2),ysky(2),'ko','Markersize',5)
 pause
@@ -343,14 +350,19 @@ end
 if 1,
 f=figure;
 r = semiMaj_km*km2asec;
+fprintf(1,'*** calling ltc\n'),
 [xll,yll,xld,yld,xtl,ytl,xtd,ytd,xc,yc] = ltc(r,ecc,se,ss);
-fprintf(1,'cusp points x=%f,%f, y=%f,%f\n',xc',yc');
+fprintf(1,'*** cusp points x=%f,%f, y=%f,%f\n',xc',yc');
 close(f);
 f=figure;
+fprintf(1,'*** calling getLTC\n'),
 [ll,ld,tl,td,cusp]=getLTC(r,ecc,se,ss);
-fprintf(1,'cusp points x=%f,%f, y=%f,%f\n',cusp{1},cusp{2});
-plot(xll,yll,ll{1},ll{2}); pause
+fprintf(1,'*** cusp points x=%f,%f, y=%f,%f\n',cusp{1},cusp{2});
 close(f);
+f=figure;
+subplot(211), plot(xll,yll,xld,yld); pause
+subplot(212), plot(ll{1},ll{2},ld{1},ld{2}); pause
+axis square
 
 % rotation
 [xc,yc] = Rotate(alpha,cusp{1},cusp{2});

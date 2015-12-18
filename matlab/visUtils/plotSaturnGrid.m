@@ -2,7 +2,7 @@ function plotSaturnGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 % function plotSaturnGrid(params, p, epoch, CML, psi, orientat, PIXSIZE)
 
 %
-% $Id: plotSaturnGrid.m,v 1.3 2015/09/15 18:30:34 patrick Exp $
+% $Id: plotSaturnGrid.m,v 1.4 2015/12/18 15:18:50 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -30,7 +30,7 @@ dlon = 20;
 % Pixel coordinates for planet centre
 PCX = p(1); 
 PCY = p(2);
-fprintf(1,'Planet center %8.2f, %8.2f [pixels]\n', PCX,PCY);
+fprintf(1,'Planet centre %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
 % calculation of the subEarth and subSolar latitudes and longitudes
 [sslat,sslon,selat,selon,CML,psi,sedistAU,AU_km] = computeSaturnAxis(epoch);
