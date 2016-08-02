@@ -4,7 +4,7 @@ function moonphase(epoch)
 % epoch: string in format 'yyyy mm dd HH MM SS'
 
 %
-% $Id: moonphase.m,v 1.1 2015/12/18 15:25:27 patrick Exp $
+% $Id: moonphase.m,v 1.2 2016/08/02 16:40:30 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -26,7 +26,7 @@ pc = [0,0];
 PIXSIZE = 0.5;
 
 if ~exist('epoch', 'var') || isempty(epoch),
-  epoch = datestr(now,'yyyy mm dd HH MM SS')
+  epoch = datestr(now,'yyyy mm dd HH MM SS');
 end
 
 if 0
