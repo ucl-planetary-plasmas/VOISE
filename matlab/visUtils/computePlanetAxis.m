@@ -1,7 +1,20 @@
 function [ss,se]=computePlanetAxis(planet,epoch)
 % function [ss,se]=computePlanetAxis(planet,epoch)
+% 
+% compute sub-solar (ss) and sub-Earth (se) points parameters for 
+% a given planet (or Moon) and epoch
+% 
+% ss.rad, se.rad       : distance in km
+% ss.lon, se.lon       : longitude in deg
+% ss.lat, ss.lat       : latitude in deg
+% ss.trgepc, se.trgepc :
+% ss.distkm, se.distkm
+% ss.distAU, se.distAU
+% se.CML
+% se.psi
+
 %
-% $Id: computePlanetAxis.m,v 1.13 2015/09/27 19:09:54 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.14 2016/08/02 16:40:12 patrick Exp $
 %
 % Copyright (c) 20012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -63,8 +76,16 @@ f = (radii(1)-radii(3))/radii(1);
 % convert UTC to ephemeris time 
 et = cspice_str2et(epoch);
 
+if 0,
+% get pic format used
+[pic, ok, xerror] = cspice_tpictr(epoch);
+% print epoch with this format
+fprintf(1,'Epoch %s\n', cspice_timout(et, pic));
+end
+
 % Sub-solar point calculations
 fprintf(1,'Sub-Solar Point\n');
+fprintf(1,'---------------\n');
 
 % Get position of the Sun with respect to planet 
 target = 'SUN'; 
@@ -75,23 +96,32 @@ target = 'SUN';
 obsrvr = PLANET;
 [state,ltime] = cspice_spkezr(target,et,fixref,abcorr,obsrvr); 
 % converts rectangular coordinates to latitudinal coordinates
+% lon increasing dir from +X axis towards +Y axis, rad units in range [-pi, pi]
+% lat rad units in range [-pi/2, pi/2]
 ssposn = state(1:3);
-% converts rectangular coordinates to latitudinal coordinates.
 [ssrad,sslon,sslat] = cspice_reclat(ssposn);
-fprintf(1,'ss   %9.f lat %+9.4f lon %+9.4f\n',ssrad,[sslat,c2grlon(sslon)]*r2d);
+fprintf(1,'ssc  %10.f lat %+9.4f lon %+9.4f\n',ssrad,[sslat,sslon]*r2d);
 if 0,
 ssrd1 = norm(ssposn);
 ssln1 = atan2(ssposn(2), ssposn(1))*r2d;
-% Get longitude in [0,360] instead of [-180,180]
-ssln1 = wrap360(ssln1);
 sslt1 = 90 - acos(ssposn(3)/ssrd1)*r2d;
-fprintf(1,'ss1  %9.f lat %+9.4f lon %+9.4f\n',ssrd1,[sslt1,c2gdlon(ssln1)]);
-fprintf(1,'diff %+9.2g     %+9.2g     %+9.2g\n',...
+fprintf(1,'ssc1 %10.f lat %+9.4f lon %+9.4f\n',ssrd1,[sslt1,ssln1]);
+fprintf(1,'diff %+10.2g     %+9.2g     %+9.2g\n',...
         ssrad-ssrd1,sslat*r2d-sslt1,sslon*r2d-ssln1)
 end
 % converts rectangular coordinates to planetographic coordinates
+% for bodies with prograde (aka direct) rotation lon increasing dir 
+% positive west (from +X axis towards -Y axis)
+% for bodies with retrograde rotation lon increasing dir
+% positive east (from +X axis towards +Y axis)
+% The earth, moon, and sun are exceptions: planetographic 
+% longitude is measured positive east for these bodies.
+% lon increasing dir from +X axis towards +Y axis, rad units in range [-pi, pi]
+% lat rad units in range [-pi/2, pi/2]
+% for point not on the reference spheroid, lat is that of the closest point
+% on the spheroid
 [lon,lat,alt] = cspice_recpgr(PLANET,ssposn,re,f);
-fprintf(1,'alt  %9.f lat %+9.4f lon %+9.4f\n',alt,[lat,lon]*r2d);
+fprintf(1,'ssg  %10.f lat %+9.4f lon %+9.4f\n',alt,[lat,lon]*r2d);
 
 % Compute sub-solar point with spice function
 target = PLANET;
@@ -109,14 +139,17 @@ obsrvr = 'EARTH';
 % and to planetographic longitude, latitude and altitude
 [supgln,supglt,supgal] = cspice_recpgr(target,sunpos,re,f);
 
-fprintf(1,'spc  %9.f lat %+9.4f lon %+9.4f\n',spcrad,[spclat,c2grlon(spclon)]*r2d);
-fprintf(1,'spg  %9.f lat %+9.4f lon %+9.4f\n',spgalt,[spglat,spglon]*r2d);
-fprintf(1,'supc %9.f lat %+9.4f lon %+9.4f\n',supcrd,[supclt,c2grlon(supcln)]*r2d);
-fprintf(1,'supg %9.f lat %+9.4f lon %+9.4f\n',supgal,[supglt,supgln]*r2d);
+fprintf(1,'spc  %10.f lat %+9.4f lon %+9.4f\n',spcrad,[spclat,spclon]*r2d);
+fprintf(1,'spg  %10.f lat %+9.4f lon %+9.4f\n',spgalt,[spglat,spglon]*r2d);
+fprintf(1,'supc %10.f lat %+9.4f lon %+9.4f\n',supcrd,[supclt,supcln]*r2d);
+fprintf(1,'supg %10.f lat %+9.4f lon %+9.4f\n',supgal,[supglt,supgln]*r2d);
+fprintf(1,'---------------\n');
 
+% Return Sun position to the planet
+%[ss.rad,ss.lon,ss.lat] = deal(ssrad,sslon*r2d,sslat*r2d); %ss
 % Return sub-solar point parameters
-[ss.rad,ss.lon,ss.lat] = deal(ssrad,sslon*r2d,sslat*r2d); 
-[ss.rad,ss.lon,ss.lat] = deal(spcrad,c2grlon(spclon)*r2d,spclat*r2d); 
+[ss.rad,ss.lon,ss.lat] = deal(spcrad,spclon*r2d,spclat*r2d); %ss
+%[ss.rad,ss.lon,ss.lat] = deal(supcrd,supclt*r2d,supcln*r2d); %ss
 ss.trgepc = trgepc;
 
 % Planet-Sun in AU
@@ -125,21 +158,22 @@ ss.distAU = cspice_convrt(ss.distkm,'KM','AU');
 
 % and Sub-Earth Point
 fprintf(1,'Sub-Earth Point\n');
+fprintf(1,'---------------\n');
 % Get position of Earth with respect to planet 
 target   = 'EARTH';
 obsrvr   = PLANET;
 [state,ltime] = cspice_spkezr(target,et,fixref,abcorr,obsrvr);
 seposn = state(1:3);
 [serad,selon,selat] = cspice_reclat(seposn);
-fprintf(1,'se   %9.f lat %+9.4f lon %+9.4f\n',serad,[selat,selon]*r2d);
+fprintf(1,'sec  %10.f lat %+9.4f lon %+9.4f\n',serad,[selat,selon]*r2d);
 if 0,
 serd1  = norm(seposn);
 seln1  = atan2(seposn(2), seposn(1))*r2d;
 % Get longitude in [0,360] instead of [-180,180]
-seln1  = wrap360(seln1);
+%seln1  = wrap360(seln1);
 selt1   = 90 - acos(seposn(3)/serd1)*r2d;
-fprintf(1,'se1  %9.f lat %+9.4f lon %+9.4f\n',serd1,[selt1,seln1]);
-fprintf(1,'diff %+9.2g     %+9.2g     %+9.2g\n',...
+fprintf(1,'sec1 %10.f lat %+9.4f lon %+9.4f\n',serd1,[selt1,seln1]);
+fprintf(1,'diff %+10.2g     %+9.2g     %+9.2g\n',...
         serad-serd1,selat*r2d-selt1,selon*r2d-seln1)
 end
 
@@ -164,10 +198,12 @@ obspos = spoint - srfvec;
 % and to planetographic longitude, latitude and altitude
 [opglon,opglat,opgalt] = cspice_recpgr(target,obspos,re,f);
 
-fprintf(1,'spc  %9.f lat %+9.4f lon %+9.4f\n',spcrad,[spclat,c2grlon(spclon)]*r2d);
-fprintf(1,'spg  %9.f lat %+9.4f lon %+9.4f\n',spgalt,[spglat,spglon]*r2d);
-fprintf(1,'opc  %9.f lat %+9.4f lon %+9.4f\n',opcrad,[opclat,c2grlon(opclon)]*r2d);
-fprintf(1,'opg  %9.f lat %+9.4f lon %+9.4f\n',opgalt,[opglat,opglon]*r2d);
+fprintf(1,'spc  %10.f lat %+9.4f lon %+9.4f\n',spcrad,[spclat,spclon]*r2d);
+fprintf(1,'spg  %10.f lat %+9.4f lon %+9.4f\n',spgalt,[spglat,spglon]*r2d);
+fprintf(1,'opc  %10.f lat %+9.4f lon %+9.4f\n',opcrad,[opclat,opclon]*r2d);
+fprintf(1,'opg  %10.f lat %+9.4f lon %+9.4f\n',opgalt,[opglat,opglon]*r2d);
+
+fprintf(1,'---------------\n');
 
 % Return sub-Earth point parameters
 [se.rad,se.lon,se.lat] = deal(serad,selon*r2d,selat*r2d); 
@@ -192,9 +228,17 @@ rotate = cspice_pxfrm2('J2000',IAU_PLANET,et-ltime,et);
 sysIIIstate = rotate*state(1:3);
 [~,CML1,~] = cspice_reclat(sysIIIstate(1:3));
 fprintf(1,'CML(III)                 = %+9.4f deg\n', CML1*r2d);
+[CML2,~,~] = cspice_recpgr(PLANET,sysIIIstate(1:3),re,f);
+fprintf(1,'CML(III)                 = %+9.4f deg\n', CML2*r2d);
 end
-CML = c2grlon(opclon);
-fprintf(1,'CML(III)                 = %+9.4f deg\n', CML*r2d);
+
+% geocentric
+CML = opclon;
+fprintf(1,'CML(III)c                = %+9.4f deg\n', CML*r2d);
+% geographic
+CML = opglon;
+fprintf(1,'CML(III)g                = %+9.4f deg\n', CML*r2d);
+
 
 % Return CML
 se.CML = CML*r2d;
@@ -298,17 +342,25 @@ fprintf(1,'Earth-%s distance%s= %9.4f AU (%.0f km)\n',...
 %  particularly in MATLAB due to data persistence.
 cspice_kclear
 
-% Get longitude in [0,360] instead of [-180,180]
+% Get longitude in range [0,360] instead of [-180,180]
 function lon = wrap360(lon)
 lon  = mod(lon, 360);
+%while lon > 180, lon = lon - 360; end
+%while lon < 0, lon = lon + 360; end
 
 % Convert planetocentric to planetographic longitude in rad
+% i.e. from [-pi,pi] to [0,2*pi]
 function lon = c2grlon(lon)
-lon = mod(2*pi - lon, 2*pi);
+% lon = mod(2*pi - lon, 2*pi);
+d = lon < 0;
+lon(d) = mod(2*pi + lon(d), 2*pi);
 
 % Convert planetocentric to planetographic longitude in deg
+% i.e. from [-180,180] to [0,360]
 function lon = c2gdlon(lon)
-lon = mod(360 - lon, 360);
+% lon = mod(360 - lon, 360);
+d = lon < 0;
+lon(d) = mod(360 + lon(d), 360);
 
 % Compute unit vector of 
 % the projection of x onto the plane defined by its normal vector np
