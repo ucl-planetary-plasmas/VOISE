@@ -11,7 +11,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.23 2015/02/13 12:35:46 patrick Exp $
+% $Id: VOISE.m,v 1.24 2016/09/16 16:01:23 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -54,12 +54,12 @@ t = cputime;
 
 printVOISEsetup(params);
 
-% plot image
-params = plotVOISE([], params, -1);
-
 if params.movDiag, % init movie
   movieHandler(params, 'init');
 end
+
+% plot image
+params = plotVOISE([], params, -1);
 
 [nr, nc] = size(params.W);
 ns       = params.iNumSeeds;
