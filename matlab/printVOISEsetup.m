@@ -2,7 +2,7 @@ function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
 %
-% $Id: printVOISEsetup.m,v 1.10 2015/02/13 14:50:34 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.11 2016/09/16 15:58:13 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -56,7 +56,9 @@ else
 	else nsy = params.iNumSeeds(2); end
   fprintf(1,'   Seeds number       = %d (%d x %d)\n', nsx*nsy, nsx, nsy);
 end
+if ~isempty(params.pcClipping),
 fprintf(1,'   Seeds clipping     = [%.1f,%.1f,%.1f,%.1f]\n', params.pcClipping);
+end
 fprintf(1,'   Seeding function   = %s\n\n', func2str(params.initSeeds));
 
 
