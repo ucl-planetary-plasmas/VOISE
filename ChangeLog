@@ -1,3 +1,18 @@
+2016-09-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/VOISE.m (1.24):
+	  Move movie initialisation prior to first plotVOISE call.
+
+2016-09-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/printVOISEsetup.m (1.11):
+	  Protect printing of params.pcClipping.
+
+2016-09-16  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/movieHandler.m (1.4):
+	  Added support for VideoWriter as avifile is deprecated.
+
 2015-12-04  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/dellipse2.m (1.5), matlab/limbFit/dellipse3.m
