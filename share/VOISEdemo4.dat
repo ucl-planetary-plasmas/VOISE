@@ -2,7 +2,7 @@
 #
 # without preprocessing
 #
-# $Id: VOISEdemo4.dat,v 1.1 2015/02/13 14:43:46 patrick Exp $
+# $Id: VOISEdemo4.dat,v 1.2 2016/10/28 15:13:46 patrick Exp $
 #
 # Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 # All Rights Reserved.
@@ -35,7 +35,7 @@ thresHoldLength = 0.3
 regMaxIter = 2
 # I/O parameters
 iFile = ../share/input/STIS_orbit_17.fits
-oDir = ../share/output/stis17/
+oDir = ../share/output/demo4/
 # Image parameters
 imageOrigo = [0, 0]
 pixelSize  = [1, 1]
