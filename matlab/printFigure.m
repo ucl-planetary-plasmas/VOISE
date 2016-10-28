@@ -2,7 +2,7 @@ function printFigure(hf,filename)
 % function printFigure(hf,filename)
 
 %
-% $Id: printFigure.m,v 1.5 2012/04/16 16:54:27 patrick Exp $
+% $Id: printFigure.m,v 1.6 2016/10/28 15:12:12 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -23,7 +23,9 @@ function printFigure(hf,filename)
 if exist('exportfig','file') == 2 & ...
    ~strcmp(get(gcf,'XDisplay'),'nodisplay'), 
 
-  exportfig(hf, filename, 'color', 'cmyk', 'boundscode','mcode','LockAxes',0);
+  %opts = struct('color', 'cmyk', 'boundscode','mcode','LockAxes',0);
+  opts = struct('color','cmyk','bounds','tight','LockAxes',1);
+  exportfig(hf, filename, opts);
 
 else
 
