@@ -39,4 +39,4 @@ MATLAB Compiler
     If you have MATLAB installed in /mathworks/devel/application/matlab, 
     run the shell script as:
     
-       ./run_gVOISE.sh /mathworks/devel/application/matlab -MCRInstaller.zip VOISEdemo3.dat
+       ./run_gVOISE.sh /mathworks/devel/application/matlab ../share/VOISEdemo3.dat
