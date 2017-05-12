@@ -2,7 +2,7 @@ function [planet] = setUpSpice4Planet(HST)
 % function [planet] = setUpSpice4Planet(HST)
 
 %
-% $Id: setUpSpice4Planet.m,v 1.4 2017/05/12 15:40:35 patrick Exp $
+% $Id: setUpSpice4Planet.m,v 1.5 2017/05/12 15:48:16 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -30,6 +30,11 @@ elseif ~isempty(isSat) & isSat,
 else
   planet.name = lower(HST.TARGNAME);
 end
+
+verbose = 1;
+loadPlanetSpiceKernels(planet.name,verbose);
+
+return
 
 % generic kernel path
 spiceKernelsPath = getSpiceGenericKernelsPath();
