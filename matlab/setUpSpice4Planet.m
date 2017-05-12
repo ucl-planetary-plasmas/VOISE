@@ -2,7 +2,7 @@ function [planet] = setUpSpice4Planet(HST)
 % function [planet] = setUpSpice4Planet(HST)
 
 %
-% $Id: setUpSpice4Planet.m,v 1.3 2015/08/11 16:03:13 patrick Exp $
+% $Id: setUpSpice4Planet.m,v 1.4 2017/05/12 15:40:35 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -36,7 +36,7 @@ spiceKernelsPath = getSpiceGenericKernelsPath();
 
 % Load a leapseconds kernel.
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/
-cspice_furnsh([spiceKernelsPath 'naif0011.tls']);
+cspice_furnsh([spiceKernelsPath 'naif0012.tls']);
 
 % Load planetary ephemeris 
 % ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
