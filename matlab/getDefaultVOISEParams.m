@@ -98,7 +98,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.17 2015/03/13 09:39:28 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.18 2017/05/12 16:04:43 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -128,6 +128,8 @@ params.ylim            = [];
 params.imageOrigo      = [0, 0];
 params.pixelSize       = [1, 1];
 params.pixelUnit       = {'pixels','pixels'};
+% get HST planet params
+params.HSTPlanetParam  = false;
 % colormap
 params.colormap        = jet;
 

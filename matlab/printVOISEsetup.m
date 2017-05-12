@@ -2,7 +2,7 @@ function printVOISEsetup(params)
 % function printVOISEsetup(params)
 
 %
-% $Id: printVOISEsetup.m,v 1.11 2016/09/16 15:58:13 patrick Exp $
+% $Id: printVOISEsetup.m,v 1.12 2017/05/12 16:04:43 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -44,6 +44,8 @@ fprintf(1,'   ylim               = %g %s, %g %s\n', ...
         params.ylim(1), params.pixelUnit{2}, ... 
         params.ylim(2), params.pixelUnit{2});
 fprintf(1,'   Wlim               = %g, %g\n\n', params.Wlim);
+
+fprintf(1,'   HSTPlanetParam     = %d\n\n', params.HSTPlanetParam);
 
 fprintf(1,' * Seeding parameters\n');
 fprintf(1,'   ---------------\n\n');
