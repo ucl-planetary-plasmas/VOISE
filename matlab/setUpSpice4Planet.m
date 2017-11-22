@@ -2,7 +2,7 @@ function [planet] = setUpSpice4Planet(HST)
 % function [planet] = setUpSpice4Planet(HST)
 
 %
-% $Id: setUpSpice4Planet.m,v 1.5 2017/05/12 15:48:16 patrick Exp $
+% $Id: setUpSpice4Planet.m,v 1.6 2017/11/22 16:28:07 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -20,8 +20,8 @@ function [planet] = setUpSpice4Planet(HST)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-isJup = strfind(HST.TARGNAME, 'JUP');
-isSat = strfind(HST.TARGNAME, 'SAT');
+isJup = regexp(HST.TARGNAME, 'JUP|PJ..-V..');
+isSat = regexp(HST.TARGNAME, 'SAT');
 
 if ~isempty(isJup) & isJup,
   planet.name = 'jupiter';
