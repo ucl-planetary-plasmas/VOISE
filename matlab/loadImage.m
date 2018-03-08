@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.19 2017/05/12 16:04:43 patrick Exp $
+% $Id: loadImage.m,v 1.20 2018/03/08 15:49:39 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -186,7 +186,7 @@ end
 	end
 
   % apply misc. filtering if required
-	params = preProcessImage(params);
+	params = preprocessImage(params);
 
   % set colour and axes limits
   if isempty(params.Wlim),

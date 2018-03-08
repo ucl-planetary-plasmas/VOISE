@@ -1,8 +1,8 @@
-function params = preProcessImage(params)
-% function params = preProcessImage(params)
+function params = preprocessImage(params)
+% function params = preprocessImage(params)
 
 %
-% $Id: preprocessImage.m,v 1.2 2018/03/08 15:42:48 patrick Exp $
+% $Id: preprocessImage.m,v 1.3 2018/03/08 15:49:39 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
