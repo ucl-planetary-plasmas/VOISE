@@ -2,7 +2,7 @@ function params = preProcessImage(params)
 % function params = preProcessImage(params)
 
 %
-% $Id: preprocessImage.m,v 1.1 2015/02/08 19:34:02 patrick Exp $
+% $Id: preprocessImage.m,v 1.2 2018/03/08 15:42:48 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -37,7 +37,7 @@ end
 
 
 if ~isempty(params.histEqBin),
-  fprintf(1,'histEq(image, %d)\n', histEqBin);
+  fprintf(1,'histEq(image, %d)\n', params.histEqBin);
   [params.W, xbins, cdf] = histEq(params.W, params.histEqBin);
 end
 
