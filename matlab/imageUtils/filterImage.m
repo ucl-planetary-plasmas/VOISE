@@ -21,7 +21,7 @@ function Y = filterImage(X,winSize,op)
 
 
 %
-% $Id: filterImage.m,v 1.4 2015/03/13 15:51:44 patrick Exp $
+% $Id: filterImage.m,v 1.5 2018/03/08 15:40:07 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -93,6 +93,14 @@ if ~isempty(op), % filter with a given function
 		      Y(i,j) = op(Xwin(:));
 	      end
       end
+
+		case {'wiener2'},
+
+		  Y = wiener2(X,winSize);
+
+		case {'medfilt2'},
+
+		  Y = medfilt2(X,winSize,'symmetric');
 
     otherwise,
 
