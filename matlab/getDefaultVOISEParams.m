@@ -24,6 +24,10 @@ function params = getDefaultVOISEParams()
 %   imageOrigo     : image origo (in pixel unit)             ([0,0])
 %   pixelSize      : pixel size along (x,y)                  ([1,1])
 %   pixelUnit      : units for pixel size along (x,y)        ({'pixels','pixels'})
+%   HSTFitsParam   : enable/disable HST fits parameters decoding
+%                                                            (true)
+%   HSTPlanetParam : enable/disable HST planet parameters calculation
+%                                                            (false)
 %
 %   colormap       : name of the colormap for the image      (jet)
 %
@@ -98,7 +102,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.18 2017/05/12 16:04:43 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.19 2018/05/29 11:11:49 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -128,6 +132,8 @@ params.ylim            = [];
 params.imageOrigo      = [0, 0];
 params.pixelSize       = [1, 1];
 params.pixelUnit       = {'pixels','pixels'};
+% get HST fits params
+params.HSTFitsParam    = true;
 % get HST planet params
 params.HSTPlanetParam  = false;
 % colormap
