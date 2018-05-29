@@ -7,7 +7,7 @@ function [ll,ld,tl,td,cusp]=getLTC(r,e,obs,sun)
 % sun sun's latitude and longitude in the observed planet's frame
 
 %
-% $Id: getLTC.m,v 1.2 2015/09/27 19:02:55 patrick Exp $
+% $Id: getLTC.m,v 1.3 2018/05/29 13:45:13 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -36,6 +36,7 @@ slon = sun.lon*pi/180;
 
 % longitude difference
 dlon = slon-olon;
+dlon = -dlon;
 
 % sky frame
 xhato = [0;1;0];
@@ -57,10 +58,10 @@ zhats = [cos(dlon)*cos(slat);-sin(dlon)*cos(slat);-sin(slat)];
 end
 
 % 
-sdir = zhats-dot(zhats,zhato)*zhato
-[dot(sdir,xhato);dot(sdir,yhato);dot(sdir,zhato)]
-xsundir = [0;dot(sdir,xhato)]
-ysundir = [0;dot(sdir,yhato)]
+sdir = zhats-dot(zhats,zhato)*zhato;
+%[dot(sdir,xhato);dot(sdir,yhato);dot(sdir,zhato)]
+xsundir = [0;dot(sdir,xhato)];
+ysundir = [0;dot(sdir,yhato)];
 
 
 if 0
@@ -111,8 +112,9 @@ xl = r*cos(theta);
 yl = r*sqrt(1-e^2*cos(olat)^2)*sin(theta);
 
 % coordinates of the vector normal to the limb (Eqs. A1 and A2)
-csnllat = (1-e^2)*cos(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
-snnllat = sin(olat)/sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
+nLnorm  = sqrt((1-e^2)^2*cos(olat)^2+sin(olat)^2);
+csnllat = (1-e^2)*cos(olat)/nLnorm;
+snnllat = sin(olat)/nLnorm;
 
 %180/pi*acos(csnllat)
 %180/pi*asin(snnllat)
@@ -134,17 +136,18 @@ else
 % ns.dirsun == 0 cusp
 c = cos(olat); s = sin(olat); ee = e*cos(olat); X = xl; Y = yl;
 %c = csnllat; s = snnllat; ee = eL; X = xl0; Y = yl0;
-dirsun = [cos(slat)*cos(dlon);-cos(slat)*sin(dlon);sin(slat)]
+dirsun = [cos(slat)*cos(dlon);-cos(slat)*sin(dlon);sin(slat)];
 DL = -1/sqrt(1-ee^2)*Y*s*cos(slat)*cos(dlon)-...
      sqrt(1-e^2)*X*cos(slat)*sin(dlon)-...
 		 1/sqrt(1-ee^2)*Y*c*sin(slat);
 end
+DL = dist(olat,slat,dlon,xl,yl);
 % limb in the light
 xll = xl; xll(DL<0) = NaN;
 yll = yl; yll(DL<0) = NaN;
-% limb in the shade
-xld = xl; xld(DL>=0) = NaN;
-yld = yl; yld(DL>=0) = NaN;
+% limb in the dark
+xld = xl; xld(DL>0) = NaN;
+yld = yl; yld(DL>0) = NaN;
 
 % embed into cells
 ll = {xll(:)',yll(:)'};
@@ -161,8 +164,9 @@ eT = eLimb(e,slat);
 %yt0 = r*sqrt(1-eT^2)*sin(theta);
 
 % coordinates of the vector normal to the terminator (Eqs. A4 and A5)
-csntlat = (1-e^2)*cos(slat)/sqrt((1-e^2)^2*cos(slat)^2+sin(slat)^2);
-snntlat = sin(slat)/sqrt((1-e^2)^2*cos(slat)^2+sin(slat)^2);
+nTnorm  = sqrt((1-e^2)^2*cos(slat)^2+sin(slat)^2);
+csntlat = (1-e^2)*cos(slat)/nTnorm;
+snntlat = sin(slat)/nTnorm;
 
 % Terms from Eqs A14-A17 i.e. 
 a = cos(dlon);
@@ -186,12 +190,12 @@ yt = A(2,1)*xt0+A(2,2)*yt0;
 
 % direction perpendicular to both the observer and the perpendicular to the
 % therminator Eqs. A9 and A10
-u = (1-e^2)*cos(slat)*cos(dlon)*sin(olat)-sin(slat)*cos(olat);
-v = (1-e^2)*cos(slat)*sin(dlon);
+u = cos(slat)*cos(dlon)*sin(olat)-sin(slat)*cos(olat);
+v = cos(slat)*sin(dlon);
 %atan2(v,u)*180/pi
 
-u = -sin(olat)*cos(dlon)*cos(slat)+cos(olat)*sin(slat);
-v = sin(dlon)*cos(slat);
+%u = -sin(olat)*cos(dlon)*cos(slat)+cos(olat)*sin(slat);
+%v = sin(dlon)*cos(slat);
 %atan2(v,u)*180/pi
 
 % cusp line
@@ -213,16 +217,22 @@ yc = v*[t1;-t1];
 cusp = {xc(:)',yc(:)'};
 
 
+% there is something wrong here
+if 1,
 AA = 1/r^2/(a*d-b*c)^2*(d^2+c^2/(1-eT^2));
 BB = 1/r^2/(a*d-b*c)^2*(b^2+a^2/(1-eT^2));
 CC = -2/r^2/(a*d-b*c)^2*(b*d+a*c/(1-eT^2));
-[xt,yt,aa,majAxis,bb,minAxis] = getEllipseAxes(AA,BB,CC);
-xc = majAxis(1)*[-aa;aa];
-yc = majAxis(2)*[-aa;aa];
+[xta,yta,aa,majAxis,bb,minAxis] = getEllipseAxes(AA,BB,CC);
+x1 = majAxis(1)*[-aa;aa];
+y1 = majAxis(2)*[-aa;aa];
 x2 = minAxis(1)*[-bb;bb];
 y2 = minAxis(2)*[-bb;bb];
-cusp = {xc(:)',yc(:)'};
+fprintf(1,'***    1 points x=%f,%f, y=%f,%f\n',x1,y1);
+fprintf(1,'***    2 points x=%f,%f, y=%f,%f\n',x2,y2);
+clf
+plot(xt,yt,xta,yta)
 pause
+end
 
 % scalars Eq 12
 t2 = sqrt(r^2*(1-eT^2)*(a*d-b*c)^2/((d*v+b*u)^2*(1-eT^2)+(c*v+a*u)^2));
@@ -231,8 +241,10 @@ t2 = sqrt(r^2*(1-eT^2)*(a*d-b*c)^2/((d*v+b*u)^2*(1-eT^2)+(c*v+a*u)^2));
 x2 = -v*[t2;-t2];
 y2 = u*[t2;-t2];
 
+if 0
 x2 = minAxis(1)*[-bb;bb];
 y2 = minAxis(2)*[-bb;bb];
+end
 
 % tilt, semi-major and semi-minor axes of the ellispe formed 
 % by the sky projection of the terminator Eqs. A6, A7 and A8
@@ -254,7 +266,9 @@ end
 % algebraic distance between a point of the terminator's projection onto the
 % sky-plane Eq A18
 DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
+DT = dist(olat,slat,dlon,xt,yt);
 
+clf
 plot(theta,DL,theta,DT);
 xlabel('theta'), legend('DL','DT');
 pause
@@ -263,8 +277,8 @@ pause
 xtl = xt; xtl(DT<0) = NaN;
 ytl = yt; ytl(DT<0) = NaN;
 % hidden terminator
-xtd = xt; xtd(DT>=0) = NaN;
-ytd = yt; ytd(DT>=0) = NaN;
+xtd = xt; xtd(DT>0) = NaN;
+ytd = yt; ytd(DT>0) = NaN;
 % embed into cells
 tl = {xtl(:)',ytl(:)'};
 td = {xtd(:)',ytd(:)'};
@@ -275,6 +289,7 @@ t=pi/2;
 xt = aT*cos(t)*rot(1,1)+bT*sin(t)*rot(1,2);
 yt = aT*cos(t)*rot(2,1)+bT*sin(t)*rot(2,2);
 DT = csntlat*sin(dlon)*xt+(-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yt;
+DT = dist(olat,slat,dlon,xt,yt);
 end
 
 % algebraic distance of cusp points with limb formula Eq. A19
@@ -290,6 +305,11 @@ DTC1 = csntlat*sin(dlon)*xc(1)+...
     (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(1);
 DTC2 = csntlat*sin(dlon)*xc(2)+...
     (-csntlat*cos(dlon)*sin(olat)+snntlat*cos(olat))*yc(2);
+
+DLC1 = dist(olat,slat,dlon,xc(1),yc(1));
+DLC2 = dist(olat,slat,dlon,xc(2),yc(2));
+DTC1 = dist(olat,slat,dlon,x1(1),y1(1));
+DTC2 = dist(olat,slat,dlon,x1(2),y1(2));
 
 fprintf(1,'DLC1=%.2g DLC2=%.2g DTC1=%.2g DTC2=%.2g\n', DLC1, DLC2, DTC1, DTC2);
 
@@ -322,8 +342,10 @@ axis equal
 else
 plot(ll{:},'-',ld{:},'--',tl{:},'-',td{:},'--',cusp{:},x2,y2,'-o');%,xis,yis,xjs,yjs);
 [legh,objh,outh,outm] = legend('ll','ld','tl','td','c','c2');%,'is','js');
+if 0
 plot(ll{:},'o-',ld{:},'o--',cusp{:},x2,y2,'-o');%,xis,yis,xjs,yjs);
 [legh,objh,outh,outm] = legend('ll','ld','c','c2');%,'is','js');
+end
 set(objh(1),'fontsize',9);
 axis equal
 hold on
@@ -442,4 +464,11 @@ function ebeta = eLimb(e,beta)
 % Eq A13
 
 ebeta = e*sqrt(1-sin(beta)^2/(1-e^2*cos(beta)^2));
+
+
+
+% algrebraic measure between point of the limb/terminator to cusp line eq 80
+function D = dist(olat,slat,dlon,xs,ys)
+D = cos(slat)*sin(dlon)*xs+...
+    (-cos(slat)*cos(dlon)*sin(olat)+sin(slat)*cos(olat))*ys;
 
