@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.20 2018/03/08 15:49:39 patrick Exp $
+% $Id: loadImage.m,v 1.21 2018/05/29 11:14:16 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -101,8 +101,10 @@ try
     % set image, axes and related
     params.W = im;
 
-    % get HST parameters if available
-    params = getHSTInfo(params);
+    % get HST fits parameters if requested
+    if params.HSTFitsParam,
+      params = getHSTInfo(params);
+    end
     if isfield(params,'HST') && ~isempty(params.HST) && params.HSTPlanetParam,
       params = getHSTPlanetParams(params);
     end
