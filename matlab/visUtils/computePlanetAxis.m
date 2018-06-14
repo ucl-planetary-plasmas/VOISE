@@ -16,7 +16,7 @@ function [ss,se]=computePlanetAxis(planet,epoch)
 %                        to the sky North (0 means aligned to North)
 
 %
-% $Id: computePlanetAxis.m,v 1.16 2016/08/03 17:01:58 patrick Exp $
+% $Id: computePlanetAxis.m,v 1.17 2018/06/14 11:41:04 patrick Exp $
 %
 % Copyright (c) 2012
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -245,9 +245,11 @@ fprintf(1,'CML(III)c                = %+9.4f deg\n', CML*r2d);
 CML = opglon;
 fprintf(1,'CML(III)g                = %+9.4f deg\n', CML*r2d);
 
+if 0
 if abs(opglon*r2d-c2glon(planet,opclon*r2d))>3*eps*r2d,
   abs(opglon*r2d-c2glon(planet,opclon*r2d)),3*eps*r2d
   error('potential issue with c2glon()');
+end
 end
 
 % Return CML
