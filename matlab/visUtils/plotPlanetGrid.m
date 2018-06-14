@@ -2,7 +2,7 @@ function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
 % function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
 
 %
-% $Id: plotPlanetGrid.m,v 1.5 2015/12/18 15:19:35 patrick Exp $
+% $Id: plotPlanetGrid.m,v 1.6 2018/06/14 11:41:42 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,6 +34,7 @@ fprintf(1,'Planet centre %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
 % calculation of the subEarth and subSolar latitudes and longitudes
 [ss,se] = computePlanetAxis(planet,epoch);
+
 if exist('CML','var') && ~isempty(CML),
   se.CML = CML;
 end
@@ -49,9 +50,9 @@ d2r = cspice_rpd;
 r2d = cspice_dpr;
 
 % km to pixel
-km2pix = (1/se.distkm)*r2d*3600/PIXSIZE;
+km2pix = (1/se.dist)*r2d*3600/PIXSIZE;
 % pixel to km -- rad to arcsec is (180/pi)*3600
-pix2km = PIXSIZE/3600*d2r*se.distkm;
+pix2km = PIXSIZE/3600*d2r*se.dist;
 
 if length(pc)==2, % no information about ellipsoid
   [a,b,e,f] = getPlanetGeometry(planet);
@@ -72,51 +73,71 @@ else, % information about ellispoide provide in pixel
   eL = sqrt(1-(bp/a)^2);
 	ecc = eL/cos(pi/180*se.lat);
 end
-fprintf(1,'Semi-major/min axes = %9.4f pixels/%9.4f pixels\n',[semiMaj_km,bp]*km2pix);
-fprintf(1,'Semi-major axis/Ecc = %9.0f km    /%9.5f\n',semiMaj_km,ecc);
+fprintf(1,'Semi-major/min axes = %9.4f pixels/%9.4f pixels\n',...
+        [semiMaj_km,bp]*km2pix);
+fprintf(1,'Semi-major axis/Ecc = %9.0f km    /%9.5f\n',...
+        semiMaj_km,ecc);
 
 
 if ~isempty(params),
-% Draw the image data, on a scale of arcsec
-% Note that PIXSIZE is the size of one side of a square pixel in arcsec
-x = PIXSIZE*(params.x-PCX);
-y = PIXSIZE*(params.y-PCY);
+  % Draw the image data, on a scale of arcsec
+  % Note that PIXSIZE is the size of one side of a square pixel in arcsec
+  x = PIXSIZE*(params.x-PCX);
+  y = PIXSIZE*(params.y-PCY);
 
-imagesc(x, y, params.Wo);
-axis xy;
-axis equal
-axis tight
-xlabel('x [arcsec]')
-ylabel('y [arcsec]')
-title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
-      datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
+  imagesc(x, y, params.Wo);
+  axis xy;
+  axis equal
+  axis tight
+  xlabel('x [arcsec]')
+  ylabel('y [arcsec]')
+  title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
+        datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
 else
-% Scaling factor to convert from km to arcsec on Earth observer's sky
-km2asec = (1/se.distkm)*(180/pi)*3600;
-A = viewmtx(90+se.CML,se.lat);
-A(4,4) = 1/km2asec;
-[X,Y,Z]=ellipsoid(0,0,0,semiMaj_km,semiMaj_km,semiMaj_km*sqrt(1-ecc^2));
-[m,n] = size(X);
-x4d = [X(:),Y(:),Z(:),ones(m*n,1)]';
-x3d = A*x4d;
-x2 = zeros(m,n); y2 = zeros(m,n); z2 = zeros(m,n);
-x2(:) = x3d(1,:)./x3d(4,:);
-y2(:) = x3d(2,:)./x3d(4,:);
-z2(:) = x3d(3,:)./x3d(4,:);
-[x2,y2] = Rotate(se.psi-orientat,x2,y2);
-surfl(x2,y2,z2,[90+ss.lon,ss.lat]);
-colormap(copper)
-shading flat,
-alpha(0.5),
-view(0,90)
-%mesh(x2,y2,z2,zeros(size(x2)));hidden off, alpha(1), view(0,90)
-axis xy;
-axis equal
-axis tight
-xlabel('x [arcsec]')
-ylabel('y [arcsec]')
-title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
-      datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
+  % Scaling factor to convert from km to arcsec on Earth observer's sky
+  km2asec = (1/se.dist)*(180/pi)*3600;
+  % http://uk.mathworks.com/help/matlab/ref/viewmtx.html
+  % orthographic transformation matrix with angles az, el
+  % az rotation around z axis counterclock-wise 
+  % el rotation above/below the x-y plane
+  A = viewmtx(90+se.CML,se.lat);
+  A(4,4) = 1/km2asec;
+  % (x^2+y^2)/re^2+z^2/re^2/(1-e^2) eq 2 from planetproj.tex
+  [X,Y,Z]=ellipsoid(0,0,0,semiMaj_km,semiMaj_km,semiMaj_km*sqrt(1-ecc^2),50);
+  [m,n] = size(X);
+  x4d = [X(:),Y(:),Z(:),ones(m*n,1)]';
+  x3d = A*x4d;
+  x2 = zeros(m,n); y2 = zeros(m,n); z2 = zeros(m,n);
+  x2(:) = x3d(1,:)./x3d(4,:);
+  y2(:) = x3d(2,:)./x3d(4,:);
+  z2(:) = x3d(3,:)./x3d(4,:);
+  subplot(121), surf(X/A(4,4),Y/A(4,4),Z/A(4,4),ones(size(Z)));daspect([1,1,1])
+  subplot(122), surf(x2,y2,z2,ones(size(Z)));daspect([1,1,1]);pause
+  clf
+  [x2,y2] = Rotate(se.psi-orientat,x2,y2);
+  %surfl(x2,y2,z2,[90+ss.lon,ss.lat]);
+  %surfl(x2,y2,z2,[90+ss.lon-se.lon,ss.lat-se.lat],'light');
+  surf(x2,y2,z2,ones(size(z2)));
+  %surfl(x2,y2,z2);
+  colormap(copper)
+  brighten(1)
+  shading interp,
+  h=lightangle(90+(ss.lon-se.lon),(ss.lat-se.lat));
+  lighting gouraud
+  material dull
+  %alpha(0.5),
+  alpha('opaque');
+  alpha(0.9),
+  pause
+  % set the default 2d view
+  view(0,90)
+  %mesh(x2,y2,z2,zeros(size(x2)));hidden off, alpha(1), view(0,90)
+  axis xy;
+  axis equal
+  axis tight
+  xlabel('x [arcsec]'); ylabel('y [arcsec]'); zlabel('z [arcsec]');
+  title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
+        datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
 end
 
 tic
@@ -145,7 +166,7 @@ thesun = pi/2 - ss.lat*pi/180;
 phisun = 2*pi - ss.lon*pi/180;
 
 % Scaling factor to convert from km to arcsec on Earth observer's sky
-km2asec = (1/se.distkm)*(180/pi)*3600;
+km2asec = (1/se.dist)*(180/pi)*3600;
 
 % Calculate the viewing angle
 lineOfSight = [sin(theobs)*cos(phiobs);sin(theobs)*sin(phiobs);cos(theobs)];
@@ -157,7 +178,7 @@ fprintf(1,'psi %f orientat %f alpha %f (deg)\n',se.psi,orientat,alpha);
 
 hold on
 
-if 0,
+if 1,
 A = viewmtx(90+se.CML,se.lat)
 A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi)
 pause
@@ -198,6 +219,9 @@ x2(:) = x3d(1,:)./x3d(4,:);
 y2(:) = x3d(2,:)./x3d(4,:);
 z2(:) = x3d(3,:)./x3d(4,:);
 else
+% Pm = [-sin(phiobs)            , cos(phiobs)            ,0          ;...
+%       -cos(phiobs)*cos(theobs),-sin(phiobs)*cos(theobs),sin(theobs);...
+%        cos(phiobs)*sin(theobs), sin(phiobs)*sin(theobs),cos(theobs)];
 xsky = -x*sin(phiobs) + y*cos(phiobs);
 ysky = (-x*cos(phiobs)-y*sin(phiobs))*cos(theobs)+z*sin(theobs);
 zsky = (x*cos(phiobs)+y*sin(phiobs))*sin(theobs)+z*cos(theobs);
@@ -211,7 +235,7 @@ end
 %xsky,ysky
 plot(xsky(1),ysky(1),'kx','Markersize',5)
 plot(xsky(2),ysky(2),'ko','Markersize',5)
-pause
+fprintf(1,'Plotting sub-Earth and sub-solar points\n'), pause
 
 
 
@@ -360,18 +384,22 @@ fprintf(1,'*** calling getLTC\n'),
 fprintf(1,'*** cusp points x=%f,%f, y=%f,%f\n',cusp{1},cusp{2});
 close(f);
 f=figure;
-subplot(211), plot(xll,yll,xld,yld); pause
-subplot(212), plot(ll{1},ll{2},ld{1},ld{2}); pause
+subplot(211), 
+plot(xll,yll,'-',xld,yld,'o',xtl,ytl,'-',xtd,ytd,'o'); pause
+subplot(212),
+plot(ll{1},ll{2},'-',ld{1},ld{2},'o',tl{1},tl{2},'-',td{1},td{2},'o'); pause
 axis square
+close(f)
 
 % rotation
 [xc,yc] = Rotate(alpha,cusp{1},cusp{2});
 plot(xc,yc,'ko','LineWidth',1,'MarkerSize',10);
 if 1,
 [xll,yll] = Rotate(alpha,ll{1},ll{2});
-plot(xll,yll,'r-','LineWidth',2,'MarkerSize',10);
+hl=plot(xll,yll,'r-','LineWidth',2,'MarkerSize',10);
 [xtl,ytl] = Rotate(alpha,tl{1},tl{2});
-plot(xtl,ytl,'g-','LineWidth',2,'MarkerSize',10);
+ht=plot(xtl,ytl,'g-','LineWidth',2,'MarkerSize',10);
+legend([hl,ht],'Limb','Terminator')
 end
 end
 
@@ -413,7 +441,7 @@ return
 
 function [Vx,Vy] = Rotate(alpha,Ux,Uy)
 
-% alpha is in deg
+% alpha is in deg counter-clockwise
 cosa = cosd(alpha);
 sina = sind(alpha);
 
