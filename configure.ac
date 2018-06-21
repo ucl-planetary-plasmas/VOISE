@@ -25,10 +25,9 @@ if test -z "$MATLABROOT"; then
   AC_MSG_CHECKING([MATLAB software root installation])
   cat >> mroot.m << EOF
 fprintf(1,'\nMATLABROOT=%s\n',matlabroot);
-exit;
 EOF
   which matlab &> /dev/null || (echo "matlab command not found" && exit 1)
-	matlab -nodesktop -nojvm -nosplash -nodisplay < mroot.m | grep MATLABROOT > mroot.out
+	matlab -nodesktop -nojvm -nosplash -nodisplay < mroot.m |& grep MATLABROOT > mroot.out 2> /dev/null
 	MATLABROOT=`sed 's/MATLABROOT=//' mroot.out`
 	rm -f mroot.m mroot.out
 	AC_MSG_RESULT([$MATLABROOT])
