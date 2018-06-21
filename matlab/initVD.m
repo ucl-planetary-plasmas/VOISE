@@ -2,7 +2,7 @@ function VD = initVD(nr, nc, S, VDlim)
 % function VD = initVD(nr, nc, S, VDlim)
 
 %
-% $Id: initVD.m,v 1.5 2015/04/13 13:54:35 patrick Exp $
+% $Id: initVD.m,v 1.6 2018/06/21 09:51:32 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -78,7 +78,6 @@ ns = size(S, 1);
 % Information about graph data structures can be found at
 % http://www.dreamincode.net/forums/topic/282225-data-structures-graph-theory-representing-graphs/
 % adjacency list http://en.wikipedia.org/wiki/Adjacency_list
-VD.Nk = cell(ns,1);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
