@@ -2,7 +2,7 @@ function plotSelectedSeeds2(VD,params,fit)
 % function plotSelectedSeeds2(VD,params,fit)
 
 %
-% $Id: plotSelectedSeeds2.m,v 1.2 2015/12/04 15:42:12 patrick Exp $
+% $Id: plotSelectedSeeds2.m,v 1.3 2020/01/23 14:28:24 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -24,10 +24,13 @@ p     = fit.p0;
 
 % eccentricity parametrisation
 if strcmp(func2str(fit.model{1}),'ellipse4'),
+  % first ellipse
   a{1} = p(3);
   e{1} = p(4);
   p(4) = a{1} * sqrt(1-e{1}^2);
   b{1} = p(4);
+
+  % second ellipse
   a{2} = p(6);
   e{2} = p(7);
   p(7) = a{2} * sqrt(1-e{2}^2);
