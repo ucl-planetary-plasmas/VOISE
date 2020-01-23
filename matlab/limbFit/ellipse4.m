@@ -1,8 +1,18 @@
 function r=ellipse4(xy,p)
 % function r=ellipse4(xy,p)
+%
+% xc = p(1); % x-coordinate of ellipse center
+% yc = p(2); % y-coordinate of ellipse center
+% a1 = p(3); % semi-major axis
+% e1 = p(4); % eccentricity
+% t1 = p(5); % tilt angle of semi-major axis to x-axis [rad]
+% a2 = p(6); % semi-major axis
+% e2 = p(7); % eccentricity
+% t2 = p(8); % tilt angle of semi-major axis to x-axis [rad]
+% ti = p(9:end); % angles [rad]
 
 %
-% $Id: ellipse4.m,v 1.2 2015/12/04 15:56:04 patrick Exp $
+% $Id: ellipse4.m,v 1.3 2020/01/23 14:23:53 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -29,11 +39,11 @@ end
 
 xc = p(1); % x-coordinate of ellipse center 
 yc = p(2); % y-coordinate of ellipse center
-a1  = p(3); % semi-major axis
-e1  = p(4); % eccentricity
+a1 = p(3); % semi-major axis
+e1 = p(4); % eccentricity
 t1 = p(5); % tilt angle of semi-major axis to x-axis [rad]
-a2  = p(6); % semi-major axis
-e2  = p(7); % eccentricity
+a2 = p(6); % semi-major axis
+e2 = p(7); % eccentricity
 t2 = p(8); % tilt angle of semi-major axis to x-axis [rad]
 ti = p(9:end); % angles [rad]
 

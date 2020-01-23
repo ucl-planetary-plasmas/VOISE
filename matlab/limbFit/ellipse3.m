@@ -1,8 +1,16 @@
 function r=ellipse3(xy,p)
 % function r=ellipse3(xy,p)
+%
+% xc = p(1); % x-coordinate of ellipse center
+% yc = p(2); % y-coordinate of ellipse center
+% a  = p(3); % semi-major axis
+% e  = p(4); % eccentricity
+% t0 = p(5); % tilt angle of semi-major axis to x-axis [rad]
+% ti = p(6:end); % angles
+
 
 %
-% $Id: ellipse3.m,v 1.3 2015/12/04 15:56:04 patrick Exp $
+% $Id: ellipse3.m,v 1.4 2020/01/23 14:23:53 patrick Exp $
 %
 % Copyright (c) 2012-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
