@@ -8,7 +8,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 
 %
-% $Id: fitLimb2.m,v 1.14 2015/12/04 15:56:04 patrick Exp $
+% $Id: fitLimb2.m,v 1.15 2020/01/23 15:19:24 patrick Exp $
 %
 % Copyright (c) 2009-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -67,10 +67,10 @@ if 0
   fprintf(1,'* EllipseDirectFit   Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.2f\n',p);
 end
     a = fit.p0(3);
-    if strcmp(func2str(fit.model{1}),'ellipse3'),
+    if strcmp(func2str(fit.model{1}),'ellipse3'), % p(4) % eccentricity
 	  e = fit.p0(4);
 	  b = a*sqrt(1-e^2);
-		else
+		else, % 
 	  b = fit.p0(4);
 	  e = sqrt((a^2 - b^2)/a^2);
 		end
@@ -81,7 +81,7 @@ end
 	  iModels = fit.iModels;
 	  p = pause; pause on
 	  To = Ts;
-	  for i=1:2,
+	  for i=1:2, % assume a,e 
 		  a{i} = fit.p0(3+(i-1)*3);
 	    e{i} = fit.p0(4+(i-1)*3);
 		  b{i} = a{i}*sqrt(1-e{i}^2);
@@ -179,6 +179,7 @@ switch length(fit.p0),
     fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n', psd(1:5))
     a = p(3);
     e = p(4);
+		% a,e to a,b
     p(4) = a * sqrt(1-e^2);
     da = psd(3);
     de = psd(4);
@@ -194,27 +195,29 @@ switch length(fit.p0),
   fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.4f\n', p(1:5));
   fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.4f\n', psd(1:5))
 
-  case 8,
+  case 8, % assume ellipse4
   fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n', p(1:5));
 	fprintf(1,'                             a=%8.1f e=%8.4f t=%8.4f\n', p(6:8));
   fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f e=%8.4f t=%8.4f\n',psd(1:5));
 	fprintf(1,'                             a=%8.1f e=%8.4f t=%8.4f\n',psd(6:8));
-    a = p(3);
-    e = p(4);
-    p(4) = a * sqrt(1-e^2);
-    da = psd(3);
-    de = psd(4);
-    psd(4) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
-    a = p(6);
-    e = p(7);
-    p(7) = a * sqrt(1-e^2);
-    da = psd(6);
-    de = psd(7);
-    psd(7) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
-		if 0
-    fit.p = p;
-    fit.psd = psd;
-		end
+	%a,e to a,b
+  a = p(3);
+  e = p(4);
+  p(4) = a * sqrt(1-e^2);
+  da = psd(3);
+  de = psd(4);
+  psd(4) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
+	%a,e to a,b
+  a = p(6);
+  e = p(7);
+  p(7) = a * sqrt(1-e^2);
+  da = psd(6);
+  de = psd(7);
+  psd(7) = sqrt((1-e^2)*da^2+e^2*a^2/(1-e^2)*de^2);
+	if 1, % save a,e in p2 and psd2
+  fit.p2 = p;
+  fit.psd2 = psd;
+	end
   fprintf(1,'params Xc(%8.1f,%8.1f) a=%8.1f b=%8.4f t=%8.4f\n', p(1:5));
 	fprintf(1,'                             a=%8.1f b=%8.4f t=%8.4f\n',p(6:8));
   fprintf(1,'stdev  Xc(%8.1f,%8.1f) a=%8.1f b=%8.4f t=%8.4f\n',psd(1:5));
