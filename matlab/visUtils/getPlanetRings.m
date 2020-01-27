@@ -2,7 +2,7 @@ function [rings,ringsSpecs] = getPlanetRings(planetName)
 % function [rings,ringsSpecs] = getPlanetRings(planetName)
 
 %
-% $Id: getPlanetRings.m,v 1.1 2018/06/14 11:56:38 patrick Exp $
+% $Id: getPlanetRings.m,v 1.2 2020/01/27 15:53:48 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -27,21 +27,24 @@ loadPlanetSpiceKernels(planetName);
 switch planetName
 
   case 'jupiter',
-	  % https://en.wikipedia.org/wiki/Rings_of_Jupiter
-	  % Halo ring, Main ring, Amalthea gossamer ring, Thebe gossamer ring
-		rings = {'Halo Ring','Main Ring','Amalthea Gossamer Ring','Thebe Gossamer Ring'};
-		ringsSpecs = [92000,122500;122500,129000;129000,182000;129000,226000];
+    % https://en.wikipedia.org/wiki/Rings_of_Jupiter
+    % Halo ring, Main ring, Amalthea gossamer ring, Thebe gossamer ring
+    rings = {'Halo Ring','Main Ring','Amalthea Gossamer Ring','Thebe Gossamer Ring'};
+    % inner, outer radii in km
+    ringsSpecs = [92000,122500;122500,129000;129000,182000;129000,226000];
   case 'saturn',
-	  % https://en.wikipedia.org/wiki/Rings_of_Saturn
-	  % A Ring, Encke Gap, Cassini Division, B Ring
-		rings = {'RING1','RING1_1','RING2','RING3'};
-		rings = {'A Ring','Encke Gap','Cassini Division','B Ring'};
-		ringsSpecs = [122170,136780;133405,133730;11758,122170;92000,117580];
-	case 'uranus'
-	  % https://en.wikipedia.org/wiki/Rings_of_Uranus
+    % https://en.wikipedia.org/wiki/Rings_of_Saturn
+    %rings = {'RING1','RING1_1','RING2','RING3'}; Spice
+    % C Ring, B Ring, Cassini Division, A Ring, Encke Gap
+    rings = {'C Ring','B Ring','Cassini Division','A Ring','Encke Gap'};
+    % inner, outer radii in km
+    ringsSpecs = [74658,92000;92000,117580;117580,122170;122170,136780;133405,133730];
+    case 'uranus'
+    % https://en.wikipedia.org/wiki/Rings_of_Uranus
     % Nu Ring, Mu Ring
-		rings = {'Nu Ring','Mu Ring'};
-		ringsSpecs = [66100,69900;86000,103000];
+    rings = {'Nu Ring','Mu Ring'};
+    % inner, outer radii in km
+    ringsSpecs = [66100,69900;86000,103000];
 end
 
 return
