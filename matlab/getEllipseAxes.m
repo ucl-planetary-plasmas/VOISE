@@ -5,7 +5,7 @@ function [x,y,aa,majAxis,bb,minAxis] = getEllipseAxes(a,b,c)
 % ax^2+by^2+cxy = 1
 
 %
-% $Id: getEllipseAxes.m,v 1.1 2018/06/14 12:03:06 patrick Exp $
+% $Id: getEllipseAxes.m,v 1.2 2020/01/27 15:42:17 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -23,20 +23,22 @@ function [x,y,aa,majAxis,bb,minAxis] = getEllipseAxes(a,b,c)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+% create matrix of quadratic form a x^2 + b x*y + c y^2 = 1
 A = [a,c/2;c/2,b];
 
+% get eigen vectors V and eigen values  D
 [V,D] = eig(A);
-D
+%D, % eigen values are diagonal elements
 
 % look for major axis to align with x-axis first and then rotate 
 % smallest eigen value corresponds to major axis (1/sqrt(\lambda)
-if D(1,1) < D(2,2), 
+if D(1,1) < D(2,2), % major axis in (1,1)
   aa = 1/sqrt(D(1,1));
 	tilt = atan2(V(2,1),V(1,1));
 	majAxis = V(:,1);
 	bb = 1/sqrt(D(2,2));
 	minAxis = V(:,2);
-else
+else, % major axis in (2,2)
   aa = 1/sqrt(D(2,2));
 	tilt = atan2(V(2,2),V(1,2));
 	majAxis = V(:,2);
@@ -44,8 +46,9 @@ else
 	minAxis = V(:,1);
 end
 
-V(1,1)*V(2,2)-V(2,1)*V(1,2)
-cross([V(:,1);0],[V(:,2);0])
+% check cross product of eigen vectors is +/- 1
+%V(1,1)*V(2,2)-V(2,1)*V(1,2), % direct calculation
+%cross([V(:,1);0],[V(:,2);0]); % 3D vector cross product 
 fprintf(1,'norm V1=%.2f V2=%.2f\n', norm(majAxis), norm(minAxis));
 fprintf(1,'tilt V1=%.2f V2=%.2f\n', ...
         180/pi*atan2(V(2,1),V(1,1)),180/pi*atan2(V(2,2),V(1,2)));
@@ -71,8 +74,9 @@ y = aa*cos(t)*sin(tilt) + bb*sin(t)*cos(tilt);
 
 end
 
-%return
+return
 
+% visual diagnostics of the ellipse
 plot(x,y,...
      majAxis(1)*[-aa;aa],majAxis(2)*[-aa;aa],...
 		 minAxis(1)*[-bb;bb],minAxis(2)*[-bb;bb]);
