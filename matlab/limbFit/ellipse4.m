@@ -12,7 +12,7 @@ function r=ellipse4(xy,p)
 % ti = p(9:end); % angles [rad]
 
 %
-% $Id: ellipse4.m,v 1.3 2020/01/23 14:23:53 patrick Exp $
+% $Id: ellipse4.m,v 1.4 2020/01/29 14:43:40 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -74,7 +74,7 @@ end
 x(I1) = x1;
 y(I1) = y1;
 
-if 0 & ~isempty(verbose) & length(verbose)>2 & verbose(3),
+if 0 && ~isempty(verbose) && length(verbose)>2 && verbose(3),
 p = pause; pause on
 plot(xi(I1),yi(I1),'o',x1,y1,'x')
 drawnow, fprintf(1,'press return\n'), pause
@@ -98,7 +98,7 @@ x(I2) = x2;
 y(I2) = y2;
 
 
-if 0 & ~isempty(verbose) & length(verbose)>2 & verbose(3),
+if 0 && ~isempty(verbose) && length(verbose)>2 && verbose(3),
 p = pause; pause on
 plot(xi(I2),yi(I2),'o',x(I2),y(I2),'x')
 fprintf(1,'press a key to continue...\n'); pause
@@ -108,7 +108,7 @@ end
 r = [x;y];
 
 
-if ~isempty(verbose) & length(verbose)>2 & verbose(3),
+if 0 && ~isempty(verbose) && length(verbose)>2 && verbose(3),
 p = pause; pause on
 plot(xi(I1),yi(I1),'o',x(I1),y(I1),'x',...
      xi(I2),yi(I2),'o',x(I2),y(I2),'x')
