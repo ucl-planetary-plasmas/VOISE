@@ -2,7 +2,7 @@ function fit = getLimb2(VD,params,fit)
 % function fit = getLimb2(VD,params,fit)
 
 %
-% $Id: getLimb2.m,v 1.8 2015/12/04 15:56:04 patrick Exp $
+% $Id: getLimb2.m,v 1.9 2020/01/29 15:56:24 patrick Exp $
 %
 % Copyright (c) 2009-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -67,7 +67,9 @@ if strcmp(func2str(fit.model{1}),'ellipse4'),
 else
   plotSelectedSeeds(VD,params,fit);
 end
-pause
+if strcmp(pause('query'),'on'),
+  fprintf(1,'press a key to continue...\n'); pause
+end
 
 
 % Calculate VD statistics 

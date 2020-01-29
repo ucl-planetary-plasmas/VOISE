@@ -8,7 +8,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 
 %
-% $Id: fitLimb2.m,v 1.16 2020/01/29 14:39:54 patrick Exp $
+% $Id: fitLimb2.m,v 1.17 2020/01/29 15:56:24 patrick Exp $
 %
 % Copyright (c) 2009-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -87,12 +87,12 @@ end
 		  % correct angle for eccentricity
 			im = (iModels==i);
 	    Ts(im) = 180/pi*atan2(Sy(im),Sx(im)*sqrt(1-e{i}^2));
-      if 0 & strcmp(pause('query'),'on'),
+      if 0 && strcmp(pause('query'),'on'),
 		    plot(To(im),pi/180*Ts(im),'o')
 		    fprintf(1,'press a key to continue...\n'); pause
 		  end
 	  end
-if 0 & strcmp(pause('query'),'on'),
+if 0 && strcmp(pause('query'),'on'),
 	for i=1:ms,
 	  plot([0,Sx(i)],[0,Sy(i)],'-x',...
          [0,R(i)*cosd(To(i))],[0,R(i)*sind(To(i))],'-o',...
@@ -103,7 +103,7 @@ if 0 & strcmp(pause('query'),'on'),
 		fprintf(1,'press a key to continue...\n'); pause
 	end
 end
-if 0 & strcmp(pause('query'),'on'),
+if 0 && strcmp(pause('query'),'on'),
 	fit.model{1}(XY,[fit.p0(:); To(:)*pi/180]);
 	f = figure;
 	fit.model{1}(XY,[fit.p0(:); To(:)*pi/180]);
@@ -316,12 +316,12 @@ elseif length(fit.p0)==8,
   dS = r.*dr.*dt;
 end
 
-if 0 & strcmp(pause('query'),'on'),
-f = figure
+if 0 && strcmp(pause('query'),'on'),
+f = figure;
 plot(1./Sw, sqrt(dS),'o',1./Sw,d2seed,'s')
 axis equal
 xlabel('Sls')
 legend('sqrt(dS)','d2seed')
-pause
+fprintf(1,'press a key to continue...\n'); pause
 close(f)
 end
