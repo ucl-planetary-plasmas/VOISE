@@ -2,7 +2,7 @@ function fit = selectSeeds2(fit,Sx,Sy,Sls)
 % function fit = selectSeeds2(fit,Sx,Sy,Sls)
 
 %
-% $Id: selectSeeds2.m,v 1.3 2020/01/23 14:27:41 patrick Exp $
+% $Id: selectSeeds2.m,v 1.4 2020/01/29 14:33:26 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -102,9 +102,7 @@ for i=1:length(fit.iSelect),
 end
 
 if strcmp(pause('query'),'on'),
-  p=pause; pause on
   plot(Sx(iSelect{1}),Sy(iSelect{1}),'o',...
 	     Sx(iSelect{2}),Sy(iSelect{2}),'x');
 	fprintf(1,'press a key to continue...\n'); pause
-	pause(p)
 end
