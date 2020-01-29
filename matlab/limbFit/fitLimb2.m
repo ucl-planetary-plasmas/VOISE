@@ -8,7 +8,7 @@ function fit = fitLimb2(fit,Sx,Sy,Sw)
 
 
 %
-% $Id: fitLimb2.m,v 1.15 2020/01/23 15:19:24 patrick Exp $
+% $Id: fitLimb2.m,v 1.16 2020/01/29 14:39:54 patrick Exp $
 %
 % Copyright (c) 2009-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -52,12 +52,12 @@ end
 
 fprintf(1,'*** %d parameters fit\n', length(fit.p0));
 switch length(fit.p0),
-  case 3,
+  case 3, % circle 
     [xc,yc,r,a] = circfit(Sx,Sy);
 	  fprintf(1,'* circfit            Xc(%8.1f,%8.1f) R=%8.1f\n', xc,yc,r);
 	  Par = CircleFitByTaubin([Sx(:),Sy(:)]);
 	  fprintf(1,'* CircleFitByTaubin  Xc(%8.1f,%8.1f) R=%8.1f\n', Par);
-  case 5,
+  case 5, % ellipse
 if 0
   p = ellipse_fit(Sx, Sy);
   fprintf(1,'* ellipse_fit        Xc(%8.1f,%8.1f) a=%8.1f b=%8.1f t=%8.2f\n',p);
@@ -76,24 +76,23 @@ end
 		end
 	  % correct angle for eccentricity
 	  Ts = 180/pi*atan2(Sy(:),Sx(:)*sqrt(1-e^2));
-  case 8,
+  case 8, % two ellipses
 	  global iModels
 	  iModels = fit.iModels;
-	  p = pause; pause on
 	  To = Ts;
 	  for i=1:2, % assume a,e 
 		  a{i} = fit.p0(3+(i-1)*3);
 	    e{i} = fit.p0(4+(i-1)*3);
 		  b{i} = a{i}*sqrt(1-e{i}^2);
 		  % correct angle for eccentricity
-			im = iModels==i;
+			im = (iModels==i);
 	    Ts(im) = 180/pi*atan2(Sy(im),Sx(im)*sqrt(1-e{i}^2));
-		  if 0
+      if 0 & strcmp(pause('query'),'on'),
 		    plot(To(im),pi/180*Ts(im),'o')
 		    fprintf(1,'press a key to continue...\n'); pause
 		  end
 	  end
-if 0,
+if 0 & strcmp(pause('query'),'on'),
 	for i=1:ms,
 	  plot([0,Sx(i)],[0,Sy(i)],'-x',...
          [0,R(i)*cosd(To(i))],[0,R(i)*sind(To(i))],'-o',...
@@ -104,14 +103,14 @@ if 0,
 		fprintf(1,'press a key to continue...\n'); pause
 	end
 end
-if 0
+if 0 & strcmp(pause('query'),'on'),
 	fit.model{1}(XY,[fit.p0(:); To(:)*pi/180]);
-	figure
+	f = figure;
 	fit.model{1}(XY,[fit.p0(:); To(:)*pi/180]);
 	disp('ModelFun')
 	fprintf(1,'press a key to continue...\n'); pause
+	close(f);
 end
-  pause(p);
 end
 
 % column vector of initial parameters, angles are in radians
@@ -317,10 +316,12 @@ elseif length(fit.p0)==8,
   dS = r.*dr.*dt;
 end
 
-figure
+if 0 & strcmp(pause('query'),'on'),
+f = figure
 plot(1./Sw, sqrt(dS),'o',1./Sw,d2seed,'s')
 axis equal
 xlabel('Sls')
 legend('sqrt(dS)','d2seed')
 pause
-close
+close(f)
+end
