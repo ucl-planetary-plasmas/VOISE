@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.17 2015/02/13 14:55:15 patrick Exp $
+% $Id: getCentroidVD.m,v 1.18 2020/04/23 11:31:22 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,6 +47,15 @@ while ~stopReg,
   % compute centre-of-mass of polygons
   Sc = zeros(0,2);
 	Sk = [];
+  if exist('getCentroidSeedBatch')==3,
+    Sc1 = getCentroidSeedBatch(VD,params.W,VD.Sk');
+    for k = 1:length(VD.Sk),
+      if isempty(find(Sc1(k, 1) == Sc(:, 1) & Sc1(k, 2) == Sc(:, 2)))
+        Sc = [[Sc(:, 1); Sc1(k, 1)], [Sc(:, 2); Sc1(k, 2)]];
+        Sk = [Sk; k];
+      end
+    end
+  else,
   for k = VD.Sk',
     sc  = getCentroidSeed(VD, params, k);
 		if isempty(find(sc(1) == Sc(:,1) & sc(2) == Sc(:,2)))
@@ -58,6 +67,7 @@ while ~stopReg,
       Sc = [[Sc(:,1); sc(1)],[Sc(:,2); sc(2)]];
 			Sk = [Sk; k];
 		end
+  end
   end
   %pause
   dist = abs(Sc(:,1)-VD.Sx(Sk)) + abs(Sc(:,2)-VD.Sy(Sk));
@@ -73,6 +83,10 @@ while ~stopReg,
   if max(dist) > 1 && iReg<=params.regMaxIter, 
     fprintf(1,'Iter %2d Computing regularised Voronoi Diagram for %d seeds\n',...
 		        iReg, size(Sc,1));
+    if exist('addSeedToVDBatch')==3,
+      VD = initVD(nr, nc, Sc, VD.W);
+      VD = addSeedToVDBatch(VD, Sc(3:end));
+    else,
     switch params.regAlgo,
 	    case 0, % incremental
 		    VD = computeVD(nr, nc, Sc, VD.W);
@@ -92,6 +106,7 @@ while ~stopReg,
 			  end
 			  fprintf(1,'(Used %6.1f s)\n', toc(tStart));
 	  end
+    end
     params = plotCurrentVD(VD, params, iReg);
 	  iReg = iReg + 1;
 		if iReg>params.regMaxIter, stopReg = true; end
