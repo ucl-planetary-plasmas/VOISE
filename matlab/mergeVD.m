@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.20 2015/02/13 14:55:15 patrick Exp $
+% $Id: mergeVD.m,v 1.21 2020/04/23 11:34:27 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -179,6 +179,9 @@ while ~stopMerge,
 	  nSr = length(Sk);
     fprintf(1,'Iter %2d Removing %d seeds from Voronoi Diagram\n', iMerge, nSr);
     %pause
+    if exist('removeSeedFromVDBatch')==3,
+      VD = removeSeedFromVDBatch(VD, Sk);
+    else
 		switch params.mergeAlgo,
 		  case 0, % incremental
         for k = Sk(:)',
@@ -207,6 +210,7 @@ while ~stopMerge,
 				end
 				fprintf(1,'(Used %6.1f s)\n', toc(tStart));
 		end
+    end
     params = plotCurrentVD(VD, params, iMerge);
 	  iMerge = iMerge+1;
 		%fprintf(1,'Voronoi Diagram computed\n');
