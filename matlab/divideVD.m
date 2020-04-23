@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.15 2015/02/11 16:13:48 patrick Exp $
+% $Id: divideVD.m,v 1.16 2020/04/23 11:17:48 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -75,6 +75,9 @@ while ~stopDiv,
   if ~isempty(S),
 	  nSa = size(S,1);
     fprintf(1,'Iter %2d Adding %d seeds to Voronoi Diagram\n', iDiv, nSa)
+    if exist('addSeedToVDBatch')==3, % mex file
+      VD = addSeedToVDBatch(VD, S);
+    else
 		switch params.divideAlgo,
 		  case 0, % incremental
         for k = 1:nSa,
@@ -115,6 +118,7 @@ while ~stopDiv,
 					end
 				end
 				fprintf(1,'(Used %6.1f s)\n', toc(tStart));
+    end
     end
 	  params = plotCurrentVD(VD, params, iDiv);
 	  iDiv = iDiv+1;
