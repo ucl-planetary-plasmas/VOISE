@@ -1,8 +1,42 @@
-function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
-% function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE)
+function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE,...
+                        ringplot,rrspec)
+% function plotPlanetGrid(planet,params,pc,epoch,CML,psi,orientat,PIXSIZE,...
+%                         ringplot,rrspec)
+%
+% 
+% ringplot: (optional) determines whether / how to plot planet rings.
+%    Automatically plot rings:   Use 1 or "plot rings"  (Default Setting)
+%    Plot no planet rings:       Use 0 or "no rings"
+%    Plot specific radii:        Specify 1xn or 2xn matrix of radii (km)
+%    Plot rings without grid*:   Use 3 or "only rings" or "no grid" and
+%                                specify specific radii in next in next
+%                                input 'rrspec'
+% 
+%    Note: The planet rings will automatically be plotted, if the planet is
+%    Saturn or Uranus, in which case the radii will be extracted from
+%    getPlanetRings.m
+% 
+%    Note: The 2xn matrix should be of same format as used in
+%    getPlanetRings.m, i.e. inner and outer radius for each ring in each
+%    each column.
+%
+%    Note: If any two rings have the same radius, then only one will be
+%    plotted, rather than over each other.
+% 
+% rrspec: (optional) only required when plotting no grid and wanting to
+%    specify specific radii.
+%    
+% PIXSIZE: arcseconds per pixel constant OR vector 
+%   Can either be single value (automatically calculated and adjusted for 
+%   new imagesize as HST.PIXSIZE in HSTinfo) or as size 2 vectors (found as
+%   HST.pixscale) witch each value containing the scalefactor for each axis
+%   (may be different due to image conversion) If two values are specified,
+%   each axis will be scaled accordingly and the mean average value is
+%   calculated, which is used in all associated distance calculations.
+%
 
 %
-% $Id: plotPlanetGrid.m,v 1.6 2018/06/14 11:41:42 patrick Exp $
+% $Id: plotPlanetGrid.m,v 1.7 2020/05/01 14:32:25 patrick Exp $
 %
 % Copyright (c) 2009 
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -34,6 +68,74 @@ fprintf(1,'Planet centre %8.2f, %8.2f [pixels]\n', PCX,PCY);
 
 % calculation of the subEarth and subSolar latitudes and longitudes
 [ss,se] = computePlanetAxis(planet,epoch);
+
+% Calculation of PIXSIZE (arcseconds per pixel)
+if length(PIXSIZE) == 1,
+  % CASE: Only one, the 'average' PIXSIZE value supplied 
+  % Assume that both axis have same pixel scaling value
+  pixsizeX = PIXSIZE;
+  pixsizeY = PIXSIZE;
+elseif length(PIXSIZE) == 2,
+  % CASE: PIXSIZE value for each axis supplied in form of matrix
+  % Calculate the mean average PIXSIZE value 
+  % (used in various distance calculations)
+  pixsizeX = PIXSIZE(1);
+  pixsizeY = PIXSIZE(2);
+  PIXSIZE = ( pixsizeX + pixsizeY)/2;
+else
+  CR = char(10); % Carriage Return ASCII code
+  error(['PIXSIZE value (arcseconds per pixel) in wrong format!',CR,...
+         'Expecting either single value or length-two vector',CR,...
+         'containing PIXSIZE value for each axis (see HST.PIXSCALE).'])
+end
+
+% Warning in case PIXSIZE values for X & Y axis differ by more than 1%
+if ~(0.999 < pixsizeX/pixsizeY < 1.001),
+  CR = char(10); % Carriage Return ASCII code
+  warning(['PIXSIZE (arcseconds per pixel) differ by more than 1%!',CR,...
+           'Graphs may be very wrong!'])
+end
+
+% Plotting Planet Rings Options
+if ~exist('ringplot','var') || isempty(ringplot),
+  plotrings = 1;      % Default setting whether to plot planet rings
+  plotgrid  = 1;      % Default setting to plot grid or not
+  RingRadii = 'auto'; % Default radii to use
+  % Note: 'auto' means get radii automatically from getPlanetRings.m
+else,
+  ringplot = lower(ringplot);  % convert any string to lowercase
+  if strcmp(ringplot,'no rings') || all(ringplot == 0),
+    % Explicitly do not plot any rings
+    plotrings = 0;
+    plotgrid  = 1;
+  elseif strcmp(ringplot,'plot rings') || all(ringplot == 1),
+    % Plot rings automatically or 
+    plotrings = 1;
+    plotgrid  = 1;
+  elseif strcmp(ringplot,'only rings') || ...
+         strcmp(ringplot,'no grid')    || all(ringplot == 2),
+    plotrings = 1;
+    plotgrid  = 0;
+  elseif isnumeric(ringplot) && min(size(ringplot)) <= 2,% && length(ringplot)>1
+    % Plot rings and use specified radii instead of automatic
+    plotrings = 1;
+    plotgrid  = 1;
+    RingRadii = ringplot;
+  else
+    CR = char(10); % Carriage Return ASCII code
+    error(['ringplot specified in unknown format!',CR,...
+           '   Do NOT plot any rings:         Use 0 or "no rings" ',CR,...
+           '   Plot rings automatically:      Use 1 or "plot rings" ',CR,...
+           '   Plot rings of specific radii:  Use 1xn or 2xn matrix ',CR,...
+           'Note: If 2 rings have the same radius, only one will be plotted'])
+  end
+end
+
+if exist('rrspec','var') && ~isempty(rrspec),
+  RingRadii = rrspec;
+elseif ~exist('RingRadii','var') && ~exist('rrspec','var'),
+  RingRadii = 'auto';
+end
 
 if exist('CML','var') && ~isempty(CML),
   se.CML = CML;
@@ -78,12 +180,11 @@ fprintf(1,'Semi-major/min axes = %9.4f pixels/%9.4f pixels\n',...
 fprintf(1,'Semi-major axis/Ecc = %9.0f km    /%9.5f\n',...
         semiMaj_km,ecc);
 
-
 if ~isempty(params),
   % Draw the image data, on a scale of arcsec
   % Note that PIXSIZE is the size of one side of a square pixel in arcsec
-  x = PIXSIZE*(params.x-PCX);
-  y = PIXSIZE*(params.y-PCY);
+  x = pixsizeX*(params.x-PCX);
+  y = pixsizeY*(params.y-PCY);
 
   imagesc(x, y, params.Wo);
   axis xy;
@@ -140,10 +241,15 @@ else
         datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
 end
 
-tic
-drawPlanetGrid(planet,epoch,ss,se,orientat,dlat,dlon,semiMaj_km,ecc);
-toc
+if plotgrid,
+  tic
+  drawPlanetGrid(planet,epoch,ss,se,orientat,dlat,dlon,semiMaj_km,ecc);
+  toc
+end
 
+if plotrings,
+    drawPlanetRings(planet,se,orientat,semiMaj_km,ecc,RingRadii);
+end
 
 
 function drawPlanetGrid(planet,epoch,ss,se,orientat,dlat,dlon,semiMaj_km,ecc)
@@ -403,6 +509,87 @@ legend([hl,ht],'Limb','Terminator')
 end
 end
 
+hold off
+
+function drawPlanetRings(planet,se,orientat,semiMaj_km,ecc,RingRadii)
+
+hold on
+
+% Sub-Earth colatitude in radians [0,pi] -> (NP,SP)
+theobs = pi/2 - se.lat*pi/180;
+% CML in a right-handed system [0,2pi]
+phiobs = 2*pi - se.CML*pi/180;
+% Km two arcseconds conversion constant
+km2asec = (1/se.dist)*(180/pi)*3600;
+% Rotation angle to adjust sky plane for telescope orientation
+alpha = se.psi-orientat;
+
+% Automatically determine ring's radiiy
+if (isempty(RingRadii) || strcmp(RingRadii,'auto')) && ...
+    any(strcmp({'saturn','uranus'},planet)),
+  [RingNames,RingRadii] = getPlanetRings(lower(planet));
+end
+
+% Get current x & y axis limits of graph (needed to prevent plotting rings
+% outside of the graph
+currentylim = ylim;
+currentxlim = xlim;
+
+% Equation of limb on sky plane
+fLimb = @(x,y) x.^2 + (y.^2)/(1-ecc.^2) -(semiMaj_km*km2asec).^2;
+
+% Plot limb on sky plane according to equation used to determine whether
+% rings or inside the limb or behind the planet
+if 0,
+  fLimbplot = fimplicit(fLimb,'LineStyle','none'); %implicit plot the limb
+  [Limbx, Limby] = Rotate(alpha,fLimbplot.XData,fLimbplot.YData);
+  plot(Limbx,Limby,'k-','LineWidth',0.5)
+end
+
+% List of Colors for each each plotted ring
+Colorlist = ['r','b','w','m','c','g','k'];
+ncolors = length(Colorlist);
+
+uniqueRings = unique(RingRadii(:)'); % Remove all duplicate radii
+
+for i = 1:length(uniqueRings),
+  radius = uniqueRings(i);
+  plotcolor = Colorlist(mod(i-1,ncolors)+1);
+
+  the = pi/2;
+  phi = linspace(0,2*pi,300);
+
+  [r,x,y,z,xsky,ysky,zsky] = spherical2Sky(radius,0, ...
+                                           the,phi,theobs,phiobs,km2asec);
+
+  % Get indicees of points that are inside limb and behind planet
+  iInside = find((fLimb(xsky,ysky)<0));
+  iBehind = iInside(find(zsky(iInside)<0));
+
+  % Plot points of rings Infront of Planet limb on sky plane
+  % Replace points behind planet with "NaN" which then get ignored by plot
+  xInfront = xsky;
+  yInfront = ysky;
+  xInfront(iBehind) = NaN;
+  yInfront(iBehind) = NaN;
+
+   [xInfront,yInfront] = Rotate(alpha,xInfront,yInfront); %Rotation
+  plot(xInfront,yInfront,[plotcolor '-'],'LineWidth',0.8, ...
+      'HandleVisibility','off')
+
+  % Plot points behind limb with different style
+  xBehind = xsky(iBehind);
+  yBehind = ysky(iBehind);
+  [xBehind,yBehind] = Rotate(alpha,xBehind,yBehind); %Rotation
+  plot(xBehind,yBehind,[plotcolor '--'],'LineWidth',0.8, ...
+       'HandleVisibility','off');
+end
+
+% Limit graph size to the image size as else ellipse will plot beyond image
+if 1,
+  xlim(currentxlim)
+  ylim(currentylim)
+end
 hold off
 
 function [r,x,y,z,xsky,ysky,varargout]=spherical2Sky(a,e,the,phi,theobs,phiobs,km2asec)
