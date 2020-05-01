@@ -4,7 +4,7 @@ function moonphase(epoch)
 % epoch: string in format 'yyyy mm dd HH MM SS'
 
 %
-% $Id: moonphase.m,v 1.2 2016/08/02 16:40:30 patrick Exp $
+% $Id: moonphase.m,v 1.3 2020/05/01 14:37:56 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,6 +21,9 @@ function moonphase(epoch)
 %
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+% moon-transparent.png from
+% http://www.pngpix.com/wp-content/uploads/2016/11/PNGPIX-COM-Moon-PNG-Transparent-Image.png
 
 pc = [0,0];
 PIXSIZE = 0.5;
