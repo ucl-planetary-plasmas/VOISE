@@ -6,7 +6,7 @@ function start_VOISE
 
 % @configure_input@
 %
-% $Id: start_VOISE.m.in,v 1.8 2020/05/02 11:28:46 patrick Exp $
+% $Id: start_VOISE.m.in,v 1.9 2020/05/02 14:51:26 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -41,6 +41,8 @@ addpath([voise.root '/matlab/limbFit']);
 addpath([voise.root '/matlab/visUtils']);
 
 if ~isempty(voise.mice),
-  fprintf('SPICE set to %s\n', voise.mice);
+  fprintf('Mice directory set to %s\n', voise.mice);
   addpath(voise.mice);
+  fprintf('%s compiled %s %s\n', cspice_mice('version'),...
+          cspice_mice('date'),cspice_mice('time'));
 end
