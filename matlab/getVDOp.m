@@ -2,7 +2,7 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 % function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 
 %
-% $Id: getVDOp.m,v 1.7 2020/04/23 12:04:47 patrick Exp $
+% $Id: getVDOp.m,v 1.8 2020/05/02 22:29:48 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,24 +22,34 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 
 Wop = zeros(size(W));
 
-if ~exist('op','var') | isempty(op), op = 'mean'; end
+if ~exist('op','var') || isempty(op), op = 'mean'; end
+
+switch op,
+  case 'median',
+    metricID = 1; 
+		op = @(x) median(x);
+  case 'mean',
+	  metricID = 2; 
+		op = @(x) mean(x);
+  case 'range',
+	  metricID = 3; 
+		op = @(x) (max(x)-min(x));
+  case 'sqrtLen',
+	  metricID = 4; 
+		op = @(x) sqrt(length(x));
+  case 'homogeneousCriteria', 
+	  metricID = 5; 
+		op = @(x,y) (max(x)-min(x))/y;
+  case 'stdDev', 
+	  metricID = 6; 
+		op = @(x,y) y*std(x); 
+	otherwise, error('op not recognized');
+end
+
 [op,msg] = fcnchk(op);
 
-if exist('getVDOpf')==3 & ( ... 
-   strcmp(lower(op),'median') | ...
-	 strcmp(lower(op),'mean') | ...
-   strcmp(lower(op),'sqrtLen') | ...
-   strcmp(lower(op),'range') | ...
-   strcmp(lower(op),'stdDev') ...
-   ),
-  switch lower(op),
-    case 'median',  metricID = 1; % @(x) median(x)
-    case 'mean',    metricID = 2; % @(x) mean(x)
-    case 'sqrtLen', metricID = 4; % @(x) sqrt(length(x))
-    case 'range',   metricID = 5; % @(x) max(x)-min(x)
-    case 'stdDev',  metricID = 6; % @(x) ksd*std(x)@(x) 
-	end
-	[W, Sop] = getVDOpf(VD, params.W, metricID, varargin{:});
+if exist('getVDOpBatch')==3,
+	[Wop, Sop] = getVDOpBatch(VD, W, metricID, varargin{:});
 else
   Sop = zeros(size(VD.Sk));
   is = 1;
@@ -55,6 +65,7 @@ end
 
 % find pixels not in any Voronoi region but on boundaries
 ii = find(VD.Vk.v == 1);
+
 if 0,
   % rescale the value for these points 
   Wop(ii) = min(Sop(:))-(max(Sop(:))-min(Sop(:)));
