@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.8 2020/05/02 14:15:03 patrick Exp $
+% $Id: getHSTInfo.m,v 1.9 2020/05/02 15:12:04 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,7 +47,7 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
                                   {'DATE-OBS','TIME-OBS'},verbose);
   end
   % start/end time (Modified Julian Time) of 1st/last exposure 
-  [HST.TEXPSTRT,HST,TEXPEND] = getFitsKeyVal(iFile,...
+  [HST.TEXPSTRT,HST.TEXPEND] = getFitsKeyVal(iFile,...
                                {'TEXPSTRT','TEXPEND'},verbose);
   % aperture field of view
   HST.APER_FOV = getFitsKeyVal(iFile,{'APER_FOV'},verbose);
