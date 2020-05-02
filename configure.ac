@@ -34,6 +34,15 @@ EOF
 fi
 AC_SUBST(MATLABROOT)
 
+# Add mice/spice path 
+AC_ARG_VAR(MICE_PATH,[MATLAB NAIF SPICE installation path])
+if test -z "$MICE_PATH"; then
+  AC_MSG_NOTICE([MATLAB NAIF SPICE not set])
+else
+  AC_MSG_NOTICE([MATLAB NAIF SPICE set to $MICE_PATH])
+fi
+AC_SUBST(MICE_PATH)
+
 # Checks for programs.
 AC_CHECK_PROG([MCC],[mcc],[mcc])
 if test -z "$MCC"; then
