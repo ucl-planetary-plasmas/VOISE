@@ -1,5 +1,27 @@
 2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
 
+	* matlab/cmpVDalgo.m (1.7), matlab/computeHCThreshold.m (1.4),
+	  matlab/divideVD.m (1.17), matlab/divideVDFast.m (1.9),
+	  matlab/getCentroidVD.m (1.19), matlab/getVRstats.m (1.4),
+	  matlab/mergeVD.m (1.22), matlab/mergeVDFast.m (1.9),
+	  matlab/plotDefaultVOISE.m (1.9), matlab/plotVOISE.m (1.8),
+	  matlab/printSeeds.m (1.7), matlab/testIncVD.m (1.7),
+	  matlab/testVD2CVD.m (1.7), matlab/testWeightedPoissonSeeds.m
+	  (1.2):
+	  Changed the API to getVDOp and plotVDOp.
+
+2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getVDOp.m (1.8):
+	  Changed API to deal with mex version of getVDOp.
+
+2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotVDOp.m (1.6):
+	  Removed comment.
+
+2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
+
 	* matlab/SaturnRingDemo.m (1.1), share/SaturnRingDemo.dat (1.1):
 	  Adapted ring visualisation demo code written by Tobin Holtmann
 	  during his summer 2018 internship at UCL.
