@@ -1,5 +1,5 @@
-function varargout = getFitsKeywordsValue(filename,keywords,verbose)
-% function values = getFitsKeywordsValue(filename,keywords,verbose)
+function varargout = getFitsKeyVal(filename,keywords,verbose)
+% function values = getFitsKeyVal(filename,keywords,verbose)
 %
 % Return values of keywords contained in the Primary Data structure and
 % the Instrument Data structure of the first image of a file in FITS format.
@@ -12,7 +12,7 @@ function varargout = getFitsKeywordsValue(filename,keywords,verbose)
 % [pcx,pcy,cml,udate]
 
 %
-% $Id: getFitsKeyVal.m,v 1.5 2018/05/29 11:19:11 patrick Exp $
+% $Id: getFitsKeyVal.m,v 1.6 2020/05/02 14:02:08 patrick Exp $
 %
 % Copyright (c) 2011-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
