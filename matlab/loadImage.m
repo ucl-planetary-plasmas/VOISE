@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.21 2018/05/29 11:14:16 patrick Exp $
+% $Id: loadImage.m,v 1.22 2020/05/02 16:56:22 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -106,22 +106,26 @@ try
       params = getHSTInfo(params);
     end
     if isfield(params,'HST') && ~isempty(params.HST) && params.HSTPlanetParam,
+      me = checkSpice; 
+      if ~isempty(me), throw(me), end
       params = getHSTPlanetParams(params);
     end
     %pause
 
-    [nr, nc] = size(params.W);
 		me = checkField(params,'imageOrigo'); 
 		if ~isempty(me), throw(me), end
+
 		me = checkField(params,'pixelSize'); 
 		if ~isempty(me), throw(me), end
+
+    [nr, nc] = size(params.W);
     params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
     params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 
+if 0,
     % pixel coordinates (indices j)
     [Xj,Yj] = meshgrid(1:nc, 1:nr);
 
-if 0
     HST = params.HST;
     % reference pixel image coordinates 
     rpx = HST.CRPIX1;
@@ -212,6 +216,15 @@ end
 function string = mydeblank(string)
 
 string = deblank(fliplr(deblank(fliplr(string))));
+
+function me = checkSpice()
+
+me = [];
+if isempty(which('mice')) || exist('mice') ~= 3,
+  me = MException('MyFunction:verifySpice', ...
+                  ['Problem with Mice/Spice installation' ...
+                  '\nCheck your installation']);
+end
 
 function me = checkiFile(params)
 
