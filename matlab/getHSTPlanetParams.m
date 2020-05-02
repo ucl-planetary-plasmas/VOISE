@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.7 2015/09/27 18:57:48 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.8 2020/05/02 17:00:26 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -38,22 +38,22 @@ radPerPixel = arcsecPerRad/HST.PLATESC;
 % Convert string date to double precision 
 et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
 % format YYY mmm dd HH:MM:SS 
-epoch = cspice_et2utc(et,'C',0)
+epoch = cspice_et2utc(et,'C',0);
 %epoch = datestr(datenum(epoch,'YYYY mmm dd HH:MM:SS'),'yyyy mm dd HH MM SS');
 
 % flag for calculation in J2000
 if 1,
-isJ2000 = true;
+  isJ2000 = true;
 else
-isJ2000 = false;
+  isJ2000 = false;
 end
 
 % Get position of planet with respect to Earth
 target   = planet.name;
 if isJ2000,
-frame    = 'J2000'; % Earth inertial frame
+  frame    = 'J2000'; % Earth inertial frame
 else
-frame    = 'IAU_EARTH'; % Earth fixed frame
+  frame    = 'IAU_EARTH'; % Earth fixed frame
 end
 abcorr   = 'LT';   % Correct for one-way light time
 observer = 'EARTH';
@@ -136,7 +136,7 @@ xhat = xhatr; yhat = yhatr;
 xrp = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
 yrp = atan2(dot(refpixposn,yhat), planetdist)*radPerPixel;
 % positive means nearer to Earth than planet centre
-zrp = planetdist+dot(refpixposn,zhat)
+zrp = planetdist + dot(refpixposn,zhat)
 fprintf(1,'xrp, yrp          = %12.6g, %12.6g pixel\n', xrp, yrp);
 
 if 1
@@ -145,7 +145,7 @@ if 1
 Xpc = atan2(dot(planetposn,xhat), planetdist)*radPerPixel + rpx;
 Ypc = atan2(dot(planetposn,yhat), planetdist)*radPerPixel + rpy; 
 % positive means nearer to Earth than planet centre
-Zpc = planetdist+dot(planetposn,zhat)
+Zpc = planetdist + dot(planetposn,zhat);
 end
 
 pc = [xpc-HST.CRPIX1, ypc-HST.CRPIX2];
@@ -201,7 +201,7 @@ planetaxis = cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat);
 fprintf(1,'planetaxis (Earth r) = %12.6f, %12.6f, %12.6f\n', planetaxis);
 xplanetaxis = dot(planetaxis,xhat);
 yplanetaxis = dot(planetaxis,yhat);
-xplanetaxis/yplanetaxis
+xplanetaxis / yplanetaxis
 pause
 planetaxis = [xplanetaxis,yplanetaxis];
 fprintf(1,'planetaxis (image)   = %12.6f, %12.6f\n', planetaxis);
