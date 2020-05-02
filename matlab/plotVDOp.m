@@ -2,7 +2,7 @@ function plotVDOp(VD, W, op, varargin)
 % function plotVDOp(VD, W, op, varargin)
 
 %
-% $Id: plotVDOp.m,v 1.5 2018/06/04 14:49:34 patrick Exp $
+% $Id: plotVDOp.m,v 1.6 2020/05/02 22:29:07 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,7 +22,6 @@ function plotVDOp(VD, W, op, varargin)
 
 clim = [min(W(:)) max(W(:))];
 
-%VDW = getVDOp(VD, W, @(x) median(x));
 VDW = getVDOp(VD, W, op, varargin{:});
 subplot(211),
 imagesc(W),
