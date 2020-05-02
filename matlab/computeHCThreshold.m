@@ -2,7 +2,7 @@ function [WD,SD,WHC,SHC,HCThreshold] = computeHCThreshold(VD, params, Pctile)
 % function [WD,SD,WHC,SHC,HCThreshold] = computeHCThreshold(VD, params, Pctile)
 
 %
-% $Id: computeHCThreshold.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: computeHCThreshold.m,v 1.4 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,12 +21,11 @@ function [WD,SD,WHC,SHC,HCThreshold] = computeHCThreshold(VD, params, Pctile)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % D(sk) = max(x)-min(x), x in VR(sk)
-[WD, SD] = getVDOp(VD, params.W, @(x) max(x)-min(x));
+[WD, SD] = getVDOp(VD, params.W, 'range');
 maxD = max(SD);
 
 % Homogeneity function
-[WHC, SHC] = getVDOp(VD, params.W, ...
-                     @(x) homogeneousCriteria(x, max(SD)));
+[WHC, SHC] = getVDOp(VD, params.W, 'homogeneousCriteria', max(SD));
 
 % Homogeneity dynamic threshold
 HCThreshold = prctile(SHC, Pctile);

@@ -2,7 +2,7 @@ function [VD, params] = mergeVD(VD, params)
 % function [VD, params] = mergeVD(VD, params)
 
 %
-% $Id: mergeVD.m,v 1.21 2020/04/23 11:34:27 patrick Exp $
+% $Id: mergeVD.m,v 1.22 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -55,12 +55,12 @@ while ~stopMerge,
   [WD,SD,WHC,SHC,HCThreshold] = computeHCThreshold(VD, params, mergePctile);
 
   if 1,
-	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) median(x));
+	  [Wmu, VD.Smu] = getVDOp(VD, params.W, 'median');
   else
-	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) mean(x));
+	  [Wmu, VD.Smu] = getVDOp(VD, params.W, 'mean');
   end
 	% sqrt(2)*std(VR_i)
-	[Wsdmu, VD.Ssdmu] = getVDOp(VD, params.W, @(x) ksd*std(x));
+	[Wsdmu, VD.Ssdmu] = getVDOp(VD, params.W, 'stdDev', ksd);
 
   if 0, % diagnostic plot
     [vx,vy] = voronoi(VD.Sx(VD.Sk), VD.Sy(VD.Sk));
@@ -226,7 +226,7 @@ VD.mergeHCThreshold = mergeHCThreshold;
 
 function params = plotCurrentVD(VD, params, iMerge)
 
-VDW = getVDOp(VD, params.W, @(x) median(x));
+VDW = getVDOp(VD, params.W, 'median');
 
 clf
 subplot(111),

@@ -6,7 +6,7 @@ function [VD,CVD] = testVD2CVD(nr,nc,ns,initSeeds,varargin)
 % VD = testVD2CVD(100,100,50,@randomSeeds)
 
 %
-% $Id: testVD2CVD.m,v 1.6 2018/05/30 16:42:10 patrick Exp $
+% $Id: testVD2CVD.m,v 1.7 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -75,7 +75,7 @@ end
 
 VD = computeVD(nr, nc, S, VDlim);
 
-plotVDOp(VD, W, @(x) median(x))
+plotVDOp(VD, W, 'median')
 pause
 
 params = getDefaultVOISEParams;
@@ -85,6 +85,6 @@ params.Wlim = [min(params.W(:)) max(params.W(:))];
 
 vdc = figure;
 CVD = getCentroidVD(VD,params);
-plotVDOp(CVD, W, @(x) median(x))
+plotVDOp(CVD, W, 'median')
 
 

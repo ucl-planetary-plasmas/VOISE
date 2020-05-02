@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.18 2020/04/23 11:31:22 patrick Exp $
+% $Id: getCentroidVD.m,v 1.19 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -125,7 +125,7 @@ VD.regDist2 = regDist2;
 
 function params = plotCurrentVD(VD, params, iReg)
 
-VDW = getVDOp(VD, params.W, @(x) median(x));
+VDW = getVDOp(VD, params.W, 'median');
 
 clf
 subplot(111),

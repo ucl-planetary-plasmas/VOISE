@@ -2,7 +2,7 @@ function [VD, params]  = divideVDFast(VD, params)
 % function [VD,params] = divideVDFast(VD, params)
 
 %
-% $Id: divideVDFast.m,v 1.8 2015/02/11 16:14:50 patrick Exp $
+% $Id: divideVDFast.m,v 1.9 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -88,7 +88,7 @@ VD.divHCThreshold = divHCThreshold;
 
 function params = plotCurrentVD(VD, params, iDiv)
 
-VDW = getVDOp(VD, params.W, @(x) median(x));
+VDW = getVDOp(VD, params.W, 'median');
 
 clf
 subplot(111),

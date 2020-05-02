@@ -2,7 +2,7 @@ function [S,xc,yc,md2s,md2c] = getVDstats(VD, params, sk)
 % function [S,xc,yc,md2s,md2c] = getVDstats(VD, params, sk)
 
 %
-% $Id: getVRstats.m,v 1.3 2012/04/16 16:54:27 patrick Exp $
+% $Id: getVRstats.m,v 1.4 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,7 +21,7 @@ function [S,xc,yc,md2s,md2c] = getVDstats(VD, params, sk)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % Calculate equivalent scale length from VD as sqrt(S)
-[imls, Sls] = getVDOp(VD, params.W, @(x) sqrt(length(x)));
+[imls, Sls] = getVDOp(VD, params.W, 'sqrtLen');
 
 if ~exist('sk') | isempty(sk),
   sk = [1:length(VD.Sk)]';

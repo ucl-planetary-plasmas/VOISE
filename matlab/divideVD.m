@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.16 2020/04/23 11:17:48 patrick Exp $
+% $Id: divideVD.m,v 1.17 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -145,7 +145,7 @@ fprintf(1,'*** Dividing phase completed.\n')
 
 function params = plotCurrentVD(VD, params, iDiv)
 
-VDW = getVDOp(VD, params.W, @(x) median(x));
+VDW = getVDOp(VD, params.W, 'median');
 
 clf
 subplot(111),

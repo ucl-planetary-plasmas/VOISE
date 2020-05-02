@@ -2,7 +2,7 @@ function varargout = printSeeds(fid, VD, params)
 % function varargout = printSeeds(fid, VD, params)
 
 %
-% $Id: printSeeds.m,v 1.6 2012/04/16 16:54:27 patrick Exp $
+% $Id: printSeeds.m,v 1.7 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -24,10 +24,10 @@ function varargout = printSeeds(fid, VD, params)
 k = VD.k;
 
 % compute scale length in pixels unit
-[WLS,SLS] = getVDOp(VD, params.W, @(x) sqrt(length(x)));
+[WLS,SLS] = getVDOp(VD, params.W, 'sqrtLen');
 
 % compute median intensity
-[WDM,SIM] = getVDOp(VD, params.W, @(x) median(x));
+[WDM,SIM] = getVDOp(VD, params.W, 'median');
 
 s = sprintf('\n');
 

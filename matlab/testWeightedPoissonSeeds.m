@@ -5,7 +5,7 @@ function VD = testWeightedPoissonSeeds(nr,nc,ns)
 % VD = testWeightedPoissonSeeds(100,100,12);
 
 %
-% $Id: testWeightedPoissonSeeds.m,v 1.1 2015/04/16 13:15:29 patrick Exp $
+% $Id: testWeightedPoissonSeeds.m,v 1.2 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -73,7 +73,7 @@ rand('twister',10);
 
 VD = testSeq(Z, ns, initSeeds, clipping, radfluct);
 
-%VDW = getVDOp(VD, Z, @(x) median(x));
+%VDW = getVDOp(VD, Z, 'median');
 imagesc(x,y,Z),
 axis xy,
 colorbar
@@ -109,7 +109,7 @@ VD = computeVD(nr, nc, S, VDlim);
 return
 
 
-plotVDOp(VD, W, @(x) median(x))
+plotVDOp(VD, W, 'median')
 pause
 
 if 0
@@ -124,6 +124,6 @@ for k = seedList,
 	drawVD(VD);
 end
 
-plotVDOp(VD, W, @(x) median(x))
+plotVDOp(VD, W, 'median')
 
 

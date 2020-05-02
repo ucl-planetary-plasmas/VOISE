@@ -2,7 +2,7 @@ function params = plotDefaultVOISE(VD, params, info)
 % function params = plotDefaultVOISE(VD, params, info)
 
 %
-% $Id: plotDefaultVOISE.m,v 1.8 2018/06/14 11:48:47 patrick Exp $
+% $Id: plotDefaultVOISE.m,v 1.9 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -20,7 +20,7 @@ function params = plotDefaultVOISE(VD, params, info)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-VDW = getVDOp(VD, params.W, @(x) median(x));
+VDW = getVDOp(VD, params.W, 'median');
 
 clf
 subplot(111),

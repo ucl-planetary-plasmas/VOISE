@@ -5,7 +5,7 @@ function VD = testIncVD(nr,nc,ns,initSeeds,clipping,radfluct)
 % VD = testIncVD(100,100,12,@randomSeeds);
 
 %
-% $Id: testIncVD.m,v 1.6 2015/02/14 15:02:21 patrick Exp $
+% $Id: testIncVD.m,v 1.7 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -93,7 +93,7 @@ end
 
 VD = computeVD(nr, nc, S, VDlim);
 
-plotVDOp(VD, W, @(x) median(x))
+plotVDOp(VD, W, 'median')
 pause
 
 
@@ -109,6 +109,6 @@ for k = seedList,
 	drawVD(VD);
 end
 
-plotVDOp(VD, W, @(x) median(x))
+plotVDOp(VD, W, 'median')
 
 

@@ -2,7 +2,7 @@ function params = plotVOISE(VD, params, ic)
 % function params = plotVOISE(VD, params, ic)
 
 %
-% $Id: plotVOISE.m,v 1.7 2015/02/11 16:23:06 patrick Exp $
+% $Id: plotVOISE.m,v 1.8 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -29,7 +29,7 @@ y = params.y;
 if isempty(VD), % original image
 	W = params.W;
 else, % median operator on VD
-  W = getVDOp(VD, params.W, @(x) median(x));
+  W = getVDOp(VD, params.W, 'median');
 end
 
 imagesc(x, y, W),

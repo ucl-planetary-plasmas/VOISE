@@ -2,7 +2,7 @@ function [VD, params] = mergeVDFast(VD, params)
 % function [VD, params] = mergeVDFast(VD, params)
 
 %
-% $Id: mergeVDFast.m,v 1.8 2015/02/11 16:16:58 patrick Exp $
+% $Id: mergeVDFast.m,v 1.9 2020/05/02 22:30:20 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -40,9 +40,9 @@ while ~stopMerge,
   [WD,SD,WHC,SHC,HCThreshold] = computeHCThreshold(VD, params, mergePctile);
 
   if 1,
-	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) median(x));
+	  [Wmu, VD.Smu] = getVDOp(VD, params.W, 'median');
   else
-	  [Wmu, VD.Smu] = getVDOp(VD, params.W, @(x) mean(x));
+	  [Wmu, VD.Smu] = getVDOp(VD, params.W, 'mean');
   end
 
   if 0, % diagnostic plot
@@ -177,7 +177,7 @@ VD.mergeHCThreshold = mergeHCThreshold;
 
 function params = plotCurrentVD(VD, params, iMerge)
 
-VDW = getVDOp(VD, params.W, @(x) median(x));
+VDW = getVDOp(VD, params.W, 'median');
 
 clf
 subplot(111),
