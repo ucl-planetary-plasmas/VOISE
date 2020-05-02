@@ -12,7 +12,7 @@ function varargout = getFitsKeyVal(filename,keywords,verbose)
 % [pcx,pcy,cml,udate]
 
 %
-% $Id: getFitsKeyVal.m,v 1.6 2020/05/02 14:02:08 patrick Exp $
+% $Id: getFitsKeyVal.m,v 1.7 2020/05/02 15:29:35 patrick Exp $
 %
 % Copyright (c) 2011-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -45,9 +45,15 @@ for k = 1:length(keywords),
       if strcmp(info.PrimaryData.Keywords{i,1},keyword),
         values{k} = info.PrimaryData.Keywords{i,2};
         if exist('verbose','var') && ~isempty(verbose) && verbose,
-        fprintf(1,'Primary  %3d %8s %12s - %s\n', i, ...
-                mydeblank(info.PrimaryData.Keywords{i,1}), values{k},...
-                mydeblank(info.PrimaryData.Keywords{i,3}));
+          if ischar(values{k}),
+            fprintf(1,'Primary  %3d %8s %12s - %s\n', i, ...
+                    mydeblank(info.PrimaryData.Keywords{i,1}), values{k},...
+                    mydeblank(info.PrimaryData.Keywords{i,3}));
+          elseif isnumeric(values{k}),
+            fprintf(1,'Primary  %3d %8s %12g - %s\n', i, ...
+                    mydeblank(info.PrimaryData.Keywords{i,1}), values{k},...
+                    mydeblank(info.PrimaryData.Keywords{i,3}));
+          end
         end
       end
     end
@@ -60,9 +66,15 @@ for k = 1:length(keywords),
         if strcmp(info.Image(j).Keywords{i,1},keyword),
           values{k} = info.Image(j).Keywords{i,2};
           if exist('verbose','var') && ~isempty(verbose) && verbose,
-          fprintf(1,'Image(%d) %3d %8s %12s - %s\n', j, i, ...
-                  mydeblank(info.Image(j).Keywords{i,1}), values{k},...
-                  mydeblank(info.Image(j).Keywords{i,3}));
+            if ischar(values{k}),
+              fprintf(1,'Image(%d) %3d %8s %12s - %s\n', j, i, ...
+                      mydeblank(info.Image(j).Keywords{i,1}), values{k},...
+                      mydeblank(info.Image(j).Keywords{i,3}));
+            elseif isnumeric(values{k}),
+              fprintf(1,'Image(%d) %3d %8s %12g - %s\n', j, i, ...
+                      mydeblank(info.Image(j).Keywords{i,1}), values{k},...
+                      mydeblank(info.Image(j).Keywords{i,3}));
+            end
           end
         end
       end
