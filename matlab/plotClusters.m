@@ -12,7 +12,7 @@ function params = plotClusters(CVD, params)
 % Example: 
 %
 %     % generate the VOISE segmentation with output in directory
-%     [voise.root '/share/output/north_proj]
+%     % [voise.root '/share/output/north_proj]
 %     webVOISEdemo1 
 %
 %     % run the python clustering algorithm knn.py 
@@ -28,7 +28,7 @@ function params = plotClusters(CVD, params)
 %     plotClusters(CVD, params)
 
 %
-% $Id: plotClusters.m,v 1.1 2020/05/03 14:44:42 patrick Exp $
+% $Id: plotClusters.m,v 1.2 2020/05/03 18:28:57 patrick Exp $
 %
 % Copyright (c) 2020 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
