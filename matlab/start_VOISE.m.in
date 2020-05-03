@@ -6,7 +6,7 @@ function start_VOISE
 
 % @configure_input@
 %
-% $Id: start_VOISE.m.in,v 1.9 2020/05/02 14:51:26 patrick Exp $
+% $Id: start_VOISE.m.in,v 1.10 2020/05/03 18:09:58 patrick Exp $
 %
 % Copyright (c) 2009-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -27,11 +27,9 @@ function start_VOISE
 
 global voise
 
-voise.root    = '@abs_top_srcdir@';
-voise.version = '@VERSION@';
-
-% Matlab NAIF SPICE path
-voise.mice    = '@MICE_PATH@';
+% VOISE set up
+voise.root      = '@abs_top_srcdir@';
+voise.version   = '@VERSION@';
 
 fprintf('Setting up VOISE -- version %s\n', voise.version);
 
@@ -40,9 +38,18 @@ addpath([voise.root '/matlab/imageUtils']);
 addpath([voise.root '/matlab/limbFit']);
 addpath([voise.root '/matlab/visUtils']);
 
-if ~isempty(voise.mice),
-  fprintf('Mice directory set to %s\n', voise.mice);
-  addpath(voise.mice);
-  fprintf('%s compiled %s %s\n', cspice_mice('version'),...
-          cspice_mice('date'),cspice_mice('time'));
+% Matlab NAIF Spice (Mice) set up
+voise.mice.path = '@MICE_PATH@';
+
+if ~isempty(voise.mice.path), % if Mice path provided
+  addpath(voise.mice.path);
+elseif ~isempty(which('mice')) && exist('mice') ~= 3, % Mice available 
+  voise.mice.path = which('mice');
+end
+
+if ~isempty(voise.mice.path), % if Mice set up
+	fprintf('Mice path:  %s\n', voise.mice.path);
+  voise.mice.ver = sprintf('%s compiled %s %s\n', cspice_mice('version'),...
+                           cspice_mice('date'),cspice_mice('time'));
+  fprintf('Version  : %s\n', voise.mice.ver);
 end
