@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.19 2020/05/02 22:30:20 patrick Exp $
+% $Id: getCentroidVD.m,v 1.20 2020/05/03 12:01:22 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -84,8 +84,8 @@ while ~stopReg,
     fprintf(1,'Iter %2d Computing regularised Voronoi Diagram for %d seeds\n',...
 		        iReg, size(Sc,1));
     if exist('addSeedToVDBatch')==3,
-      VD = initVD(nr, nc, Sc, VD.W);
-      VD = addSeedToVDBatch(VD, Sc(3:end));
+      VD = initVD(nr, nc, Sc(1:3,1:2), VD.W);
+      VD = addSeedToVDBatch(VD, Sc(3:end,1:2));
     else,
     switch params.regAlgo,
 	    case 0, % incremental
