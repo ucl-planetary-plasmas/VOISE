@@ -1,8 +1,23 @@
-function varargout=VD2GraphViz(filename, VD)
-% function VD2GraphViz(filename, VD)
+function varargout = VD2GraphViz(filename, VD, params)
+% function [gvString]=VD2GraphViz(filename, VD, params)
+%
+% Create GraphViz graph file (.gv) from a Voronoi diagram and 
+% returns on demand a string containing the graph file.
+%
+% Example:
+%
+%     % generate the VOISE segmentation with output in directory
+%     % [voise.root '/share/output/north_proj]
+%     webVOISEdemo1
+%
+%     global voise
+%     datadir = [voise.root '/share/output/north_proj'];
+%     load([datadir '/voise.mat'])
+%     VD2GraphViz('CVD.gv',CVD, params);
+%     
 
 %
-% $Id: VD2GraphViz.m,v 1.1 2015/04/16 13:09:41 patrick Exp $
+% $Id: VD2GraphViz.m,v 1.2 2020/05/03 18:30:33 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,6 +37,9 @@ function varargout=VD2GraphViz(filename, VD)
 
 % A list of the attributes available for GraphViz can be found at
 % http://www.graphviz.org/content/attrs
+
+% Put the GraphViz file into the output directory
+filename = [params.oDir '/' filename];
 
 % current time
 k = VD.k;
