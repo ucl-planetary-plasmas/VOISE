@@ -1,8 +1,28 @@
 function A = VD2AdjacencyMatrix(VD)
 % function A = VD2AdjacencyMatrix(VD)
+%
+% Create A Adjacency matrix, a square matrix such that its element Aij is
+% one when there is an edge from vertex i to vertex j, and 
+% zero when there is no edge.
+%
+% Example:
+%
+%     % generate the VOISE segmentation with output in directory
+%     % [voise.root '/share/output/north_proj]
+%     webVOISEdemo1
+%
+%     global voise
+%     datadir = [voise.root '/share/output/north_proj'];
+%     load([datadir '/voise.mat'])
+%     A = VD2AdjacencyMatrix(CVD);
+%     imagesc(A),
+%     axis ij
+%     colormap(parula(2))
+%     colorbar
+
 
 %
-% $Id: VD2AdjacencyMatrix.m,v 1.1 2015/04/16 14:17:44 patrick Exp $
+% $Id: VD2AdjacencyMatrix.m,v 1.2 2020/05/03 21:10:23 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.

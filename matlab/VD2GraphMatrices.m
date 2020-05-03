@@ -1,8 +1,76 @@
 function [A,D,L,l,d,s,I] = VD2GraphMatrices(VD)
 % function [A,D,L,l,d,s,I] = VD2GraphMatrices(VD)
+%
+% Create matrice representation of graph in VD
+%
+% A: Adjacency matrix
+% D: Degree matrix
+% L: Laplacian matrix
+% l: Normalised Laplacian matrix
+% d: Distance matrix
+% s: Similarity matrix
+% I: Incidence matrix
+%
+% Example:
+%
+%     % generate the VOISE segmentation with output in directory
+%     % [voise.root '/share/output/north_proj]
+%     webVOISEdemo1
+%
+%     global voise
+%     datadir = [voise.root '/share/output/north_proj'];
+%     load([datadir '/voise.mat'])
+%     [A,D,L,l,d,s,I] = VD2GraphMatrices(CVD);
+%
+%     close all
+%
+%     figure
+%     subplot(221) 
+%     imagesc(A)
+%     title('adjacency matrix')
+%     colormap(gca,parula(2))
+%     colorbar
+%
+%     subplot(222)
+%     imagesc(D)
+%     title('degree matrix')
+%     colormap(gca,parula(max(D(:))-min(D(:))))
+%     colorbar
+%
+%     subplot(223)
+%     imagesc(L)
+%     title('Laplacian matrix')
+%     colormap(gca,parula(max(L(:))-min(L(:))))
+%     colorbar
+%
+%     subplot(224)
+%     imagesc(l)
+%     title('Laplacian matrix')
+%     colormap(gca,parula(256))
+%     colorbar
+%
+%     figure
+%     subplot(311)
+%     imagesc(d)
+%     title('distance matrix')
+%     colormap(gca,parula(max(d(:))-min(d(:))))
+%     colorbar
+%
+%     subplot(312)
+%     imagesc(s)
+%     title('similarity matrix')
+%     colormap(gca,parula(256))
+%     colorbar
+%
+%     subplot(313)
+%     imagesc(I)
+%     title('incidence matrix')
+%     colormap(gca,parula(2))
+%     colorbar
+
 
 %
-% $Id: VD2GraphMatrices.m,v 1.1 2015/04/16 14:19:00 patrick Exp $
+% $Id: VD2GraphMatrices.m,v 1.2 2020/05/03 21:10:23 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -56,7 +124,7 @@ nvertices = length(VD.Nk);
 Aupper = triu(A);
 nedges = sum(Aupper(:));
 I = zeros(nvertices,nedges);
-[ii,jj] = find(A2==1);
+[ii,jj] = find(A==1);
 for i = 1:nedges,
   I(ii(i),i) = 1;
   I(jj(i),i) = 1;
