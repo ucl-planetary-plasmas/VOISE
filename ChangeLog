@@ -1,3 +1,49 @@
+2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/plotClusters.m (1.1), python/knn.py (1.1):
+	  Imported clustering python code and matlab visualisation code
+	  written by Jack Scantlebury for his MSc project at UCL in the
+	  academic year 2017-2018.
+
+2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getCentroidVD.m (1.20):
+	  Fixed code typo.
+
+2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/mexCompile.m (1.1):
+	  Compile all mex function files from C++ source code written by
+	  Jack Scantlebury for his MSc thesis at UCL in 2018.
+
+2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* cpp/NSStar.cpp (1.1), cpp/NSStar.h (1.1), cpp/addSeed.cpp (1.1),
+	  cpp/addSeed.h (1.1), cpp/getCentroid.cpp (1.1), cpp/getCentroid.h
+	  (1.1), cpp/getOp.cpp (1.1), cpp/getOp.h (1.1), cpp/getRegion.cpp
+	  (1.1), cpp/getRegion.h (1.1), cpp/pointInRegion.cpp (1.1),
+	  cpp/pointInRegion.h (1.1), cpp/removeSeed.cpp (1.1),
+	  cpp/removeSeed.h (1.1), cpp/skizException.cpp (1.1),
+	  cpp/skizException.h (1.1), cpp/typedefs.h (1.1), cpp/vd.cpp
+	  (1.1), cpp/vd.h (1.1), cpp/aux-functions/arrayPosInVector.h
+	  (1.1), cpp/aux-functions/circumcentre.h (1.1),
+	  cpp/aux-functions/inVector.h (1.1), cpp/aux-functions/metrics.cpp
+	  (1.1), cpp/aux-functions/metrics.h (1.1),
+	  cpp/aux-functions/proposition2.cpp (1.1),
+	  cpp/aux-functions/proposition2.h (1.1),
+	  cpp/aux-functions/sqDist.h (1.1), cpp/aux-functions/updateDict.h
+	  (1.1), cpp/mex/addSeedToVD.cpp (1.1),
+	  cpp/mex/addSeedToVDBatch.cpp (1.1),
+	  cpp/mex/getCentroidSeedBatch.cpp (1.1), cpp/mex/getVDOpBatch.cpp
+	  (1.1), cpp/mex/grabVD.cpp (1.1), cpp/mex/grabVD.h (1.1),
+	  cpp/mex/grabW.cpp (1.1), cpp/mex/grabW.h (1.1),
+	  cpp/mex/mexIncludes.h (1.1), cpp/mex/pushVD.cpp (1.1),
+	  cpp/mex/pushVD.h (1.1), cpp/mex/removeSeedFromVD.cpp (1.1),
+	  cpp/mex/removeSeedFromVDBatch.cpp (1.1), cpp/mex/sopToWop.cpp
+	  (1.1):
+	  Imported C++ code for VOISE written by Jack Scantlebury for his
+	  MSc project in the academic year 2017-2018.
+
 2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/cmpVDalgo.m (1.7), matlab/computeHCThreshold.m (1.4),
