@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.22 2020/05/02 16:56:22 patrick Exp $
+% $Id: loadImage.m,v 1.23 2020/09/17 09:14:52 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -60,10 +60,10 @@ try
 		if ~isempty(me), throw(me), end
     im = load(params.iFile);
     % set image, axes and related
-    params.W = im.Z;
+    params.W = double(im.Z);
 		if isfield(im,'x') & isfield(im,'y'),
-      params.x = im.x;
-      params.y = im.y;
+      params.x = double(im.x);
+      params.y = double(im.y);
 			% overwrite pixelSize and imageOrigo deduced from x and y
       params.pixelSize  = [diff(params.x(1:2)), diff(params.y(1:2))];
       params.imageOrigo = [-params.x(1)./params.pixelSize(1),...
