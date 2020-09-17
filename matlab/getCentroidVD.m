@@ -2,7 +2,7 @@ function VD = getCentroidVD(VD, params)
 % function VD = getCentroidVD(VD, params)
 
 %
-% $Id: getCentroidVD.m,v 1.20 2020/05/03 12:01:22 patrick Exp $
+% $Id: getCentroidVD.m,v 1.21 2020/09/17 06:30:24 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,7 +47,7 @@ while ~stopReg,
   % compute centre-of-mass of polygons
   Sc = zeros(0,2);
 	Sk = [];
-  if exist('getCentroidSeedBatch')==3,
+  if exist('getCentroidSeedBatch')==3, % params.W has to be double!
     Sc1 = getCentroidSeedBatch(VD,params.W,VD.Sk');
     for k = 1:length(VD.Sk),
       if isempty(find(Sc1(k, 1) == Sc(:, 1) & Sc1(k, 2) == Sc(:, 2)))

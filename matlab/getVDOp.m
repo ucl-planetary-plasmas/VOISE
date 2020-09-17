@@ -2,7 +2,7 @@ function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 % function [Wop, Sop] = getVDOp(VD, W, op, varargin)
 
 %
-% $Id: getVDOp.m,v 1.8 2020/05/02 22:29:48 patrick Exp $
+% $Id: getVDOp.m,v 1.9 2020/09/17 06:30:24 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -48,7 +48,7 @@ end
 
 [op,msg] = fcnchk(op);
 
-if exist('getVDOpBatch')==3,
+if exist('getVDOpBatch')==3, % W has to be double!
 	[Wop, Sop] = getVDOpBatch(VD, W, metricID, varargin{:});
 else
   Sop = zeros(size(VD.Sk));
