@@ -14,7 +14,7 @@ function webVOISE(VOISEconf)
 % iFile = ../share/input/sampleint.fits
 % oDir = ../share/output/sampleint/
 
-% $Id: webVOISE.m.in,v 1.9 2015/02/11 16:25:29 patrick Exp $
+% $Id: webVOISE.m.in,v 1.10 2020/10/08 15:22:23 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -36,8 +36,9 @@ function webVOISE(VOISEconf)
 % Some set up variables
 global voise
 
-voise.root    = '..';
-voise.version = '@VERSION@';
+%voise.root    = '@abs_top_srcdir@';
+%voise.version = '@VERSION@';
+start_VOISE
 
 % disable warning about using handle graphics with -nojvm
 warning('off','MATLAB:HandleGraphics:noJVM');
