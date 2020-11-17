@@ -2,7 +2,7 @@ function [VD, params]  = divideVD(VD, params)
 % function [VD,params] = divideVD(VD, params)
 
 %
-% $Id: divideVD.m,v 1.17 2020/05/02 22:30:20 patrick Exp $
+% $Id: divideVD.m,v 1.18 2020/11/17 12:46:56 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -76,7 +76,22 @@ while ~stopDiv,
 	  nSa = size(S,1);
     fprintf(1,'Iter %2d Adding %d seeds to Voronoi Diagram\n', iDiv, nSa)
     if exist('addSeedToVDBatch')==3, % mex file
+      if 1, % filter identical seeds
+      Sx = S(1,1); Sy = S(1,2);
+      for k = 2:nSa, % ensure seeds are unique
+        if isempty(find(S(k,1)==Sx & S(k,2)==Sy)) && ...
+           isempty(find(S(k,1)==VD.Sx & S(k,2)==VD.Sy)),
+          Sx = [Sx;S(k,1)]; Sy = [Sy;S(k,2)];
+        else
+          fprintf(1,'Warning: seed %d already exists\n',k);
+        end
+      end
+      Su = [Sx,Sy];
+      VD = addSeedToVDBatch(VD, Su);
+      else, % no identical seeds filtering, save seeds
+      save multiseeds params VD S
       VD = addSeedToVDBatch(VD, S);
+      end
     else
 		switch params.divideAlgo,
 		  case 0, % incremental
