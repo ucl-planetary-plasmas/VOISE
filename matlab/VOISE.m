@@ -11,7 +11,7 @@ function [params,IVD,DVD,MVD,CVD] = VOISE(params, varargin)
 %
 % VOronoi Image SEgmentation 
 %
-% $Id: VOISE.m,v 1.24 2016/09/16 16:01:23 patrick Exp $
+% $Id: VOISE.m,v 1.25 2020/11/17 12:43:34 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -35,6 +35,8 @@ global voise timing
 if ischar(params), % params is the name of a VOISE configuration file
   % load VOISE parameters
 	params = readVOISEconf(params);
+  % allow for command line parameter modifications
+  params = parseArgs(params, varargin{:});
 	% load input image
 	params = loadImage(params);
 	% create directory if necessary
