@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.9 2020/05/02 15:12:04 patrick Exp $
+% $Id: getHSTInfo.m,v 1.10 2021/04/12 19:20:40 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -49,6 +49,8 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
   % start/end time (Modified Julian Time) of 1st/last exposure 
   [HST.TEXPSTRT,HST.TEXPEND] = getFitsKeyVal(iFile,...
                                {'TEXPSTRT','TEXPEND'},verbose);
+  [HST.EXPSTART,HST.EXPEND] = getFitsKeyVal(iFile,...
+                               {'EXPSTART','EXPEND'},verbose);
   % aperture field of view
   HST.APER_FOV = getFitsKeyVal(iFile,{'APER_FOV'},verbose);
   % plate scale (arcsec/pixel)
@@ -57,7 +59,7 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
   else
     HST.PLATESC = getFitsKeyVal(iFile,{'PLATESC'},verbose);
   end
-  % subarray axes center pt in unbinned dectector pixels
+  % subarray axes centre point in unbinned detector pixels
   [HST.CENTERA1,HST.CENTERA2] = getFitsKeyVal(iFile,...
                                 {'CENTERA1','CENTERA2'},verbose);
   % subarray axes size in unbinned detector pixels
@@ -75,11 +77,13 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
   [HST.CD2_1,HST.CD2_2] = getFitsKeyVal(iFile,{'CD2_1','CD2_2'},verbose);
   % inverse linear transform matrix with scale
   % from intermediate world coordinate to pixel coordinate
-  invCD = inv([HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2]);
-  HST.iCD1_1 = invCD(1,1);
-  HST.iCD1_2 = invCD(1,2);
-  HST.iCD2_1 = invCD(2,1);
-  HST.iCD2_2 = invCD(2,2);
+  if ~isempty([HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2]),
+    invCD = inv([HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2]);
+    HST.iCD1_1 = invCD(1,1);
+    HST.iCD1_2 = invCD(1,2);
+    HST.iCD2_1 = invCD(2,1);
+    HST.iCD2_2 = invCD(2,2);
+  end
 
   % ra and dec of aperture reference position
   [HST.RA_APER,HST.DEC_APER] = getFitsKeyVal(iFile,...
@@ -102,24 +106,41 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
   fprintf(1,'RA_APER, DEC_APER = %12.6f, %12.6f deg\n',HST.RA_APER,HST.DEC_APER);
 
   fprintf(1,'ORIENTAT          = %12.6f deg\n',HST.ORIENTAT);
-  % find scaling and rotation
-  CD = [HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2];
-  % scaling
-  s = [norm(CD(1,:));norm(CD(2,:))];
-  % linear tranformation
-  m = [CD(1,:)/s(1);CD(2,:)/s(2)];
-  % rotation angle
-  orientat = atan2(m(2,1), m(2,2))*180/pi;
-  fprintf(1,'orientat CD(2,:)  = %12.6f deg\n', orientat);
+  if ~isempty([HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2]),
+    % find scaling and rotation
+    CD = [HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2];
+    % scaling
+    s = [norm(CD(1,:));norm(CD(2,:))];
+    % linear tranformation
+    m = [CD(1,:)/s(1);CD(2,:)/s(2)];
+    % rotation angle
+    orientat = atan2(m(2,1), m(2,2))*180/pi;
+    fprintf(1,'orientat CD(2,:)  = %12.6f deg\n', orientat);
+	  % arcseconds per pixel
+	  PIXSIZE  = s*3600;
+    fprintf(1,'PIXSIZE           = %12.6f, %12.6f arcsec/pixel\n', PIXSIZE);
 
-  % embed scaling and rotation stuff into HST 
-  HST.CD = CD;
-  HST.s = s;
-  HST.m = m;
-  HST.orientat = orientat;
+    % embed scaling and rotation stuff into HST 
+    HST.CD = CD;
+    HST.s = s;
+    HST.m = m;
+    HST.orientat = orientat;
+    HST.PIXSIZE  = PIXSIZE;
 
-	% inverse linear transform matrix with scale
-	HST.iCD = [HST.iCD1_1,HST.iCD1_2;HST.iCD2_1,HST.iCD2_2];
+    % inverse linear transform matrix with scale
+    HST.iCD = [HST.iCD1_1,HST.iCD1_2;HST.iCD2_1,HST.iCD2_2];
+  end
+
+  % https://uk.mathworks.com/matlabcentral/answers/21209-convert-modified-julian-date
+  MJD_epoch='Nov 17, 1858,00:00';
+  if ~isempty(HST.EXPSTART),
+	  HST.EXPSTART = datestr(HST.EXPSTART+datenum(MJD_epoch));
+    fprintf(1,'EXPSTART          = %s\n', HST.EXPSTART);
+	end
+  if ~isempty(HST.EXPEND),
+	  HST.EXPEND = datestr(HST.EXPEND+datenum(MJD_epoch));
+    fprintf(1,'EXPEND            = %s\n', HST.EXPEND);
+  end
 
   % Embed HST into params
 	params.HST = HST;
