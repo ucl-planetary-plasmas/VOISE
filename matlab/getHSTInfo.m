@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.11 2021/04/15 08:24:23 patrick Exp $
+% $Id: getHSTInfo.m,v 1.12 2021/04/15 08:53:22 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -147,9 +147,12 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'), % level 1 and level 2 HST
 
 end
 % level 2 APIS specific
-SOURCE = getFitsKeyVal(iFile,{'SOURCEE'},verbose);
+SOURCE = getFitsKeyVal(iFile,{'SOURCE'},verbose);
 if ~isempty(SOURCE) && strcmp(SOURCE,'APIS database'),
+  fprintf(1,'Level 2 APIS fits detected.\n');
+
   % DATA DESCRIPTION
+	HST.SOURCE = SOURCE;
   HST.TARGET1 = getFitsKeyVal(iFile,{'TARGET1'},verbose);
   HST.HEMIS1 = getFitsKeyVal(iFile,{'HEMIS1'},verbose);
   HST.HEMIS2 = getFitsKeyVal(iFile,{'HEMIS2'},verbose);
