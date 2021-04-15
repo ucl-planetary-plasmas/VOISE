@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.10 2021/04/12 19:20:40 patrick Exp $
+% $Id: getHSTInfo.m,v 1.11 2021/04/15 08:24:23 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -24,10 +24,13 @@ iFile = params.iFile;
 
 verbose = 1;
 
+HST = [];
+
 % detect whether data is from HST
 TELESCOP = getFitsKeyVal(iFile,{'TELESCOP'},verbose);
 
-if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
+if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'), % level 1 and level 2 HST
+
   % instrument identifier
   HST.INSTRUME = getFitsKeyVal(iFile,{'INSTRUME'},verbose);
   % proposer's target name
@@ -142,8 +145,55 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'),
     fprintf(1,'EXPEND            = %s\n', HST.EXPEND);
   end
 
+end
+% level 2 APIS specific
+SOURCE = getFitsKeyVal(iFile,{'SOURCEE'},verbose);
+if ~isempty(SOURCE) && strcmp(SOURCE,'APIS database'),
+  % DATA DESCRIPTION
+  HST.TARGET1 = getFitsKeyVal(iFile,{'TARGET1'},verbose);
+  HST.HEMIS1 = getFitsKeyVal(iFile,{'HEMIS1'},verbose);
+  HST.HEMIS2 = getFitsKeyVal(iFile,{'HEMIS2'},verbose);
+  HST.EXTEN1 = getFitsKeyVal(iFile,{'EXTEN1'},verbose);
+  HST.UNIT1 = getFitsKeyVal(iFile,{'UNIT1'},verbose);
+  HST.EXTEN2 = getFitsKeyVal(iFile,{'EXTEN2'},verbose);
+  HST.UNIT2 = getFitsKeyVal(iFile,{'UNIT2'},verbose);
+  HST.EXTEN3 = getFitsKeyVal(iFile,{'EXTEN3'},verbose);
+  HST.UNIT3 = getFitsKeyVal(iFile,{'UNIT3'},verbose);
+  HST.EXTEN4 = getFitsKeyVal(iFile,{'EXTEN4'},verbose);
+  HST.UNIT4 = getFitsKeyVal(iFile,{'UNIT4'},verbose);
+  HST.EXTEN5 = getFitsKeyVal(iFile,{'EXTEN5'},verbose);
+  HST.UNIT5 = getFitsKeyVal(iFile,{'UNIT5'},verbose);
+  HST.EXTEN6 = getFitsKeyVal(iFile,{'EXTEN6'},verbose);
+  HST.UNIT6 = getFitsKeyVal(iFile,{'UNIT6'},verbose);
+  HST.EXTEN7 = getFitsKeyVal(iFile,{'EXTEN7'},verbose);
+  HST.UNIT7 = getFitsKeyVal(iFile,{'UNIT7'},verbose);
+
+  % ORIGINAL OBSERVATION
+  HST.DATEOBS = getFitsKeyVal(iFile,{'DATEOBS'},verbose);
+  HST.EXP = getFitsKeyVal(iFile,{'EXP'},verbose);
+  HST.PLATESC = getFitsKeyVal(iFile,{'PLATESC'},verbose);
+  HST.RA_APER = getFitsKeyVal(iFile,{'RA_APER'},verbose);
+  HST.DEC_APER = getFitsKeyVal(iFile,{'DEC_APER'},verbose);
+
+  % ASTRONOMICAL EPHEMERIS AT MID-EXPOSURE
+  HST.DISTE = getFitsKeyVal(iFile,{'DISTE'},verbose);
+  HST.SUBELAT = getFitsKeyVal(iFile,{'SUBELAT'},verbose);
+  HST.SUBELON = getFitsKeyVal(iFile,{'SUBELON'},verbose);
+
+  HST.DISTS = getFitsKeyVal(iFile,{'DISTS'},verbose);
+  HST.SUBSLAT = getFitsKeyVal(iFile,{'SUBSLAT'},verbose);
+  HST.SUBSLON = getFitsKeyVal(iFile,{'SUBSLON'},verbose);
+
+  HST.TLIGHT = getFitsKeyVal(iFile,{'TLIGHT'},verbose);
+  HST.RAP = getFitsKeyVal(iFile,{'RAP'},verbose);
+  HST.PHASE = getFitsKeyVal(iFile,{'PHASE'},verbose);
+  HST.NP_POS = getFitsKeyVal(iFile,{'NP_POS'},verbose);
+  HST.RA_TAR = getFitsKeyVal(iFile,{'RA_TAR'},verbose);
+  HST.DEC_TAR = getFitsKeyVal(iFile,{'DEC_TAR'},verbose);
+
+end
+
   % Embed HST into params
 	params.HST = HST;
 
-end
 
