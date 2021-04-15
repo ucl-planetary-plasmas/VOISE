@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.23 2020/09/17 09:14:52 patrick Exp $
+% $Id: loadImage.m,v 1.24 2021/04/15 08:52:39 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -91,7 +91,8 @@ try
     warning('off','MATLAB:imagesci:fitsinfo:unknownFormat');
     info = fitsinfo(params.iFile);
 
-    if ~isfield(info,'Image'), 
+    if ~isfield(info,'Image') || ...
+		  length(info.Image)>1, % APIS level 2 data
       im = squeeze(fitsread(params.iFile));
     else
       im = squeeze(fitsread(params.iFile,'image'));
