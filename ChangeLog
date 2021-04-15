@@ -1,3 +1,8 @@
+2021-04-15  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTInfo.m (1.11):
+	  Added level 2 APIS keywords.
+
 2021-04-12  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getHSTInfo.m (1.10):
