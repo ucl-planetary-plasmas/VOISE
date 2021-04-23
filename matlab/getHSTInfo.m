@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.12 2021/04/15 08:53:22 patrick Exp $
+% $Id: getHSTInfo.m,v 1.13 2021/04/23 16:44:56 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,7 +22,7 @@ function params = getHSTInfo(params)
 
 iFile = params.iFile;
 
-verbose = 1;
+verbose = params.verbose;
 
 HST = [];
 
@@ -103,12 +103,25 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'), % level 1 and level 2 HST
   % angle between sun and V1 axis (optical axis)
   HST.SUNANGLE = getFitsKeyVal(iFile,{'SUNANGLE'},verbose);
 
-  fprintf(1,'CRPIX1 , CRPIX2   = %12.6f, %12.6f pixel\n',HST.CRPIX1,HST.CRPIX2);
-  fprintf(1,'CRVAL1 , CRVAL2   = %12.6f, %12.6f deg\n',HST.CRVAL1,HST.CRVAL2);
-  fprintf(1,'RA_TARG, DEC_TARG = %12.6f, %12.6f deg\n',HST.RA_TARG,HST.DEC_TARG);
-  fprintf(1,'RA_APER, DEC_APER = %12.6f, %12.6f deg\n',HST.RA_APER,HST.DEC_APER);
-
-  fprintf(1,'ORIENTAT          = %12.6f deg\n',HST.ORIENTAT);
+  if verbose && ~isempty([HST.CRPIX1,HST.CRPIX2]),
+    fprintf(1,'CRPIX1 , CRPIX2   = %12.6f, %12.6f pixel\n',...
+		        HST.CRPIX1,HST.CRPIX2);
+	end
+  if ~isempty([HST.CRVAL1,HST.CRVAL2]),
+    fprintf(1,'CRVAL1 , CRVAL2   = %12.6f, %12.6f deg\n',...
+            HST.CRVAL1,HST.CRVAL2);
+	end
+  if ~isempty([HST.RA_TARG,HST.DEC_TARG]),
+    fprintf(1,'RA_TARG, DEC_TARG = %12.6f, %12.6f deg\n',...
+            HST.RA_TARG,HST.DEC_TARG);
+	end
+  if ~isempty([HST.RA_APER,HST.DEC_APER]),
+    fprintf(1,'RA_APER, DEC_APER = %12.6f, %12.6f deg\n',...
+            HST.RA_APER,HST.DEC_APER);
+	end
+  if ~isempty(HST.ORIENTAT),
+    fprintf(1,'ORIENTAT          = %12.6f deg\n',HST.ORIENTAT);
+	end
   if ~isempty([HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2]),
     % find scaling and rotation
     CD = [HST.CD1_1,HST.CD1_2;HST.CD2_1,HST.CD2_2];
@@ -136,13 +149,14 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'), % level 1 and level 2 HST
 
   % https://uk.mathworks.com/matlabcentral/answers/21209-convert-modified-julian-date
   MJD_epoch='Nov 17, 1858,00:00';
+  HST.EPOCH_FORMAT = 'yyyy mm dd HH MM SS';
   if ~isempty(HST.EXPSTART),
-	  HST.EXPSTART = datestr(HST.EXPSTART+datenum(MJD_epoch));
-    fprintf(1,'EXPSTART          = %s\n', HST.EXPSTART);
+	  HST.START_EPOCH = datestr(HST.EXPSTART+datenum(MJD_epoch),HST.EPOCH_FORMAT);
+    fprintf(1,'START_EPOCH       = %s\n', HST.START_EPOCH);
 	end
   if ~isempty(HST.EXPEND),
-	  HST.EXPEND = datestr(HST.EXPEND+datenum(MJD_epoch));
-    fprintf(1,'EXPEND            = %s\n', HST.EXPEND);
+	  HST.END_EPOCH = datestr(HST.EXPEND+datenum(MJD_epoch),HST.EPOCH_FORMAT);
+    fprintf(1,'END_EPOCH         = %s\n', HST.END_EPOCH);
   end
 
 end
@@ -153,46 +167,53 @@ if ~isempty(SOURCE) && strcmp(SOURCE,'APIS database'),
 
   % DATA DESCRIPTION
 	HST.SOURCE = SOURCE;
-  HST.TARGET1 = getFitsKeyVal(iFile,{'TARGET1'},verbose);
-  HST.HEMIS1 = getFitsKeyVal(iFile,{'HEMIS1'},verbose);
-  HST.HEMIS2 = getFitsKeyVal(iFile,{'HEMIS2'},verbose);
-  HST.EXTEN1 = getFitsKeyVal(iFile,{'EXTEN1'},verbose);
-  HST.UNIT1 = getFitsKeyVal(iFile,{'UNIT1'},verbose);
-  HST.EXTEN2 = getFitsKeyVal(iFile,{'EXTEN2'},verbose);
-  HST.UNIT2 = getFitsKeyVal(iFile,{'UNIT2'},verbose);
-  HST.EXTEN3 = getFitsKeyVal(iFile,{'EXTEN3'},verbose);
-  HST.UNIT3 = getFitsKeyVal(iFile,{'UNIT3'},verbose);
-  HST.EXTEN4 = getFitsKeyVal(iFile,{'EXTEN4'},verbose);
-  HST.UNIT4 = getFitsKeyVal(iFile,{'UNIT4'},verbose);
-  HST.EXTEN5 = getFitsKeyVal(iFile,{'EXTEN5'},verbose);
-  HST.UNIT5 = getFitsKeyVal(iFile,{'UNIT5'},verbose);
-  HST.EXTEN6 = getFitsKeyVal(iFile,{'EXTEN6'},verbose);
-  HST.UNIT6 = getFitsKeyVal(iFile,{'UNIT6'},verbose);
-  HST.EXTEN7 = getFitsKeyVal(iFile,{'EXTEN7'},verbose);
-  HST.UNIT7 = getFitsKeyVal(iFile,{'UNIT7'},verbose);
+  HST.APIS.TARGET1 = getFitsKeyVal(iFile,{'TARGET1'},verbose);
+  HST.APIS.HEMIS1 = getFitsKeyVal(iFile,{'HEMIS1'},verbose);
+  HST.APIS.HEMIS2 = getFitsKeyVal(iFile,{'HEMIS2'},verbose);
+
+  HST.APIS.EXTEN1 = getFitsKeyVal(iFile,{'EXTEN1'},verbose);
+  HST.APIS.UNIT1 = getFitsKeyVal(iFile,{'UNIT1'},verbose);
+
+  HST.APIS.EXTEN2 = getFitsKeyVal(iFile,{'EXTEN2'},verbose);
+  HST.APIS.UNIT2 = getFitsKeyVal(iFile,{'UNIT2'},verbose);
+
+  HST.APIS.EXTEN3 = getFitsKeyVal(iFile,{'EXTEN3'},verbose);
+  HST.APIS.UNIT3 = getFitsKeyVal(iFile,{'UNIT3'},verbose);
+
+  HST.APIS.EXTEN4 = getFitsKeyVal(iFile,{'EXTEN4'},verbose);
+  HST.APIS.UNIT4 = getFitsKeyVal(iFile,{'UNIT4'},verbose);
+
+  HST.APIS.EXTEN5 = getFitsKeyVal(iFile,{'EXTEN5'},verbose);
+  HST.APIS.UNIT5 = getFitsKeyVal(iFile,{'UNIT5'},verbose);
+
+  HST.APIS.EXTEN6 = getFitsKeyVal(iFile,{'EXTEN6'},verbose);
+  HST.APIS.UNIT6 = getFitsKeyVal(iFile,{'UNIT6'},verbose);
+
+  HST.APIS.EXTEN7 = getFitsKeyVal(iFile,{'EXTEN7'},verbose);
+  HST.APIS.UNIT7 = getFitsKeyVal(iFile,{'UNIT7'},verbose);
 
   % ORIGINAL OBSERVATION
-  HST.DATEOBS = getFitsKeyVal(iFile,{'DATEOBS'},verbose);
-  HST.EXP = getFitsKeyVal(iFile,{'EXP'},verbose);
-  HST.PLATESC = getFitsKeyVal(iFile,{'PLATESC'},verbose);
-  HST.RA_APER = getFitsKeyVal(iFile,{'RA_APER'},verbose);
-  HST.DEC_APER = getFitsKeyVal(iFile,{'DEC_APER'},verbose);
+  HST.APIS.DATEOBS = getFitsKeyVal(iFile,{'DATEOBS'},verbose);
+  HST.APIS.EXP = getFitsKeyVal(iFile,{'EXP'},verbose);
+  HST.APIS.PLATESC = getFitsKeyVal(iFile,{'PLATESC'},verbose);
+  HST.APIS.RA_APER = getFitsKeyVal(iFile,{'RA_APER'},verbose);
+  HST.APIS.DEC_APER = getFitsKeyVal(iFile,{'DEC_APER'},verbose);
 
   % ASTRONOMICAL EPHEMERIS AT MID-EXPOSURE
-  HST.DISTE = getFitsKeyVal(iFile,{'DISTE'},verbose);
-  HST.SUBELAT = getFitsKeyVal(iFile,{'SUBELAT'},verbose);
-  HST.SUBELON = getFitsKeyVal(iFile,{'SUBELON'},verbose);
+  HST.APIS.DISTE = getFitsKeyVal(iFile,{'DISTE'},verbose);
+  HST.APIS.SUBELAT = getFitsKeyVal(iFile,{'SUBELAT'},verbose);
+  HST.APIS.SUBELON = getFitsKeyVal(iFile,{'SUBELON'},verbose);
 
-  HST.DISTS = getFitsKeyVal(iFile,{'DISTS'},verbose);
-  HST.SUBSLAT = getFitsKeyVal(iFile,{'SUBSLAT'},verbose);
-  HST.SUBSLON = getFitsKeyVal(iFile,{'SUBSLON'},verbose);
+  HST.APIS.DISTS = getFitsKeyVal(iFile,{'DISTS'},verbose);
+  HST.APIS.SUBSLAT = getFitsKeyVal(iFile,{'SUBSLAT'},verbose);
+  HST.APIS.SUBSLON = getFitsKeyVal(iFile,{'SUBSLON'},verbose);
 
-  HST.TLIGHT = getFitsKeyVal(iFile,{'TLIGHT'},verbose);
-  HST.RAP = getFitsKeyVal(iFile,{'RAP'},verbose);
-  HST.PHASE = getFitsKeyVal(iFile,{'PHASE'},verbose);
-  HST.NP_POS = getFitsKeyVal(iFile,{'NP_POS'},verbose);
-  HST.RA_TAR = getFitsKeyVal(iFile,{'RA_TAR'},verbose);
-  HST.DEC_TAR = getFitsKeyVal(iFile,{'DEC_TAR'},verbose);
+  HST.APIS.TLIGHT = getFitsKeyVal(iFile,{'TLIGHT'},verbose);
+  HST.APIS.RAP = getFitsKeyVal(iFile,{'RAP'},verbose);
+  HST.APIS.PHASE = getFitsKeyVal(iFile,{'PHASE'},verbose);
+  HST.APIS.NP_POS = getFitsKeyVal(iFile,{'NP_POS'},verbose);
+  HST.APIS.RA_TAR = getFitsKeyVal(iFile,{'RA_TAR'},verbose);
+  HST.APIS.DEC_TAR = getFitsKeyVal(iFile,{'DEC_TAR'},verbose);
 
 end
 
