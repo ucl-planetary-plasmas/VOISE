@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.24 2021/04/15 08:52:39 patrick Exp $
+% $Id: loadImage.m,v 1.25 2021/04/23 16:43:34 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -48,9 +48,13 @@ function params = loadImage(params)
 try
 
 	me = checkField(params,'iFile');
-	if ~isempty(me), throw(me), end
+  if ~isempty(me), 
+    throw(me),
+  else
+    iFile = params.iFile;
+  end
 
-  if strfind(params.iFile,'.mat'), % mat-file
+  if strfind(iFile,'.mat'), % mat-file
     %   north_proj.mat is a mat file containing a polar projection of
     %   Jupiter observed by HST:
     %   Z           256x256         524288  double  image intensity
@@ -58,12 +62,12 @@ try
     %   y           256x1             2048  double  y-axis (# rows in Z)
 		me = checkiFile(params);
 		if ~isempty(me), throw(me), end
-    im = load(params.iFile);
+    img = load(iFile);
     % set image, axes and related
-    params.W = double(im.Z);
-		if isfield(im,'x') & isfield(im,'y'),
-      params.x = double(im.x);
-      params.y = double(im.y);
+    params.W = double(img.Z);
+		if isfield(img,'x') & isfield(img,'y'),
+      params.x = double(img.x);
+      params.y = double(img.y);
 			% overwrite pixelSize and imageOrigo deduced from x and y
       params.pixelSize  = [diff(params.x(1:2)), diff(params.y(1:2))];
       params.imageOrigo = [-params.x(1)./params.pixelSize(1),...
@@ -78,34 +82,58 @@ try
       params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
       params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 		end
-		if isfield(im,'pixelUnit') & ...
-       isa(im.pixelUnit,'cell') & ...
-       length(im.pixelUnit) == 2,
-			 params.pixelUnit = im.pixelUnit;
+		if isfield(img,'pixelUnit') & ...
+       isa(img.pixelUnit,'cell') & ...
+       length(img.pixelUnit) == 2,
+			 params.pixelUnit = img.pixelUnit;
     end
 
-  elseif strfind(params.iFile,'.fits'), % fits-file
+  elseif strfind(iFile,'.fits'), % fits-file
 
     me = checkiFile(params);
 		if ~isempty(me), throw(me), end
+		%  from [msg,msgID] = lastwarn;
     warning('off','MATLAB:imagesci:fitsinfo:unknownFormat');
-    info = fitsinfo(params.iFile);
 
-    if ~isfield(info,'Image') || ...
-		  length(info.Image)>1, % APIS level 2 data
-      im = squeeze(fitsread(params.iFile));
-    else
-      im = squeeze(fitsread(params.iFile,'image'));
-    end
-    warning('on','MATLAB:imagesci:fitsinfo:unknownFormat');
-
-    % set image, axes and related
-    params.W = im;
+    info = fitsinfo(iFile);
+    opts = {'Info', info};
 
     % get HST fits parameters if requested
     if params.HSTFitsParam,
       params = getHSTInfo(params);
     end
+
+    ext = [];
+    if ~isfield(info,'Image') ...
+      img = squeeze(fitsread(iFile,'primary',opts{:}));
+    elseif length(info.Image)==6, % APIS level 2 data _proc.fits
+      img = squeeze(fitsread(iFile,'primary',opts{:}));
+      % latitude in degree at the 1-bar level
+      ext.lat1b = fitsread(iFile,'image',1,opts{:});
+      % local time at the 1-bar level
+      ext.lt1b = fitsread(iFile,'image',2,opts{:});
+      % observing zenith angle at the 1-bar level
+      ext.oza1b = fitsread(iFile,'image',3,opts{:});
+      % zenithal solar angle at the 1-bar level
+      ext.zsa1b = fitsread(iFile,'image',4,opts{:});
+      % auroral latitude at 300km above the 1-bar level
+      ext.lat300km = fitsread(iFile,'image',5,opts{:});
+      % auroral local time at 300km above the 1-bar level
+      ext.lt300km = fitsread(iFile,'image',6,opts{:});
+    elseif length(info.Image)==3, % APIS level 1 data _drz.fits
+      % Science Image
+      img = squeeze(fitsread(iFile,'image',1,opts{:})); 
+      % Weight Image
+      ext.wht = squeeze(fitsread(iFile,'image',2,opts{:})); 
+      % Context Image
+      ext.ctx = squeeze(fitsread(iFile,'image',3,opts{:})); 
+    end
+    warning('on','MATLAB:imagesci:fitsinfo:unknownFormat');
+
+    % set image, axes and related
+    params.W = img;
+    params.ext = ext;
+
     if isfield(params,'HST') && ~isempty(params.HST) && params.HSTPlanetParam,
       me = checkSpice; 
       if ~isempty(me), throw(me), end
@@ -176,12 +204,12 @@ end
 
   else, % neither mat-file nor fits-file
 
-    if ~isempty(params.iFile), 
+    if ~isempty(iFile), 
       me = MException('MyFunction:fileTypeNotSupported',...
-                      '%s is not a fits- nor a mat-file',params.iFile);
+                      '%s is not a fits- nor a mat-file',iFile);
 		else
 		  me = MException('MyFunction:fileEmpty',...
-			                'field iFile is empty');
+                      'field iFile is empty');
       throw(me);
 		end
 
