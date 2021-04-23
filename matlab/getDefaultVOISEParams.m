@@ -93,6 +93,7 @@ function params = getDefaultVOISEParams()
 %
 % * Diagnostics/reporting parameters
 %
+%   verbose        : verbose flag                            (true)
 %   logVOISE       : log flag                                (true)
 %   divideExport   : export all divide iterations            (false)
 %   mergeExport    : export all merge iterations             (false)
@@ -102,7 +103,7 @@ function params = getDefaultVOISEParams()
 
 
 %
-% $Id: getDefaultVOISEParams.m,v 1.19 2018/05/29 11:11:49 patrick Exp $
+% $Id: getDefaultVOISEParams.m,v 1.20 2021/04/23 16:32:09 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -192,6 +193,9 @@ params.histEqBin       = [];
 
 % Diagnostics/Report parameters
 %
+% verbose flag
+params.verbose         = true;
+
 % log output of VOISE run
 params.logVOISE        = true;
 %
