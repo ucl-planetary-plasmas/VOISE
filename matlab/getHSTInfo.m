@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.13 2021/04/23 16:44:56 patrick Exp $
+% $Id: getHSTInfo.m,v 1.14 2021/04/26 13:05:12 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -153,10 +153,14 @@ if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'), % level 1 and level 2 HST
   if ~isempty(HST.EXPSTART),
 	  HST.START_EPOCH = datestr(HST.EXPSTART+datenum(MJD_epoch),HST.EPOCH_FORMAT);
     fprintf(1,'START_EPOCH       = %s\n', HST.START_EPOCH);
+  else
+    HST.START_EPOCH = [];
 	end
   if ~isempty(HST.EXPEND),
 	  HST.END_EPOCH = datestr(HST.EXPEND+datenum(MJD_epoch),HST.EPOCH_FORMAT);
     fprintf(1,'END_EPOCH         = %s\n', HST.END_EPOCH);
+  else
+    HST.END_EPOCH = [];
   end
 
 end
