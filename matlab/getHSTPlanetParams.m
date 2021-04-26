@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.8 2020/05/02 17:00:26 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.9 2021/04/26 20:36:53 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -35,8 +35,12 @@ arcsecPerRad = degPerRad*3600;
 
 radPerPixel = arcsecPerRad/HST.PLATESC;
 
-% Convert string date to double precision 
-et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
+if ~isempty(HST.TDATEOBS) && ~isempty(HST.TTIMEOBS),
+  % Convert string date to double precision 
+  et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
+elseif ~isempty(HST.START_EPOCH),
+  et = cspice_str2et(HST.START_EPOCH);
+end
 % format YYY mmm dd HH:MM:SS 
 epoch = cspice_et2utc(et,'C',0);
 %epoch = datestr(datenum(epoch,'YYYY mmm dd HH:MM:SS'),'yyyy mm dd HH MM SS');
@@ -136,7 +140,7 @@ xhat = xhatr; yhat = yhatr;
 xrp = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
 yrp = atan2(dot(refpixposn,yhat), planetdist)*radPerPixel;
 % positive means nearer to Earth than planet centre
-zrp = planetdist + dot(refpixposn,zhat)
+zrp = planetdist + dot(refpixposn,zhat);
 fprintf(1,'xrp, yrp          = %12.6g, %12.6g pixel\n', xrp, yrp);
 
 if 1
