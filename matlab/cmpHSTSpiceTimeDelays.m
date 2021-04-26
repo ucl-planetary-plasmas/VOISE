@@ -2,7 +2,7 @@ function cmpHSTSpiceTimeDelays(filename)
 % function cmpHSTSpiceTimeDelays(filename)
 
 %
-% $Id: cmpHSTSpiceTimeDelays.m,v 1.5 2012/06/13 14:14:56 patrick Exp $
+% $Id: cmpHSTSpiceTimeDelays.m,v 1.6 2021/04/26 13:27:59 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -22,9 +22,10 @@ function cmpHSTSpiceTimeDelays(filename)
 
 params = getDefaultVOISEParams;
 params.iFile = filename;
+params.verbose = false;
 
-% get HST parameters if available
-params = getHSTInfo(params);
+% get HST image and parameters 
+params = loadImage(params);
 
 HST = params.HST;
 
@@ -36,13 +37,29 @@ radPerDeg = cspice_rpd;
 radPerArcsec = radPerDeg/3600;
 arcsecPerRad = degPerRad*3600;
 
-% Convert string date to double precision 
-et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
+% start and end exposure times
+if ~isempty(HST.TDATEOBS) && ~isempty(HST.TTIMEOBS),
+  % Convert string date to double precision 
+  et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
+  if ~isempty(HST.EXPTIME),
+    times    = et + [0, HST.EXPTIME]; 
+  elseif isempty(HST.TEXPTIME),
+    times    = et + [0, HST.TEXPTIME]; 
+  end 
+elseif ~isempty(HST.START_EPOCH) && ~isempty(HST.END_EPOCH)
+  times = [cspice_str2et(HST.START_EPOCH), cspice_str2et(HST.END_EPOCH)];
+end
+format = 'C'; % Calendar format, UTC
+%format = 'D'; % Day-of-Year format, UTC
+%format = 'J'; % Julian Date format, UTC
+%format = 'ISOC';  % ISO Calendar format, UTC
+%format = 'ISOD';  % ISO Day-of-Year format, UTC
+prec = 2; % number of decimal precision for fractional seconds computed
+utcstr = cspice_et2utc(times,format,prec);
+fprintf('Times             =   %s :   %s\n',utcstr(1,:),utcstr(2,:));
 
 % get planet ra,dec in J2000 frame for difference aberration corrections
-
 target   = planet.name;
-times    = et + [0, HST.EXPTIME]; % start and end exposure times
 frame    = 'J2000'; % Earth mean equator, dynamical equinox of J2000
 observer = 'EARTH';
 
@@ -77,24 +94,10 @@ for i = 1:length(abcorr),
 	[ra(:,i),dec(:,i)]', abcorr{i});
 end
 
-% remove converged corrections
-abcorr = {abcorr{1:3}};
-range = range(:,1:3);
-lt = lt(:,1:3);
-ra = ra(:,1:3);
-dec = dec(:,1:3);
+img = params.W;
 
-info = fitsinfo(params.iFile);
-
-if ~isfield(info,'Image'),
-  img = squeeze(fitsread(params.iFile));
-else
-  img = squeeze(fitsread(params.iFile,'image'));
-end
-[nr, nc] = size(img);
-
-% pixel coordinates (indices j)
-[Xj,Yj] = meshgrid(1:nc, 1:nr);
+% Mesh in pixels [1,nx]x[1,ny]
+[Xj,Yj]=meshgrid(params.x+1,params.y+1);
 
 % ref pixel
 rpx = HST.CRPIX1;
@@ -116,16 +119,35 @@ end
 
 
 close all
+
+opts1 = {'fontsize',9,'fontweight','light','color','black'};
+opts2 = {'fontsize',9,'fontweight','light','color','magenta'};
+
 figure
+if 1,
+  [Xj,Yj] = getHSTabs2relPixels(HST,Xj,Yj);
+	[rpx,rpy] = getHSTabs2relPixels(HST,rpx,rpy);
+	[pxc,pyc] = getHSTabs2relPixels(HST,pxc,pyc);
+	xlbl = 'pixels/ref. pixel [arcsec]';
+	ylbl = 'pixels/ref. pixel [arcsec]';
+else
+	xlbl = 'pixels';
+	ylbl = 'pixels';
+end
+
 pcolor(Xj,Yj,log10(abs(img))); shading flat;
 hold on
 plot(rpx,rpy,'ko','markersize',5);
-plot(pxc,pyc,'-kx','markersize',5);
-opts = {'fontsize',9,'fontweight','light','color','green'};
-for i = 1:length(abcorr),
-  text(pxc(1,i), pyc(1,i),['S(' abcorr{i} ')'],opts{:})
-  text(pxc(2,i), pyc(2,i),'E',opts{:})
+plot(pxc(:,1:3),pyc(:,1:3),'-kx','markersize',5);
+plot(pxc(:,4:5),pyc(:,4:5),':mo','markersize',5);
+for i = 1:3,
+  text(pxc(1,i)*1.05, pyc(1,i)*1.05,['S(' abcorr{i} ')'],opts1{:})
 end
+for i = 4:5,
+  text(pxc(2,i)*1.05, pyc(2,i)*1.05,['E(' abcorr{i} ')'],opts2{:})
+end
+xlabel(xlbl)
+ylabel(ylbl)
 hold off
 axis auto
 axis equal
@@ -137,7 +159,7 @@ if 1,
 	[rpra,rpdec] = getHSTabs2relRadec(HST,rpra,rpdec);
 	[ra,dec] = getHSTabs2relRadec(HST,ra,dec);
 	xlbl = 'ra/ref. pixel [arcsec]';
-	ylbl = 'dec/ref.pixel [arcsec]';
+	ylbl = 'dec/ref. pixel [arcsec]';
 else
   % absolute ra/dec in deg
 	xlbl = 'ra [deg]';
@@ -147,11 +169,14 @@ end
 pcolor(Xi,Yi,log10(abs(img))); shading flat;
 hold on
 axis auto
-plot(rpra,rpdec,'bo','markersize',5)
-plot(ra,dec,'-bx','markersize',5)
-for i = 1:length(abcorr),
-  text(ra(1,i), dec(1,i),['S(' abcorr{i} ')'],opts{:})
-  text(ra(2,i), dec(2,i),'E',opts{:})
+plot(rpra,rpdec,'ko','markersize',5)
+plot(ra(:,1:3),dec(:,1:3),'-kx','markersize',5)
+plot(ra(:,4:5),dec(:,4:5),':mo','markersize',5)
+for i = 1:3,
+  text(ra(1,i)*1.05, dec(1,i)*1.05,['S(' abcorr{i} ')'],opts1{:})
+end
+for i = 4:5,
+  text(ra(2,i)*1.05, dec(2,i)*1.05,['E(' abcorr{i} ')'],opts2{:})
 end
 hold off
 axis auto
