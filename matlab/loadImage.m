@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.25 2021/04/23 16:43:34 patrick Exp $
+% $Id: loadImage.m,v 1.26 2021/06/24 17:45:12 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -115,7 +115,7 @@ try
       % observing zenith angle at the 1-bar level
       ext.oza1b = fitsread(iFile,'image',3,opts{:});
       % zenithal solar angle at the 1-bar level
-      ext.zsa1b = fitsread(iFile,'image',4,opts{:});
+      ext.sza1b = fitsread(iFile,'image',4,opts{:});
       % auroral latitude at 300km above the 1-bar level
       ext.lat300km = fitsread(iFile,'image',5,opts{:});
       % auroral local time at 300km above the 1-bar level
