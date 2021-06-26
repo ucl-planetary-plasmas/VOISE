@@ -5,7 +5,7 @@ function [x,y,aa,majAxis,bb,minAxis] = getEllipseAxes(a,b,c)
 % ax^2+by^2+cxy = 1
 
 %
-% $Id: getEllipseAxes.m,v 1.2 2020/01/27 15:42:17 patrick Exp $
+% $Id: getEllipseAxes.m,v 1.3 2021/06/26 10:56:34 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -54,24 +54,17 @@ fprintf(1,'tilt V1=%.2f V2=%.2f\n', ...
         180/pi*atan2(V(2,1),V(1,1)),180/pi*atan2(V(2,2),V(1,2)));
 fprintf(1,'aa = %.2f bb = %.2f tilt = %.0f\n', aa, bb, tilt*180/pi);
 
-
 t = linspace(0,2*pi,361);
-
-if 1
-
-% ellipse with major axis aligned with x
-xc = aa * cos(t);
-yc = bb * sin(t);
-
-% rotation by tilt
-x = xc*cos(tilt) - yc*sin(tilt);
-y = xc*sin(tilt) + yc*cos(tilt);
-
+if 1,
+  % ellipse with major axis aligned with x
+  xc = aa * cos(t);
+  yc = bb * sin(t);
+  % rotation by tilt
+  x = xc*cos(tilt) - yc*sin(tilt);
+  y = xc*sin(tilt) + yc*cos(tilt);
 else
-
-x = aa*cos(t)*cos(tilt) - bb*sin(t)*sin(tilt);
-y = aa*cos(t)*sin(tilt) + bb*sin(t)*cos(tilt);
-
+  x = aa*cos(t)*cos(tilt) - bb*sin(t)*sin(tilt);
+  y = aa*cos(t)*sin(tilt) + bb*sin(t)*cos(tilt);
 end
 
 return

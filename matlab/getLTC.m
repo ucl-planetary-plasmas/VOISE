@@ -7,7 +7,7 @@ function [ll,ld,tl,td,cusp]=getLTC(r,e,obs,sun)
 % sun sun's latitude and longitude in the observed planet's frame
 
 %
-% $Id: getLTC.m,v 1.3 2018/05/29 13:45:13 patrick Exp $
+% $Id: getLTC.m,v 1.4 2021/06/26 10:59:54 patrick Exp $
 %
 % Copyright (c) 2010
 % Patrick Guio <p.guio@ucl.ac.uk>
@@ -64,7 +64,7 @@ xsundir = [0;dot(sdir,xhato)];
 ysundir = [0;dot(sdir,yhato)];
 
 
-if 0
+if 0,
 p = [0;0;0];
 px = r*([0;xhato(1)]+p(1)); py = r*([0;xhato(2)]+p(2)); pz = r*([0;xhato(3)]+p(3));
 plot3(px,py,pz,'rx-','linewidth',2)
@@ -93,7 +93,7 @@ pause
 end
 
 
-if 0
+if 0,
 % disk of the planet with rotation axis vertical
 xp = r*cos(theta);
 yp = r*sqrt(1-e^2)*sin(theta);
@@ -215,6 +215,7 @@ xc = u*[t1;-t1];
 yc = v*[t1;-t1];
 % embed in cells
 cusp = {xc(:)',yc(:)'};
+fprintf(1,'Cusp points x=%f,%f, y=%f,%f\n',xc(:)',yc(:)');
 
 
 % there is something wrong here
