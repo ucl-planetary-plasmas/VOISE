@@ -2,7 +2,7 @@ function params = getHSTPlanetParams(params)
 % function params = getHSTPlanetParams(params)
 
 %
-% $Id: getHSTPlanetParams.m,v 1.9 2021/04/26 20:36:53 patrick Exp $
+% $Id: getHSTPlanetParams.m,v 1.10 2021/06/26 11:00:45 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -25,13 +25,15 @@ HST = params.HST;
 % load necessary SPICE kernels
 planet = setUpSpice4Planet(HST);
 
-IAU_PLANET = ['IAU_' upper(planet.name)];
+planetName = upper(planet.name);
+IAU_PLANET = ['IAU_' planetName];
 
 % conversion factors
 degPerRad = cspice_dpr;
 radPerDeg = cspice_rpd;
 radPerArcsec = radPerDeg/3600;
 arcsecPerRad = degPerRad*3600;
+
 
 radPerPixel = arcsecPerRad/HST.PLATESC;
 
@@ -53,13 +55,23 @@ else
 end
 
 % Get position of planet with respect to Earth
-target   = planet.name;
+target   = planetName;
 if isJ2000,
   frame    = 'J2000'; % Earth inertial frame
 else
   frame    = 'IAU_EARTH'; % Earth fixed frame
 end
-abcorr   = 'LT';   % Correct for one-way light time
+%abcorr   = 'NONE'; % bad above
+% photon leaves at et-lt and arrives at et
+%abcorr   = 'LT'; % good
+%abcorr   = 'LT+S'; % bad below
+abcorr   = 'CN'; % good
+%abcorr   = 'CN+S'; % bad below
+% X* photon leaves at et and arrives at et+lt
+%abcorr   = 'XLT'; % bad above
+%abcorr   = 'XLT+S'; % bad above
+%abcorr   = 'XCN'; % bad above
+%abcorr   = 'XCN+S'; % bad above
 observer = 'EARTH';
 % Look up the 'state' vectors and light time values 'lt'  
 % corresponding to the vector of input ephemeris time 'et'.
@@ -75,7 +87,8 @@ planet.r = range;
 planet.ra = ra*degPerRad; 
 planet.dec = dec*degPerRad;
 
-fprintf(1,'planet    ra, dec = %12.6f,%12.6f deg\n',[planet.ra(:)';planet.dec(:)']);
+fprintf(1,'%s RA, DEC = %12.6f,%12.6f deg\n',...
+        planetName,[planet.ra(:)';planet.dec(:)']);
 
 % reference pixel image coordinates 
 rpx = HST.CRPIX1;
@@ -98,8 +111,8 @@ if ~isJ2000,
 refpixposn = J2000toEarth*refpixposn;
 end
 
-fprintf(1,'planetposn        = %12.6g, %12.6g, %12.6g km\n', planetposn);
-fprintf(1,'refpixposn        = %12.6g, %12.6g, %12.6g km\n', refpixposn);
+fprintf(1,'planetposn = %12.6g, %12.6g, %12.6g km\n', planetposn);
+fprintf(1,'refpixposn = %12.6g, %12.6g, %12.6g km\n', refpixposn);
 
 refpix2planetangle = acosd(dot(cspice_vhat(planetposn),cspice_vhat(refpixposn)));
 fprintf(1,'angle(planet,refpix)           = %f deg\n', refpix2planetangle);
@@ -110,9 +123,9 @@ norm([planet.ra-rpra;planet.dec-rpdec],2));
 zhat = -cspice_vhat(refpixposn);
 % get celestial north in Earth ref
 if isJ2000,
-north = EarthtoJ2000*[0;0;1];
+  north = EarthtoJ2000*[0;0;1];
 else
-north = [0;0;1];
+  north = [0;0;1];
 end
 % yhat is the projection of celestial north onto the image plane
 % (the plane perpendicular to the line of sight defined by zhat)
@@ -141,7 +154,8 @@ xrp = atan2(dot(refpixposn,xhat), planetdist)*radPerPixel;
 yrp = atan2(dot(refpixposn,yhat), planetdist)*radPerPixel;
 % positive means nearer to Earth than planet centre
 zrp = planetdist + dot(refpixposn,zhat);
-fprintf(1,'xrp, yrp          = %12.6g, %12.6g pixel\n', xrp, yrp);
+fprintf(1,'xrp, yrp          = %12.6g, %12.6g pixel %s\n',...
+       xrp,yrp,'** should be small eps **');
 
 if 1
 % planet centre (Xpc,Ypc) in the image plane in km
@@ -160,13 +174,15 @@ fprintf(1,'angle(pc,PC)      = %12.2f deg\n', acosd(dot(pc/norm(pc),PC/norm(PC))
 
 
 % get planet radii
-radii = cspice_bodvrd(planet.name,'RADII',3);
+radii = cspice_bodvrd(planetName,'RADII',3);
 a = radii(1); % equatorial radius (1 and 2)
 b = radii(3); % polar radius
 e = sqrt(a^2-b^2)/a; % excentricity
 
+fprintf(1,'R_eq %.0f km, R_polar %.0f km, e %.2f\n', a, b, e);
+
 % if Saturn get rings parameters
-if strcmp(planet.name,'saturn'),
+if strcmp(planetName,'SATURN'),
   % A Ring, Encke Gap, Cassini Division, B Ring
   rings = {'RING1','RING1_1','RING2','RING3'};
 	ringSpecs = zeros(5,length(rings));
@@ -176,7 +192,7 @@ if strcmp(planet.name,'saturn'),
 	% equal to one-half of the total thickness of the ring) 
 	% OD is the average optical depth of the ring sub-segment/gap across R1 to R2.
 	for i=1:length(rings),
-   ringSpecs(:,i) = cspice_bodvrd(planet.name,rings{i},5);
+   ringSpecs(:,i) = cspice_bodvrd(planetName,rings{i},5);
 	end
 end
 
@@ -189,9 +205,9 @@ planet2Earth = cspice_pxform(IAU_PLANET, 'IAU_EARTH', et);
 end
 % planet axis direction (pointing north) in Earth frame (or inertial J2000)
 if ~isJ2000,
-planetaxis = planet2Earth*[0;0;1];
+  planetaxis = planet2Earth*[0;0;1];
 else
-planetaxis = EarthtoJ2000*(planet2Earth*[0;0;1]);
+  planetaxis = EarthtoJ2000*(planet2Earth*[0;0;1]);
 end
 
 
@@ -205,8 +221,7 @@ planetaxis = cspice_vhat(planetaxis-dot(zhat,planetaxis)*zhat);
 fprintf(1,'planetaxis (Earth r) = %12.6f, %12.6f, %12.6f\n', planetaxis);
 xplanetaxis = dot(planetaxis,xhat);
 yplanetaxis = dot(planetaxis,yhat);
-xplanetaxis / yplanetaxis
-pause
+%fprintf(1,'xplanetaxis/yplanetaxis %.2f\n', xplanetaxis/yplanetaxis); pause
 planetaxis = [xplanetaxis,yplanetaxis];
 fprintf(1,'planetaxis (image)   = %12.6f, %12.6f\n', planetaxis);
 
@@ -243,13 +258,14 @@ Ypg(Zpg<0) = NaN;
 % North pole
 XN = atan2(dot(N,xhat), planetdist)*radPerPixel + rpx;
 YN = atan2(dot(N,yhat), planetdist)*radPerPixel + rpy;
-ZN = planetdist+dot(N,zhat)
-ZN = dot(N,zhat)
+ZN = dot(N,zhat);
 
 % South pole
 XS = atan2(dot(S,xhat), planetdist)*radPerPixel + rpx;
 YS = atan2(dot(S,yhat), planetdist)*radPerPixel + rpy;
-ZS = dot(S,zhat)
+ZS = dot(S,zhat);
+
+fprintf(1,'ZN %.0f km, ZS %.0f km\n', ZN, ZS);
 
 % poles computed in world (ra/dec) and transformed to pixel coordinates
 if ~isJ2000,
@@ -294,8 +310,7 @@ end
 [meridrange,meridra,meriddec] = cspice_recrad(planetmerid);
 [xmerid,ymerid] = getHSTradec2pixel(HST,meridra*degPerRad,meriddec*degPerRad);
 
-
-if strcmp(planet.name,'saturn'),
+if strcmp(planetName,'SATURN'),
 % Saturn's ring computed in world (ra/dec) and transformed to pixel coordinates,
 lon = linspace(0,2*pi,100);
 for j = 1:length(rings),
@@ -332,15 +347,17 @@ bp = atan2(bp,planetdist)*radPerPixel;
 % tilt in the plane of the image with respect to x axis
 tilt = atan2(planetaxis(2),planetaxis(1))*degPerRad;
 
-fprintf(1,'planet disc  a, b, bp  = %12.1f, %12.1f, %12.1f pixel, tilt = %5.1f deg\n',...
-a,b,bp,tilt);
+fprintf(1,'%s (A, B, Bp) = (%.1f, %.1f, %.1f) pixel\n',planetName,a,b,bp);
+fprintf(1,'%s tilt       = %.1f deg\n',planetName,tilt);
 
-if strcmp(planet.name,'saturn'),
+
+if strcmp(planetName,'SATURN'),
 % correction for projection on the plane
 %ARmin = ARmin*cosd(tprojplanetaxis);
 end
 
-% plot an ellipse with planet parameters, i.e. a, b, tilt
+opts = {'fontsize',12,'fontweight','normal'}; %,'color','black'};
+
 theta = linspace(0,360,100);
 % ellipse with axis along x axis
 ellx = b*sind(theta);
@@ -350,14 +367,11 @@ ell = rot2d(tilt,[ellx;elly]);
 ellx = ell(1,:);
 elly = ell(2,:);
 
-
-opts = {'fontsize',12,'fontweight','normal'}; %,'color','black'};
-
 % north-south pole axis in the image
 xAxis = [1;-1]*planetaxis(1)*bp;
 yAxis = [1;-1]*planetaxis(2)*bp;
 
-if 0
+if 0, % plot an ellipse with planet parameters, i.e. a, b, tilt
 plot(ellx,elly,xAxis,yAxis)
 text(xAxis(1),yAxis(1),'NAxis',opts{:});
 text(xAxis(2),yAxis(2),'SAxis',opts{:});
@@ -365,20 +379,16 @@ axis equal
 pause
 end
 
-figure
-% load color values
-h=plot(ones(10));
-for i=1:length(h),
-  colors{i} = get(h(i),'color');
-end
-clear h
-close
-
-[ss,se]=computePlanetAxis(planet.name,epoch);
+[ss,se] = computePlanetAxis(planetName,epoch);
 
 % get limb, terminator and cusp point assuming rotation axis is measured
 % from y-axis, needs a rotation of tilt+90 deg
-[ll,ld,tl,td,cusp]=getLTC(a,e,se,ss);
+[ll,ld,tl,td,cusp] = getLTC(a,e,se,ss);
+
+disp('ok')
+pause
+
+
 pause
 if 1
 % rotation by tilt+90 deg to take into account that getLTC returns the geometry
@@ -429,7 +439,7 @@ clf
 X = [1:nc];
 Y = [1:nr];
 
-if ~strcmp(planet.name,'jupiter'),
+if ~strcmp(planetName,'JUPITER'),
 % create an image with the template ellipse centered
 Wt = zeros(size(W));
 [Xgrid, Ygrid] = meshgrid([1:size(W,2)]-Xpc,[1:size(W,1)]-Ypc);
@@ -465,7 +475,7 @@ xmerid = xmerid+j; ymerid = ymerid+i;
 Xpc = Xpc+j; Ypc = Ypc+i;
 Xmg = Xmg+j; Ymg = Ymg+i;
 Xpg = Xpg+j; Ypg = Ypg+i;
-if strcmp(planet.name,'saturn'),
+if strcmp(planetName,'SATURN'),
 for i=1:length(rings),
   xrmn{i} = xrmn{i}+j; yrmn{i} = yrmn{i}+i;
 	xrmx{i} = xrmx{i}+j; yrmx{i} = yrmx{i}+i;
@@ -486,10 +496,10 @@ plot(xpc,ypc,'bx','markersize',10), text(xpc,ypc,'(xpc,ypc)',opts{:})
 plot([xn;xs],[yn;ys],'bo-','markersize',10), 
 text([xn;xs],[yn;ys],['N';'S'],opts{:},'color','b'),
 plot(xeq,yeq,'bo-',xmerid,ymerid,'bo-');
-if strcmp(planet.name,'saturn'),
+if strcmp(planetName,'SATURN'),
 for i=1:length(rings),
-plot(xrmn{i},yrmn{i},'o-','color',colors{i});
-plot(xrmx{i},yrmx{i},'o-','color',colors{i});
+plot(xrmn{i},yrmn{i},'o-','SeriesIndex',i);
+plot(xrmx{i},yrmx{i},'o-','SeriesIndex',i);
 end
 end
 
