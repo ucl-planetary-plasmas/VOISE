@@ -6,6 +6,7 @@ radPerDeg = cspice_rpd;
 
 e = sqrt(1-b^2/a^2);
 
+% north and south pole vectors in km
 north = rotaxis*b;
 south = -rotaxis*b;
 
@@ -38,25 +39,30 @@ end
 
 [r, colat, lon] = cspice_recsph(rotaxis);
 
-
-[colat*degPerRad, lon*degPerRad]
+fprintf(1,'colat %.2f deg, lon %.2f deg\n',[colat*degPerRad, lon*degPerRad])
 
 % colatitude is the complementary angle of the latitude, i.e. the difference
 % between 90° and the latitude
-colat =  acosd(dot(rotaxis,[0;0;1]))
-lat = atan2(dot(rotaxis,[0;0;1]),cspice_vnorm([rotaxis(1);rotaxis(2);0]))*degPerRad
-colat = 90-lat
+colat =  acosd(dot(rotaxis,[0;0;1]));
+fprintf(1,'colat %.2f deg\n',colat)
+lat = atan2(dot(rotaxis,[0;0;1]), ...
+            cspice_vnorm([rotaxis(1);rotaxis(2);0]))*degPerRad;
+colat = 90-lat;
+fprintf(1,'lat %.2f deg, colat %.2f deg\n',lat,colat)
 
 % longitude measured from x axis (0,-1,0) clockwise (0,1,0) counterclockwise
 lon = atan2(dot(cspice_vhat([rotaxis(1);rotaxis(2);0]),[0;-1;0]),...
-            dot(cspice_vhat([rotaxis(1);rotaxis(2);0]),[1;0;0]))*degPerRad
+            dot(cspice_vhat([rotaxis(1);rotaxis(2);0]),[1;0;0]))*degPerRad;
+fprintf(1,'lon %.2f deg\n',lon)
 
-rotaxis
-plot3([0;rotaxis(1)],[0;rotaxis(2)],[0;rotaxis(3)])
+if 0,
+fprintf(1,'rotaxis (%.4f, %.4f, %.4f)\n', rotaxis);
+plot3([0;rotaxis(1)],[0;rotaxis(2)],[0;rotaxis(3)],'linewidth',2)
 axis vis3d
 axis equal
-az = lon
-el = lat
+az = lon;
+el = lat;
+fprintf(1,'az %.2f deg, el %.2f deg\n', az, el);
 % Azimuth is a polar angle in the x-y plane, with positive angles indicating
 % counterclockwise rotation of the viewpoint and measured from the -y axis.
 % Elevation is the angle above % (positive angle) or below (negative angle)
@@ -65,6 +71,7 @@ view([az,el])
 view(rotaxis)
 xlabel('x'); ylabel('y'); zlabel('z');
 pause
+end
 
 % generate data with 1 deg angle resolution
 [x,y,z] = ellipsoid(0,0,0,a,a,b,360);
@@ -77,15 +84,16 @@ end
 %rotaxis = A*rotaxis;
 end
 
+% create a 3d grid
 is = 1:20:361;
 % meridians
 xm = x(:,is); ym = y(:,is); zm = z(:,is);
 % parallels
 xp = x(is,:)'; yp = y(is,:)'; zp = z(is,:)';
 
+if 0, % plot 3d grid
 clf
-
-if 1
+if 1, 
 mesh(x(is,is),y(is,is),z(is,is));
 alpha(0.5)
 else
@@ -123,6 +131,7 @@ hold off
 %view(lon*degPerRad,colat*degPerRad)
 xlabel('x'); ylabel('y'); zlabel('z');
 pause
+end % plot 3d grid
 
 [Xm,Ym,Zm] = project(xm,ym,zm,xhat,yhat,zhat);
 % Remove hidden point i.e. point back the z=0 plane
@@ -136,6 +145,8 @@ Yp(Zp<0) = NaN;
 [XN,YN,ZN] = project(north(1),north(2),north(3),xhat,yhat,zhat);
 [XS,YS,ZS] = project(south(1),south(2),south(3),xhat,yhat,zhat);
 
+if 0, % plot 2d projection grid
+clf
 plot(Xm,Ym,'k-');
 hold on
 plot(Xp,Yp,'k-');
@@ -144,6 +155,7 @@ text(XN,YN,'N')
 text(XS,YS,'S')
 hold off
 pause
+end % plot 2d projection grid
 
 function [X,Y,Z] = project(x,y,z,xhat,yhat,zhat)
 
