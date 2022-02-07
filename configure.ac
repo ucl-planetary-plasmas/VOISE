@@ -61,7 +61,7 @@ AM_CONDITIONAL([HAVE_MCC],[test -n "$MCC"])
 
 
 dnl Generate Makefiles
-AC_CONFIG_FILES([Makefile matlab/Makefile mcc/Makefile share/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile matlab/Makefile cpp/Makefile mcc/Makefile share/Makefile doc/Makefile])
 
 AC_CONFIG_FILES([matlab/start_VOISE.m:matlab/start_VOISE.m.in], [])
 

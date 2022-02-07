@@ -1,6 +1,6 @@
 
 
-SUBDIRS = matlab mcc share doc
+SUBDIRS = matlab cpp mcc share doc
 
 EXTRA_DIST = LICENSE mcc/Makefile 
 
