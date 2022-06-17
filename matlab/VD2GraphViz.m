@@ -17,7 +17,7 @@ function varargout = VD2GraphViz(filename, VD, params)
 %     
 
 %
-% $Id: VD2GraphViz.m,v 1.3 2022/04/30 15:45:25 patrick Exp $
+% $Id: VD2GraphViz.m,v 1.4 2022/06/17 16:06:30 patrick Exp $
 %
 % Copyright (c) 2008-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -47,6 +47,19 @@ filename = [params.oDir filename];
 % Calculate median intensity from VD 
 [immu, Smu] = getVDOp(VD, params.W, 'median');
 
+if isfield(VD,'xm') & isfield(VD,'ym') & isfield(VD,'xM') & isfield(VD,'yM'),
+  % Scale Sx, Sy to image scales
+  sx = (max(params.x)-min(params.x))/(VD.xM-VD.xm);
+  sy = (max(params.y)-min(params.y))/(VD.yM-VD.ym);
+  Sx = (VD.Sx(VD.Sk)-VD.xm)*sx+min(params.x);
+  Sy = (VD.Sy(VD.Sk)-VD.ym)*sy+min(params.y);
+  Sr = sqrt(Sx.^2+Sy.^2);
+  St = atan2(Sy,Sx)*180/pi;
+else
+  Sx = VD.Sx;
+  Sy = VD.Sy;
+end
+
 % current time
 k = VD.k;
 
@@ -65,6 +78,7 @@ s2 = sprintf('\trankdir=LR; // Left to Right, instead of Top to Bottom');
 
 s = [s sprintf('%s\n%s\n', s1,s2)];
 
+
 % Attributes Graphviz documentation 
 % https://graphviz.org/doc/info/attrs.html
 
@@ -72,7 +86,7 @@ s = [s sprintf('%s\n%s\n', s1,s2)];
 for i = 1:length(VD.Nk), % for all seeds that ever been registered
   s = [s sprintf('\t%d ', i)];
   s = [s sprintf('[pos="%.1f,%.1f,%.1f!" width=%.1f];\n',...
-                 VD.Sx(i),VD.Sy(i),Smu(i),Sls(i))];
+                 Sx(i),Sy(i),Smu(i),Sls(i))];
 end
 for i = 1:length(VD.Nk), % for all seeds that ever been registered
   s = [s sprintf('\t%d -- ', i)];
