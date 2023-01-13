@@ -112,7 +112,7 @@ void getVDOp(const vd &VD, const Mat &W, std::function<real(RealVec)> metric,
       finish = true;
       real lb = std::max(0.0, bounds(j, 0) - 1);
       real ub = std::min((real)VD.getNc(), bounds(j, 1));
-      for (real i = lb; i < ub; ++i) {
+      for (int i = lb; i < ub; ++i) {
         if (!VD.getVByIdx(j, i)) {
           Wop(j, i) = val; // All pixels in VR populated with average
         }

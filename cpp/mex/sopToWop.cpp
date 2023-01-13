@@ -50,7 +50,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   // Average for each VR is independent (embarrassingly parallel)
   //#pragma omp parallel for
-  for (uint32 f = 0; f < VD.getSk().size(); ++f) {
+  for (int f = 0; f < VD.getSk().size(); ++f) {
     real s = VD.getSk().at(f);
     bool finish = false;
     real val = sopReals[f];
@@ -67,7 +67,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
       finish = true;
       real lb = std::max(0.0, bounds(j, 0) - 1);
       real ub = std::min((real) VD.getNc(), bounds(j, 1));
-      for (real i = lb; i < ub; ++i) {
+      for (int i = lb; i < ub; ++i) {
         if (!VD.getVByIdx(j, i)) {
           Wop(j, i) = val; // All pixels in VR populated with avg
         }

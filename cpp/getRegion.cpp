@@ -57,10 +57,10 @@ Mat getRegion(const vd &VD, const real &s)
   boundsDown *= -1;
 
   // Upward sweep including s2 row
-  for (real i = s2; i < VD.getNr() + 1; ++i) {
+  for (int i = s2; i < VD.getNr() + 1; ++i) {
 
     RealVec lb, ub;
-    const real boundsIdx = i - s2 + 1;
+    const int boundsIdx = i - s2 + 1;
     bool killLine = false; // For use when s1 == s2
     for (auto r : A) { // Apply conditions from neighbours only
 
@@ -135,7 +135,7 @@ Mat getRegion(const vd &VD, const real &s)
   }
 
   // Downward sweep excluding s2 row
-  for (real i = s2 - 1; i > 0; --i) {
+  for (int i = s2 - 1; i > 0; --i) {
     RealVec lb, ub;
     bool killLine = false;
     for (auto r : A) {
