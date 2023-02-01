@@ -2,7 +2,7 @@ function p = fitEllipse2(VD,params,LSS,Sx,Sy,ii,p0,dp)
 % function p = fitEllipse2(VD,params,LSS,Sx,Sy,ii,p0,dp)
 
 %
-% $Id: fitEllipse2.m,v 1.4 2012/04/16 15:45:15 patrick Exp $
+% $Id: fitEllipse2.m,v 1.5 2023/02/01 19:05:38 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -45,7 +45,7 @@ else
   dp = [dp, ones(1,m)];
 end
 
-p0 = [p0, T'*pi/180];
+p0 = [p0(:); T*pi/180];
 
 W = ones(size(XY));
 W = [(1./LSS(ii)');(1./LSS(ii)')];
@@ -69,29 +69,27 @@ fprintf(1,'stdev  est.: Xc(%.1f,%.1f) a=%.1f b=%.1f tilt=%.0f\n', psd(1:5));
 
 td = linspace(-180,180,50);
 
-r0 = ellipse(td,[p0(1:4), 180/pi*p0(5)]);
-r = ellipse(td,[p(1:4); 180/pi*p(5)]);
+r0 = ellipse(td,[p0(1:4);p0(5)]);
+r = ellipse(td,[p(1:4);p(5)]);
 
-%subplot(212)
 clf
 if ~isempty(params),
   figure(1)
 	clf
 else
-  subplot(211)
+  subplot(111)
 end
 
-plot(T,R,'o',td,r0,'-',td,r,'-');
+%plot(T,R,'o',td,r0,'-',td,r,'-');
+plot(180/pi*p(6:end),R,'o',td,r0,'-',td,r,'-');
 set(gca,'ylim',[0 400],'xlim',[-180 180]);
 xlabel('\theta [deg]');
 ylabel('\rho [pixels]')
 
-pause
 
 [legh,objh,oh,om] = legend('data','initial','fitted','location','SouthEast');
 set(objh(1),'fontsize',9);
 
-return
 if ~isempty(datapath) & ~isempty(ploc),
 
   orient landscape, set(gcf,'PaperOrientation','portrait');
@@ -119,18 +117,17 @@ else
   hold on
 end
 
-Ts = sort(T);
-r0 = ellipse(Ts,p0);
-r = ellipse(Ts,p);
+XY0 = ellipse2(XY,[p0(1:5);sort(p0(6:end))]);
+Xe0 = XY0(1:end/2);
+Ye0 = XY0(end/2+1:end);
 
-Xe = r.*cosd(Ts);
-Ye = r.*sind(Ts);
+XY = ellipse2(XY,[p(1:5);sort(p(6:end))]);
+Xe = XY(1:end/2);
+Ye = XY(end/2+1:end);
 
-Xe0 = r0.*cosd(Ts);
-Ye0 = r0.*sind(Ts);
 
 % initial guess and fitted 
-plot(Xe0,Ye0,'r--o', Xe,Ye, 'r-o','linewidth',1)
+plot(Xe0,Ye0,'r-o', Xe,Ye, 'r-x','linewidth',1)
 % data points
 plot(Sx(ii), Sy(ii), 'ko','markersize',3);
 

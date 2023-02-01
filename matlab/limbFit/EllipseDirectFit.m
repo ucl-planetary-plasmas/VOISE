@@ -82,9 +82,7 @@ if a < c,
 	else
     phi = 0.5 * acot((a-c)/(2*b));
 	end
-end
-
-if a > c,
+else
   if b==0,
 	  phi = pi/2;
 	else

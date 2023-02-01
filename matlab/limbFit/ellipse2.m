@@ -10,7 +10,7 @@ function r=ellipse2(xy,p)
 
 
 %
-% $Id: ellipse2.m,v 1.5 2020/01/23 14:23:53 patrick Exp $
+% $Id: ellipse2.m,v 1.6 2023/02/01 18:41:12 patrick Exp $
 %
 % Copyright (c) 2010-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -39,8 +39,8 @@ xc = p(1); % x-coordinate of ellipse center
 yc = p(2); % y-coordinate of ellipse center
 a  = p(3); % semi-major axis
 b  = p(4); % semi-minor axis
-t0 = p(5); % tilt angle of semi-major axis to x-axis [rad]
-ti = p(6:end); % angles
+t0 = p(5); % tilt angle of semi-major axis to x-axis [deg]
+ti = p(6:end); % angles [rad]
 
 ni = length(xy);
 m = fix(ni/2);
@@ -69,7 +69,7 @@ end
 
 function Q = rot(alpha)
 
-Q = [cos(alpha), -sin(alpha); ...
-     sin(alpha), cos(alpha)];
+Q = [cosd(alpha), -sind(alpha); ...
+     sind(alpha), cosd(alpha)];
 
 

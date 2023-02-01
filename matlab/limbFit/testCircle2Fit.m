@@ -8,7 +8,7 @@ function testCircle2Fit(ns,pc,p,p0,dp)
 
 
 %
-% $Id: testCircle2Fit.m,v 1.3 2012/04/16 15:45:15 patrick Exp $
+% $Id: testCircle2Fit.m,v 1.5 2023/02/01 19:31:33 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -55,12 +55,11 @@ r  = p(3);
 % init seed of Mersenne-Twister RNG
 rand('twister',10);
 
+% initial angles in degrees
 t = 360*rand(1,ns);
 
 Sx0 = Xc + r*cosd(t);
 Sy0 = Yc + r*sind(t);
-
-Ti = t*pi/180;
 
 Sx = Xc + r*(1+pc*(0.5-rand(1,ns))).*cosd(t);
 Sy = Yc + r*(1+pc*(0.5-rand(1,ns))).*sind(t);
@@ -74,11 +73,11 @@ fprintf(1,'LSS min %f max %f\n', [min(LSS), max(LSS)]);
 
 fp = fitCircle2([],[],LSS,Sx,Sy,[1:length(LSS)],p0);
 
-return
-
 fprintf(1,'exact  Xc(%.1f,%.1f) R=%.1f\n', p([1:3]));
 fprintf(1,'guess  Xc(%.1f,%.1f) R=%.1f\n', p0([1:3]));
 fprintf(1,'fitted Xc(%.1f,%.1f) R=%.1f\n', fp([1:3]));
+
+%return
 
 hold on
 plot(Sx0,Sy0,'ok');
@@ -95,7 +94,7 @@ fprintf(1,'circfit Xc(%.1f,%.1f) R=%.1f\n', xc,yc,R);
 
 
 Par = CircleFitByTaubin([Sx(:),Sy(:)]);
-fprintf(1,'circfit Xc(%.1f,%.1f) R=%.1f\n', Par);
+fprintf(1,'CircleFitByTaubin Xc(%.1f,%.1f) R=%.1f\n', Par);
 
 t = sort(t);
 x1 = xc + R*cosd(t);

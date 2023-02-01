@@ -7,7 +7,7 @@ function testEllipse2Fit(ns,pc,p,p0,dp)
 %
 
 %
-% $Id: testEllipse2Fit.m,v 1.3 2012/04/16 15:45:15 patrick Exp $
+% $Id: testEllipse2Fit.m,v 1.5 2023/02/01 19:31:33 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -31,9 +31,9 @@ pause('off')
 
 if nargin==0,
   ns = 500;
-	pc = 0.1,
-	p = [3.5,-8.5,340,250,0];
-	p0 = [-10,10,285,295,0];
+	pc = 0.10;
+	p = [3.5,-8.5,340,250,20];
+	p0 = [-10,10,285,295,40];
   % fit all parameters
   dp = ones(1,5);
   testDriver(ns, pc, p, p0, dp);
@@ -61,13 +61,30 @@ t = 360*rand(1,ns);
 
 Sx0 = Xc + a*cosd(t)*cosd(t0) - b*sind(t)*sind(t0);
 Sy0 = Yc + a*cosd(t)*sind(t0) + b*sind(t)*cosd(t0);
-
-Ti = t*pi/180;
+if 0
+r = ellipse(t,p);
+plot(t,r,'o',t,sqrt(Sx0.^2+Sy0.^2),'x')
+end
 
 Sx = Xc + a*(1+pc*(0.5-rand(1,ns))).*cosd(t)*cosd(t0)-...
           b*(1+pc*(0.5-rand(1,ns))).*sind(t)*sind(t0);
 Sy = Yc + a*(1+pc*(0.5-rand(1,ns))).*cosd(t)*sind(t0)+...
           b*(1+pc*(0.5-rand(1,ns))).*sind(t)*cosd(t0);
+if 0
+xp = a*(1+pc*(0.5-rand(1,ns))).*cosd(t);
+yp = b*(1+pc*(0.5-rand(1,ns))).*sind(t);
+Sx = zeros(size(t));
+Sy = zeros(size(t));
+Q = [cosd(t0), -sind(t0); ...
+     sind(t0), cosd(t0)];
+for i = 1:length(ns),
+  xy = [Xc;Yc]+Q*[xp(i);yp(i)];
+	Sx(i) = xy(1);
+	Sy(i) = xy(2);
+end
+plot(t,r,'o',t,sqrt(Sx.^2+Sy.^2),'x')
+pause
+end
 
 %plot(Sx0,Sy0,'x',Sx,Sy,'o');
 
@@ -84,11 +101,11 @@ end
 
 fp = fitEllipse2([],[],LSS,Sx,Sy,[1:length(LSS)],p0,dp);
 
-return
-
 fprintf(1,'exact  Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n', p([1:5]));
 fprintf(1,'guess  Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n', p0([1:5]));
 fprintf(1,'fitted Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n', fp([1:5]));
+
+%return
 
 hold on
 plot(Sx0,Sy0,'ok');
@@ -101,8 +118,9 @@ axis equal
 % test
 
 p = ellipse_fit(Sx, Sy);
-fprintf(1,'ellipse_fit Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n', p);
-xc = p(1); yc = p(2); a = p(3); b = p(4); t0 = p(5);
+fprintf(1,'ellipse_fit Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n',...
+       p(1:4),-p(5));
+xc = p(1); yc = p(2); a = p(3); b = p(4); t0 = -p(5);
 
 t = sort(t);
 
@@ -110,8 +128,9 @@ x1 = xc + a*cosd(t)*cosd(t0) - b*sind(t)*sind(t0);
 y1 = yc + a*cosd(t)*sind(t0) + b*sind(t)*cosd(t0);
 
 [A,p] = EllipseFitByTaubin([Sx(:),Sy(:)]);
-fprintf(1,'EllipseFitByTaubin Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n', p);
-xc = p(1); yc = p(2); a = p(3); b = p(4); t0 = p(5);
+fprintf(1,'EllipseFitByTaubin Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n',...
+p(1:4),180/pi*p(5));
+xc = p(1); yc = p(2); a = p(3); b = p(4); t0 = 180/pi*p(5);
 
 
 x2 = xc + a*cosd(t)*cosd(t0) - b*sind(t)*sind(t0);
@@ -127,8 +146,9 @@ x3 = xc + a*cosd(t)*cosd(t0) - b*sind(t)*sind(t0);
 y3 = yc + a*cosd(t)*sind(t0) + b*sind(t)*cosd(t0);
 
 [A,p] = EllipseDirectFit([Sx(:),Sy(:)]);
-fprintf(1,'EllipseDirectFit Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n', p);
-xc = p(1); yc = p(2); a = p(3); b = p(4); t0 = p(5);
+fprintf(1,'EllipseDirectFit Xc(%.1f,%.1f) a=%.1f b=%.1f inclination=%.0f\n',...
+p(1:4),180/pi*p(5));
+xc = p(1); yc = p(2); a = p(3); b = p(4); t0 = 180/pi*p(5);
 
 x4 = xc + a*cosd(t)*cosd(t0) - b*sind(t)*sind(t0);
 y4 = yc + a*cosd(t)*sind(t0) + b*sind(t)*cosd(t0);
@@ -137,7 +157,7 @@ y4 = yc + a*cosd(t)*sind(t0) + b*sind(t)*cosd(t0);
 hold on
 he = plot(x1,y1,'o-',x2,y2,'o-',x3,y3,'o-',x4,y4,'o-');
 hold off
-[h([1 2 4 3]); he]
+%[h([1 2 4 3]); he]
 legend([h([1 2 4 3]); he], 'data','data+noise','initial','fitted',...
        'ellipse\_fit','EllipseFitByTaubin','fit\_ellipse','EllipseDirectFit');
 

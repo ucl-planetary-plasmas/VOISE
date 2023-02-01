@@ -2,7 +2,7 @@ function dr=dellipse2(xy,f,p,dp,func)
 % function dr=dellipse2(xy,f,p,dp,func)
 
 %
-% $Id: dellipse2.m,v 1.5 2015/12/04 15:56:04 patrick Exp $
+% $Id: dellipse2.m,v 1.6 2023/02/01 18:41:12 patrick Exp $
 %
 % Copyright (c) 2010-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -32,8 +32,8 @@ xc = p(1); % x-coordinate of ellipse center
 yc = p(2); % y-coordinate of ellipse center
 a  = p(3); % semi-major axis
 b  = p(4); % semi-minor axis
-t0 = p(5); % tilt angle of semi-major axis to x-axis [rad]
-ti = p(6:end); % angles
+t0 = p(5); % tilt angle of semi-major axis to x-axis [deg]
+ti = p(6:end); % angles [rad]
 
 ni = length(xy);
 m = fix(ni/2);
@@ -75,11 +75,12 @@ dr = [dgdxc, dgdyc, dgda, dgdb, dgdt0,[diag(dgdti(1:m));diag(dgdti(m+1:ni))]];
 
 function Q = rot(alpha)
 
-Q = [cos(alpha), -sin(alpha); ...
-     sin(alpha), cos(alpha)];
+Q = [cosd(alpha), -sind(alpha); ...
+     sind(alpha), cosd(alpha)];
 
 % derivative of rotation matrix
 function Qp = rotprime(alpha)
 
-Qp = [-sin(alpha), -cos(alpha); ...
-      cos(alpha), -sin(alpha)];
+Qp = pi/180*...
+     [-sind(alpha), -cosd(alpha); ...
+      cosd(alpha), -sind(alpha)];

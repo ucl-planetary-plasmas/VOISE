@@ -2,7 +2,7 @@ function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 % function p = fitCircle2(VD,params,LSS,Sx,Sy,ii,p0)
 
 %
-% $Id: fitCircle2.m,v 1.6 2012/04/16 15:45:15 patrick Exp $
+% $Id: fitCircle2.m,v 1.8 2023/02/01 18:33:20 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -39,7 +39,7 @@ niter=100;
 dp=[1 1 1, ones(1,length(ii))];
 dp = ones(size(dp));
 
-p0 = [p0, T'*pi/180];
+p0 = [p0(:); T*pi/180];
 
 W = ones(size(XY));
 W = [(1./LSS(ii)');(1./LSS(ii)')];
@@ -48,9 +48,6 @@ W = [(1./LSS(ii)');(1./LSS(ii)')];
 [f,p,kvg,iter,corp,covp,covr,stdresid,Z,r2,ss]=...
   leasqr(XY, XY, p0, 'circle2', stol , niter, W, dp,...
 	  'dcircle2',options);
-%	  'dfdp',options);
-
-%return
 
 % degrees of freedom
 nu = length(f) - length(p(dp==1));
@@ -70,18 +67,15 @@ td = linspace(-180,180,50);
 r0 = circle(td,p0(1:3));
 r = circle(td,p(1:3));
 
-%subplot(212)
 clf
 if ~isempty(params),
   figure(1)
 	clf
 else
-  subplot(211)
+  subplot(111)
 end
 
-%plot(XY(1:ni),XY(ni+1:end),'go')
-%hold on
-plot(T,R,'o',td,r0,'-',td,r,'-');
+plot(180/pi*p(4:end),R,'o',td,r0,'-',td,r,'-');
 set(gca,'ylim',[0 350],'xlim',[-180 180]);
 xlabel('\theta [deg]');
 ylabel('\rho [pixels]')
@@ -89,7 +83,6 @@ ylabel('\rho [pixels]')
 [legh,objh,oh,om] = legend('data','initial','fitted','location','SouthEast');
 set(objh(1),'fontsize',9);
 
-return
 if ~isempty(datapath) & ~isempty(ploc),
 
   orient landscape, set(gcf,'PaperOrientation','portrait');
@@ -99,9 +92,6 @@ if ~isempty(datapath) & ~isempty(ploc),
   ploc = ploc+1;
 
 end
-
-
-%subplot(222)
 
 if ~isempty(params),
   imagesc(params.x,params.y,params.W);
