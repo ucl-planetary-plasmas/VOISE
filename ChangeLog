@@ -1,3 +1,30 @@
+2023-02-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/visUtils/li.m (1.1), matlab/visUtils/minnaert.m (1.1):
+	  Added functions to estimate Li and Minnaert type airglow from
+	  image.
+
+2023-02-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testPolProjAPISproc.m (1.1):
+	  Test function for simple polar projection from level 2 image
+	  (proc files) with airglow removal.
+
+2023-02-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testReadAPISproc.m (1.1):
+	  Added test function to read APIS proc file (level 2 image).
+
+2023-02-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testReadAPISdrz.m (1.2):
+	  Minor fix in help text.
+
+2023-02-03  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testReadAPISdrz.m (1.1):
+	  Added test function to read APIS drz file (level 1 image).
+
 2023-02-01  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/limbFit/EllipseDirectFit.m (1.4),
