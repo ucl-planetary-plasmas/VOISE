@@ -1,16 +1,20 @@
-function testReadAPISdrz(filename)
-% function testReadAPISdrz(filename)
+function testReadAPISLevel1(filename)
+% function testReadAPISLevel1(filename)
+%
+% Function to test APIS Level 1 images.
+%
+% Examples:
 %
 % APIS HST south pole image 20/02/2007, 15:22:52-15:24:33, 100 s integration time 
-% testReadAPISdrz('../share/input/j9rlb0fxq_drz.fits'); 
+% testReadAPISLevel1('../share/input/j9rlb0fxq_drz.fits'); 
 %
 % APIS HST north pole image 21/02/2007, 16:03:58-16:05:39, 100 s integration time 
-% testReadAPISdrz('../share/input/j9rlb1imq_drz.fits'); 
+% testReadAPISLevel1('../share/input/j9rlb1imq_drz.fits'); 
 %
 %
 
 %
-% $Id: testReadAPISdrz.m,v 1.2 2023/02/03 16:43:51 patrick Exp $
+% $Id: testReadAPISLevel1.m,v 1.3 2023/03/28 08:34:10 patrick Exp $
 %
 % Copyright (c) 2021 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
