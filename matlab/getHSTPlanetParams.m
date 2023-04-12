@@ -37,10 +37,10 @@ arcsecPerRad = degPerRad*3600;
 
 radPerPixel = arcsecPerRad/HST.PLATESC;
 
-if ~isempty(HST.TDATEOBS) && ~isempty(HST.TTIMEOBS),
+if ~isempty(HST.TDATEOBS) && ~isempty(HST.TTIMEOBS)
   % Convert string date to double precision 
   et = cspice_str2et([HST.TDATEOBS ' ' HST.TTIMEOBS]);
-elseif ~isempty(HST.START_EPOCH),
+elseif ~isempty(HST.START_EPOCH)
   et = cspice_str2et(HST.START_EPOCH);
 end
 % format YYY mmm dd HH:MM:SS 
@@ -48,7 +48,7 @@ epoch = cspice_et2utc(et,'C',0);
 %epoch = datestr(datenum(epoch,'YYYY mmm dd HH:MM:SS'),'yyyy mm dd HH MM SS');
 
 % flag for calculation in J2000
-if 1,
+if 1
   isJ2000 = true;
 else
   isJ2000 = false;
@@ -56,7 +56,7 @@ end
 
 % Get position of planet with respect to Earth
 target   = planetName;
-if isJ2000,
+if isJ2000
   frame    = 'J2000'; % Earth inertial frame
 else
   frame    = 'IAU_EARTH'; % Earth fixed frame
@@ -105,9 +105,10 @@ iCD = HST.iCD;
 refpixposn = cspice_radrec(planetdist, rpra*radPerDeg, rpdec*radPerDeg);
 % Retrieve the transformation matrix from J2000 frame to IAU_EARTH frame
 J2000toEarth = cspice_pxform('J2000', 'IAU_EARTH', et);
+pause
 EarthtoJ2000 = cspice_pxform('IAU_EARTH', 'J2000', et);
 % transform rectangular inertial coordinates into Earth frame
-if ~isJ2000,
+if ~isJ2000
 refpixposn = J2000toEarth*refpixposn;
 end
 
@@ -256,13 +257,13 @@ Xpg(Zpg<0) = NaN;
 Ypg(Zpg<0) = NaN;
 
 % North pole
-XN = atan2(dot(N,xhat), planetdist)*radPerPixel + rpx;
-YN = atan2(dot(N,yhat), planetdist)*radPerPixel + rpy;
+%XN = atan2(dot(N,xhat), planetdist)*radPerPixel + rpx;
+%YN = atan2(dot(N,yhat), planetdist)*radPerPixel + rpy;
 ZN = dot(N,zhat);
 
 % South pole
-XS = atan2(dot(S,xhat), planetdist)*radPerPixel + rpx;
-YS = atan2(dot(S,yhat), planetdist)*radPerPixel + rpy;
+%XS = atan2(dot(S,xhat), planetdist)*radPerPixel + rpx;
+%YS = atan2(dot(S,yhat), planetdist)*radPerPixel + rpy;
 ZS = dot(S,zhat);
 
 fprintf(1,'ZN %.0f km, ZS %.0f km\n', ZN, ZS);
@@ -351,7 +352,7 @@ fprintf(1,'%s (A, B, Bp) = (%.1f, %.1f, %.1f) pixel\n',planetName,a,b,bp);
 fprintf(1,'%s tilt       = %.1f deg\n',planetName,tilt);
 
 
-if strcmp(planetName,'SATURN'),
+if strcmp(planetName,'SATURN')
 % correction for projection on the plane
 %ARmin = ARmin*cosd(tprojplanetaxis);
 end
@@ -371,7 +372,7 @@ elly = ell(2,:);
 xAxis = [1;-1]*planetaxis(1)*bp;
 yAxis = [1;-1]*planetaxis(2)*bp;
 
-if 0, % plot an ellipse with planet parameters, i.e. a, b, tilt
+if 0 % plot an ellipse with planet parameters, i.e. a, b, tilt
 plot(ellx,elly,xAxis,yAxis)
 text(xAxis(1),yAxis(1),'NAxis',opts{:});
 text(xAxis(2),yAxis(2),'SAxis',opts{:});
@@ -383,13 +384,12 @@ end
 
 % get limb, terminator and cusp point assuming rotation axis is measured
 % from y-axis, needs a rotation of tilt+90 deg
+figure
 [ll,ld,tl,td,cusp] = getLTC(a,e,se,ss);
 
 disp('ok')
 pause
 
-
-pause
 if 1
 % rotation by tilt+90 deg to take into account that getLTC returns the geometry
 % with rotation axis vertical and that tilt is with respect to x-axis
@@ -410,34 +410,57 @@ cusp{1} = tmp(1,:);
 cusp{2} = tmp(2,:);
 end
 
+pause
+close all
+
+figure
 plot(Xmg,Ymg,'k-');
 hold on
 plot(Xpg,Ypg,'k-');
+
 XN = dot(N,xhat);
 YN = dot(N,yhat);
-ZN = dot(N,zhat);
+%ZN = dot(N,zhat);
 XS = dot(S,xhat);
 YS = dot(S,yhat);
-ZS = dot(S,zhat);
-if 0
-plot([XN,XS]+Xpc,[YN,YS]+Ypc,'bx')
-text(XN+Xpc,YN+Ypc,'N')
-text(XS+Xpc,YS+Ypc,'S')
+%ZS = dot(S,zhat);
+
+% North and south pole in pixels
+XpcAlt = dot(planetposn,xhat);
+YpcAlt = dot(planetposn,yhat); 
+
+XNPix = atan2(XN + XpcAlt, planetdist)*radPerPixel + rpx;
+YNPix = atan2(YN + YpcAlt, planetdist)*radPerPixel + rpy;
+
+XSPix = atan2(XS + XpcAlt, planetdist)*radPerPixel + rpx;
+YSPix = atan2(YS + YpcAlt, planetdist)*radPerPixel + rpy;
+
+%params.npole = [XNPix, YNPix];
+%params.spole = [XSPix, YSPix];
+
+if 1
+plot([XNPix, XSPix], [YNPix, YSPix], 'bx', 'Markersize', 10)
+text(XN, YN, 'N')
+text(XS, YS, 'S')
 end
+
 % cusp, limb and terminator
-plot(cusp{1}+Xpc,cusp{2}+Ypc,'ko','Markersize',10);
-plot(ll{1}+Xpc,ll{2}+Ypc,'c-',tl{1}+Xpc,tl{2}+Ypc,'m-','Linewidth',2);
-plot(ld{1}+Xpc,ld{2}+Ypc,'c--',td{1}+Xpc,td{2}+Ypc,'m--','Linewidth',1);
+plot(cusp{1} + Xpc, cusp{2} + Ypc, 'ko', 'Markersize', 10);
+plot(ll{1} + Xpc, ll{2} + Ypc, 'c-', tl{1} + Xpc, tl{2} + Ypc, ...
+    'm-', 'Linewidth', 2);
+plot(ld{1} + Xpc, ld{2} + Ypc, 'c--', td{1} + Xpc, td{2} + Ypc, ...
+    'm--', 'Linewidth', 1);
 hold off
 disp('problem')
+
 pause
+close all
 
 % get image and axes
 W = params.W;
 [nr,nc] = size(W);
-clf
-X = [1:nc];
-Y = [1:nr];
+X = 1:nc;
+Y = 1:nr;
 
 if ~strcmp(planetName,'JUPITER'),
 % create an image with the template ellipse centered
@@ -450,7 +473,8 @@ Wt(Xgrid.^2/a^2+Ygrid.^2/b^2<=1) = 1;
 
 figure
 subplot(121),
-imagesc(X,Y,log10(abs(W))),
+imagesc(X,Y,W),
+set(gca,'ColorScale','log')
 axis xy
 axis square
 
@@ -458,6 +482,9 @@ subplot(122),
 imagesc(X,Y,Wt)
 axis xy
 axis square
+
+pause
+close all
 
 figure
 
@@ -485,7 +512,7 @@ end
 end
 
 figure
-imagesc(X,Y,log10(abs(W)))
+imagesc(X,Y,W)
 axis xy
 hold on
 axis auto
@@ -514,11 +541,10 @@ plot(Xpg,Ypg,'k-'); % parallel
 plot(cusp{1}+Xpc,cusp{2}+Ypc,'wo','Markersize',10);
 plot(ll{1}+Xpc,ll{2}+Ypc,'y-',ld{1}+Xpc,ld{2}+Ypc,'y--','Linewidth',2);
 plot(tl{1}+Xpc,tl{2}+Ypc,'w-',td{1}+Xpc,td{2}+Ypc,'w--','Linewidth',2);
-
+set(gca,'ColorScale','log')
+%view(tilt + 270, 90)
 hold off
 axis equal
-%pause
-
 
 fac = 1.15;
 set(gca,'xlim',[max(1,xpc-fac*max(a,b)), min(nc,xpc+fac*max(a,b))])

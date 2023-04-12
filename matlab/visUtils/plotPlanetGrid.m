@@ -83,7 +83,7 @@ elseif length(PIXSIZE) == 2,
   pixsizeY = PIXSIZE(2);
   PIXSIZE = ( pixsizeX + pixsizeY)/2;
 else
-  CR = char(10); % Carriage Return ASCII code
+  CR = newline; % Carriage Return ASCII code for all OS
   error(['PIXSIZE value (arcseconds per pixel) in wrong format!',CR,...
          'Expecting either single value or length-two vector',CR,...
          'containing PIXSIZE value for each axis (see HST.PIXSCALE).'])
@@ -91,7 +91,7 @@ end
 
 % Warning in case PIXSIZE values for X & Y axis differ by more than 1%
 if ~(0.999 < pixsizeX/pixsizeY < 1.001),
-  CR = char(10); % Carriage Return ASCII code
+  CR = newline; % Carriage Return ASCII code for all OS
   warning(['PIXSIZE (arcseconds per pixel) differ by more than 1%!',CR,...
            'Graphs may be very wrong!'])
 end
@@ -122,7 +122,7 @@ else,
     plotgrid  = 1;
     RingRadii = ringplot;
   else
-    CR = char(10); % Carriage Return ASCII code
+    CR = newline; % Carriage Return ASCII code for all OS
     error(['ringplot specified in unknown format!',CR,...
            '   Do NOT plot any rings:         Use 0 or "no rings" ',CR,...
            '   Plot rings automatically:      Use 1 or "plot rings" ',CR,...
@@ -161,7 +161,7 @@ if length(pc)==2, % no information about ellipsoid
 	% limb eccentricity 
   eL = e*cos(pi/180*se.lat);
 	% projected semi minor axis
-  bp = a * sqrt(1-eL^2);
+  bp = a*sqrt(1-eL^2);
 	semiMaj_km = a;
 	ecc = e;
 else, % information about ellispoide provide in pixel
@@ -194,6 +194,7 @@ if ~isempty(params),
   ylabel('y [arcsec]')
   title(sprintf('%s %s',[upper(planet(1)),lower(planet(2:end))],...
         datestr(datenum(epoch,'yyyy mm dd HH MM SS'))));
+  
 else
   % Scaling factor to convert from km to arcsec on Earth observer's sky
   km2asec = (1/se.dist)*(180/pi)*3600;
@@ -285,8 +286,8 @@ fprintf(1,'psi %f orientat %f alpha %f (deg)\n',se.psi,orientat,alpha);
 hold on
 
 if 1,
-A = viewmtx(90+se.CML,se.lat)
-A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi)
+%A = viewmtx(90+se.CML,se.lat)
+A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi);
 pause
 A(4,4) = 1/km2asec;
 [X,Y,Z]=ellipsoid(0,0,0,semiMaj_km,semiMaj_km,semiMaj_km*sqrt(1-ecc^2));
@@ -298,7 +299,8 @@ x2 = zeros(m,n); y2 = zeros(m,n); z2 = zeros(m,n);
 x2(:) = x3d(1,:)./x3d(4,:);
 y2(:) = x3d(2,:)./x3d(4,:);
 z2(:) = x3d(3,:)./x3d(4,:);
-mesh(x2,y2,z2,zeros(size(x2)));hidden off, alpha(1), view(0,90)
+[x2,y2] = Rotate(alpha,x2,y2);
+mesh(x2,y2,z2,ones(size(x2)));hidden off, alpha(1), view(0,90)
 pause
 f=figure;
 subplot(211), mesh(x2,y2,z2,zeros(size(x2))), view(0,90)
@@ -339,14 +341,13 @@ end
 %x2,y2,z2
 [xsky,ysky] = Rotate(alpha,x2,y2);
 %xsky,ysky
-plot(xsky(1),ysky(1),'kx','Markersize',5)
-plot(xsky(2),ysky(2),'ko','Markersize',5)
+sePlot = plot(xsky(1),ysky(1),'kx','Markersize',5)
+ssPlot = plot(xsky(2),ysky(2),'ko','Markersize',5)
 fprintf(1,'Plotting sub-Earth and sub-solar points\n'), pause
 
 
-
 % Grid curves of constant latitude
-for the = ([dlat:dlat:180-dlat])*pi/180,
+for the = (dlat:dlat:180-dlat)*pi/180,
 %for the = ([90+se.lat])*pi/180,
 	phi = linspace(0,2*pi,fix(150*sin(the))); 
 	[r,x,y,z,xsky,ysky,zsky] = spherical2Sky(semiMaj_km,ecc, ...
@@ -491,10 +492,14 @@ fprintf(1,'*** cusp points x=%f,%f, y=%f,%f\n',cusp{1},cusp{2});
 close(f);
 f=figure;
 subplot(211), 
-plot(xll,yll,'-',xld,yld,'o',xtl,ytl,'-',xtd,ytd,'o'); pause
-subplot(212),
-plot(ll{1},ll{2},'-',ld{1},ld{2},'o',tl{1},tl{2},'-',td{1},td{2},'o'); pause
+plot(xll,yll,'-',xld,yld,'o',xtl,ytl,'-',xtd,ytd,'o')
 axis square
+title('ltc')
+subplot(212),
+plot(ll{1},ll{2},'-',ld{1},ld{2},'o',tl{1},tl{2},'-',td{1},td{2},'o')
+axis square
+title('getLTC')
+pause
 close(f)
 
 % rotation
@@ -505,7 +510,14 @@ if 1,
 hl=plot(xll,yll,'r-','LineWidth',2,'MarkerSize',10);
 [xtl,ytl] = Rotate(alpha,tl{1},tl{2});
 ht=plot(xtl,ytl,'g-','LineWidth',2,'MarkerSize',10);
-legend([hl,ht],'Limb','Terminator')
+legend([hl,ht,sePlot,ssPlot], ...
+    {'Limb','Terminator','Sub-Earth Point','Sub-Solar Point'}, ...
+    'location', 'eastoutside')
+
+%view(-90, 90)
+%set(gca,'xlim',[-20, -5])
+%set(gca,'ylim',[-20, 20])
+
 end
 end
 

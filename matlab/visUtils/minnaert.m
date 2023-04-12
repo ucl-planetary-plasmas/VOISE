@@ -149,8 +149,8 @@ for i = 1:nlats-1,
 	  break; 
 	end
 
-  glowthrs = median(params.W(glow))+mad(params.W(glow));
-	glowthrs = median(params.W(glow))+c*mad(params.W(glow));
+  %glowthrs = median(params.W(glow))+mad(params.W(glow));
+  glowthrs = median(params.W(glow))+c*mad(params.W(glow));
   %glowthrs = median(params.W(glow))+3*c*mad(params.W(glow));
   %[~,~,glowthrs,~] = isoutlier(params.W(glow),'median');
   fprintf(1,'Airglow threshold %f\n', glowthrs);
@@ -239,7 +239,7 @@ for i = 1:nlats-1,
   xlabel('log(\mu\mu_0)')
   ylabel('log(\mu I)')
 
-  legend({lgdawn{:},lgdusk{:}},'location','southeast')
+  legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
   drawnow
 
   %pause

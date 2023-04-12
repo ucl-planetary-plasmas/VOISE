@@ -1,5 +1,5 @@
-function [a,b,e,f] = getPlanetGeometry(planetName)
-% function [a,b,e,f] = getPlanetGeometry(planetName)
+function [a, b, e, f] = getPlanetGeometry(planetName)
+% function [a, b, e, f] = getPlanetGeometry(planetName)
 
 %
 % $Id: getPlanetGeometry.m,v 1.4 2018/06/14 11:56:38 patrick Exp $
@@ -28,16 +28,16 @@ loadPlanetSpiceKernels('standard');
 % the largest equatorial radius (the length of the semi-axis
 % containing the prime meridian), the second number is the smaller
 % equatorial radius, and the third is the polar radius.
-radii = cspice_bodvrd(planetName,'RADII',3);
+radii = cspice_bodvrd(planetName, 'RADII', 3);
 
 % major axis
 a = radii(1);
 % minor axis
 b = radii(3);
 % eccentricity
-e = sqrt(a^2-b^2)/a;
+e = sqrt(1 - (b / a)^2);
 % flattening
-f = (a-b)/a;
+f = (a - b) / a;
 
 %  It's always good form to unload kernels after use,
 %  particularly in MATLAB due to data persistence.
