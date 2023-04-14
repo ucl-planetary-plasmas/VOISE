@@ -1,5 +1,5 @@
-function testEllipse2Fit(ns,pc,p,p0,dp)
-% function testEllipse2Fit(ns,pc,p,p0,dp)
+function testEllipse2Fit(ns,pc,p,p0,dp,alim)
+% function testEllipse2Fit(ns,pc,p,p0,dp,alim)
 %
 % Try for example
 % testEllipse2Fit
@@ -7,7 +7,7 @@ function testEllipse2Fit(ns,pc,p,p0,dp)
 %
 
 %
-% $Id: testEllipse2Fit.m,v 1.5 2023/02/01 19:31:33 patrick Exp $
+% $Id: testEllipse2Fit.m,v 1.6 2023/04/14 13:51:05 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -36,14 +36,18 @@ if nargin==0,
 	p0 = [-10,10,285,295,40];
   % fit all parameters
   dp = ones(1,5);
-  testDriver(ns, pc, p, p0, dp);
-elseif nargin==5
-  testDriver(ns, pc, p, p0, dp);
+	alim = [0,360];
+  testDriver(ns, pc, p, p0, dp, alim);
+elseif nargin==5,
+	alim = [0,360];
+  testDriver(ns, pc, p, p0, dp, alim);
+elseif nargin==6,
+  testDriver(ns, pc, p, p0, dp, alim);
 end
 
 pause(pstate)
 
-function testDriver(ns,pc,p,p0,dp)
+function testDriver(ns,pc,p,p0,dp,alim)
 
 global verbose
 verbose=[0 1 0];
@@ -57,7 +61,7 @@ t0 = p(5);
 % init seed of Mersenne-Twister RNG
 rand('twister',10);
 
-t = 360*rand(1,ns);
+t = diff(alim)*rand(1,ns)+alim(1);
 
 Sx0 = Xc + a*cosd(t)*cosd(t0) - b*sind(t)*sind(t0);
 Sy0 = Yc + a*cosd(t)*sind(t0) + b*sind(t)*cosd(t0);
