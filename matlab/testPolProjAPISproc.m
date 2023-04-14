@@ -130,7 +130,10 @@ latgrid = planetodetic(latgrid(maskPlanet));
 adjust_intensity = 1;
 
 if adjust_intensity
-adj = intensityAdjustment(x, y, z, params.HST.APIS.SUBELAT,params.HST.APIS.SUBELON);
+%subELAT = params.HST.APIS.SUBELAT;
+subELAT = -90; % Viewed from the south-pole
+adj = intensityAdjustment(x, y, z, subELAT, params.HST.APIS.SUBELON,...
+    params.HST.APIS.SUBSLAT,params.HST.APIS.SUBSLON);
 c1 = c1 .* adj;
 c2 = c2 .* adj;
 end
@@ -317,28 +320,61 @@ if logScale
     set(gca,'ColorScale','log')
 end
 
-function adjustment = intensityAdjustment(x, y, z, subelat, subelon)
-% Direction of normal surface.
+function adjustment = intensityAdjustment(x, y, z, subelat, subelon, subslat, subslon)
+% https://en.wikipedia.org/wiki/Specular_highlight
+% https://en.wikipedia.org/wiki/Phong_reflection_model
+% https://dl.acm.org/doi/abs/10.1145/360825.360839
+% https://dicklyon.com/tech/Graphics/Phong_TR-Lyon.pdf
+
+n = 2; % Shininess exponent (Different values may work better)
+
 % Jupiter
 re = 71492; % km
 rp = 66854; % km
 e = sqrt(1 - rp^2 / re^2);
+
+% Direction of normal surface
 mag = 1 ./ sqrt(x.^2 + y.^2 + z.^2 / (1 - e^2)^2);
-n = mag .* [x, y, z ./ (1 - e^2)];
+Nhat = mag .* [x, y, z ./ (1 - e^2)];
 
-% Calculate normalized observer vector.
-% Assumes observer at earth.
 [earthx, earthy, earthz] = latlon2xyz(subelat, subelon);
-earth = [earthx, earthy, earthz];
-earth = earth / max(abs(earth(:)));
+subEarthPoint = [earthx, earthy, earthz];
 
-% Calculate dot product between surface normals and observer direction
-dotProd = n * earth';
+[sunx, suny, sunz] = latlon2xyz(subslat, subslon);
+subSolarPoint = [sunx, suny, sunz];
+
+% View vector
+% https://se.mathworks.com/help/matlab/ref/vecnorm.html
+V = subEarthPoint - [x, y, z];
+Vhat = V ./ vecnorm(V, 2, 2);
+
+% Reflection vector
+L = [x, y, z] - subSolarPoint;
+Lhat = L ./ vecnorm(L, 2, 2);
+
+% Direction Vector
+% https://se.mathworks.com/help/matlab/ref/dot.html
+R = 2 * dot(Nhat, Lhat, 2) .* Nhat - Lhat;
+Rhat = R ./ vecnorm(R, 2, 2);
+
+% Diffuse reflection coefficient
+Kdiff = dot(Lhat, Nhat, 2); % Seems to get an unexpected result
+
+% Specular reflection coefficient
+Kspec = dot(Rhat, Vhat, 2) .^ n;
+
+% Total reflection
+Ks = 1 ; % Specular reflection constant (assumed 1)
+Kd = 1 ; % Specular diffusion constant (assumed 1)
+
+Ktotal = Kd .* Kdiff + Ks .* Kspec;
+
+% Scattered light from the aurora
+subEarthPoint = subEarthPoint ./ norm(subEarthPoint);
+dotProd = Nhat * subEarthPoint';
 theta = acosd(dotProd);
 
-% Avoids 1/0 at 90 degrees
-thrs = 89;
-theta(theta > thrs) = thrs;
-correction = 1./cosd(theta);
-% For smoothing out the values
-adjustment = log(correction);
+lambertianScatter = cosd(theta);
+
+% Total Illumination
+adjustment = lambertianScatter + Ktotal;
