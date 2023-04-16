@@ -1,15 +1,15 @@
 function testReadAPISLevel2(filename)
 % function testReadAPISLevel2(filename)
 %
-% Function to test APIS Level 1 images. 
+% Function to test APIS Level 2 images. 
 %
 % Example:
 %
 % APIS HST south pole image 20/02/2007, 15:22:52-15:24:33, 100 s integration time 
-% testReadAPISproc('../share/input/j9rlb0fxq_proc.fits')
+% testReadAPISLevel2('../share/input/j9rlb0fxq_proc.fits')
 
 %
-% $Id: testReadAPISLevel2.m,v 1.2 2023/03/28 08:34:10 patrick Exp $
+% $Id: testReadAPISLevel2.m,v 1.3 2023/04/16 12:53:48 patrick Exp $
 %
 % Copyright (c) 2021 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
