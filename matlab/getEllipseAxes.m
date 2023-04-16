@@ -5,7 +5,7 @@ function [x,y,aa,majAxis,bb,minAxis] = getEllipseAxes(a,b,c)
 % ax^2+by^2+cxy = 1
 
 %
-% $Id: getEllipseAxes.m,v 1.3 2021/06/26 10:56:34 patrick Exp $
+% $Id: getEllipseAxes.m,v 1.4 2023/04/16 18:40:50 patrick Exp $
 %
 % Copyright (c) 2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -23,7 +23,8 @@ function [x,y,aa,majAxis,bb,minAxis] = getEllipseAxes(a,b,c)
 % You should have received a copy of the GNU General Public License
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-% create matrix of quadratic form a x^2 + b x*y + c y^2 = 1
+
+% create matrix of quadratic form a x^2 + b y^2 + c x y = 1
 A = [a,c/2;c/2,b];
 
 % get eigen vectors V and eigen values  D
@@ -45,6 +46,7 @@ else, % major axis in (2,2)
 	bb = 1/sqrt(D(1,1));
 	minAxis = V(:,1);
 end
+
 
 % check cross product of eigen vectors is +/- 1
 %V(1,1)*V(2,2)-V(2,1)*V(1,2), % direct calculation
@@ -70,10 +72,13 @@ end
 return
 
 % visual diagnostics of the ellipse
+fimplicit(@(x,y) a*x.^2+c*x.*y+b*y.^2-1)
+hold on
 plot(x,y,...
      majAxis(1)*[-aa;aa],majAxis(2)*[-aa;aa],...
 		 minAxis(1)*[-bb;bb],minAxis(2)*[-bb;bb]);
-legend('E','1','2')
+hold off
+legend('E_i','E_e','1','2')
 axis equal
 fprintf(1,'mean|a*x.^2+b*y.^2+c*x.*y-1| = %.2g\n',...
         mean(abs(a*x.^2+b*y.^2+c*x.*y-1)))
