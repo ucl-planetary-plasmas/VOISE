@@ -25,7 +25,7 @@ function [ll,ld,tl,td,cusp]=getLTC(r,e,obs,sun)
 % Public License for more details.
 %
 
-% [0,2*pi] angular grid with one degree resolution
+% [0,2\pi] angular grid with one degree resolution
 theta = linspace(0,2*pi,361);
 
 % deg into rad
@@ -34,20 +34,15 @@ olon = obs.lon*pi/180;
 slat = sun.lat*pi/180;
 slon = sun.lon*pi/180;
 
-%re = 71492; % km
-%rp = 66854; % km
-%f = (re - rp) / re;
-%olat = olat + atan(f * sin(2 .* olat) ./ (1 - f .* sin(olat).^2));
-
 % longitude difference
 dlon = slon-olon;
 dlon = -dlon;
 
 % sky frame
 xhato = [0;1;0];
-yhato = [-sin(olat);0;cos(olat)];
+yhato = [sin(olat);0;cos(olat)];
 %zhato = cross(xhato, yhato);
-zhato = [cos(olat);0;sin(olat)];
+zhato = [cos(olat);0;-sin(olat)];
 
 if 0
 % "sky" frame in direction to the sun
@@ -107,11 +102,11 @@ end
 % excentricity of the limb
 eL = eLimb(e,olat);
 % limb in its own plane
-%xl0 = r*cos(theta);
-%yl0 = r*sqrt(1-eL^2)*sin(theta);
+xl0 = r*cos(theta);
+yl0 = r*sqrt(1-eL^2)*sin(theta);
 
 % limb projected onto the sky-plane (perpendicular to the
-% direction of the observer), the projected rotation axis is vertical
+% the direction of the observer), the projected rotation axis is vertical
 % and xl is in the equatorial plane (Eq A3)
 xl = r*cos(theta);
 yl = r*sqrt(1-e^2*cos(olat)^2)*sin(theta);
@@ -224,10 +219,10 @@ fprintf(1,'Cusp points x=%f,%f, y=%f,%f\n',xc(:)',yc(:)');
 
 
 % there is something wrong here
-if 1
-AA = 1 / (r^2 * (a * d - b * c)^2) * (d^2 + c^2 / (1 - eT^2));
-BB = 1 / (r^2 * (a * d - b * c)^2) * (b^2 + a^2 / (1 - eT^2));
-CC = - 2 / (r^2 * (a * d - b * c)^2) * (b * d + a * c / (1 - eT^2));
+if 1,
+AA = 1/r^2/(a*d-b*c)^2*(d^2+c^2/(1-eT^2));
+BB = 1/r^2/(a*d-b*c)^2*(b^2+a^2/(1-eT^2));
+CC = -2/r^2/(a*d-b*c)^2*(b*d+a*c/(1-eT^2));
 [xta,yta,aa,majAxis,bb,minAxis] = getEllipseAxes(AA,BB,CC);
 x1 = majAxis(1)*[-aa;aa];
 y1 = majAxis(2)*[-aa;aa];
@@ -252,8 +247,8 @@ x2 = minAxis(1)*[-bb;bb];
 y2 = minAxis(2)*[-bb;bb];
 end
 
-% tilt, semi-major and semi-minor axes of the ellipse formed 
-% by the sky projection of the terminator Eqs. A6, A7 and A8xt
+% tilt, semi-major and semi-minor axes of the ellispe formed 
+% by the sky projection of the terminator Eqs. A6, A7 and A8
 thetaT = atan2(v,u);
 aT = sqrt(u^2+v^2)*t1;
 bT = sqrt(u^2+v^2)*t2;

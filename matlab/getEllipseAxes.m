@@ -28,8 +28,6 @@ A = [a,c/2;c/2,b];
 
 % get eigen vectors V and eigen values  D
 [V,D] = eig(A);
-%Negative V(1,1), rotates 180 degrees by changing sign
-V(1,1) = - V(1,1);
 %D, % eigen values are diagonal elements
 
 % look for major axis to align with x-axis first and then rotate 

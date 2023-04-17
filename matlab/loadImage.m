@@ -48,25 +48,26 @@ function params = loadImage(params)
 try
 
 	me = checkField(params,'iFile');
-  if ~isempty(me) 
+  if ~isempty(me), 
     throw(me),
   else
     iFile = params.iFile;
   end
 
-  if contains(iFile,'.mat') % mat-file
+  %Changed to contains instead of strfind for readability
+  if contains(iFile,'.mat'), % mat-file
     %   north_proj.mat is a mat file containing a polar projection of
     %   Jupiter observed by HST:
     %   Z           256x256         524288  double  image intensity
     %   x             1x256           2048  double  x-axis (# cols in Z)
     %   y           256x1             2048  double  y-axis (# rows in Z)
 		me = checkiFile(params);
-		if ~isempty(me), throw(me)
-        end
+		if ~isempty(me), throw(me), end
     img = load(iFile);
     % set image, axes and related
     params.W = double(img.Z);
-		if isfield(img,'x') && isfield(img,'y')
+        % Changed from & to && for efficiency
+		if isfield(img,'x') && isfield(img,'y'),
       params.x = double(img.x);
       params.y = double(img.y);
 			% overwrite pixelSize and imageOrigo deduced from x and y
@@ -82,18 +83,17 @@ try
       [nr, nc] = size(params.W);
       params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
       params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
-        end
-        if isfield(img,'pixelUnit') && ...
+		end
+		if isfield(img,'pixelUnit') && ...
        isa(img.pixelUnit,'cell') && ...
-       length(img.pixelUnit) == 2
+       length(img.pixelUnit) == 2,
 			 params.pixelUnit = img.pixelUnit;
-        end
+    end
 
-  elseif contains(iFile,'.fits') % fits-file
+  elseif contains(iFile,'.fits'), % fits-file
 
     me = checkiFile(params);
-		if ~isempty(me), throw(me)
-        end
+		if ~isempty(me), throw(me), end
 		%  from [msg,msgID] = lastwarn;
     warning('off','MATLAB:imagesci:fitsinfo:unknownFormat');
 
@@ -101,14 +101,14 @@ try
     opts = {'Info', info};
 
     % get HST fits parameters if requested
-    if params.HSTFitsParam
+    if params.HSTFitsParam,
       params = getHSTInfo(params);
     end
 
     ext = [];
-    if ~isfield(info,'Image')
+    if ~isfield(info,'Image') ...
       img = squeeze(fitsread(iFile,'primary',opts{:}));
-    elseif length(info.Image)==6 % APIS level 2 data _proc.fits
+    elseif length(info.Image)==6, % APIS level 2 data _proc.fits
       img = squeeze(fitsread(iFile,'primary',opts{:}));
       % latitude in degree at the 1-bar level
       ext.lat1b = fitsread(iFile,'image',1,opts{:});
@@ -122,7 +122,7 @@ try
       ext.lat300km = fitsread(iFile,'image',5,opts{:});
       % auroral local time at 300km above the 1-bar level
       ext.lt300km = fitsread(iFile,'image',6,opts{:});
-    elseif length(info.Image)==3 % APIS level 1 data _drz.fits
+    elseif length(info.Image)==3, % APIS level 1 data _drz.fits
       % Science Image
       img = squeeze(fitsread(iFile,'image',1,opts{:})); 
       % Weight Image
@@ -136,13 +136,12 @@ try
     params.W = img;
     params.ext = ext;
 
-    if isfield(params,'HST') && ~isempty(params.HST) ...
-            && params.HSTPlanetParam
+    if isfield(params,'HST') && ~isempty(params.HST) && params.HSTPlanetParam,
       me = checkSpice; 
-      if ~isempty(me), throw(me)
-      end
+      if ~isempty(me), throw(me), end
       params = getHSTPlanetParams(params);
     end
+    %pause
 
 		me = checkField(params,'imageOrigo'); 
 		if ~isempty(me), throw(me), end
@@ -154,7 +153,7 @@ try
     params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
     params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 
-if 0
+if 0,
     % pixel coordinates (indices j)
     [Xj,Yj] = meshgrid(1:nc, 1:nr);
 
@@ -183,7 +182,7 @@ if 0
     hold off
 
     figure
-    if 1
+    if 1,
       % convert to arcsec and set relative ra/dec to ref pix
       [Xi,Yi] = getHSTabs2relRadec(HST,Xi,Yi);
       [rpra,rpdec] = getHSTabs2relRadec(HST,rpra,rpdec);
@@ -195,7 +194,7 @@ if 0
       xlbl = 'ra [deg]';
       ylbl = 'dec [deg]';
     end
-    pcolor(Xi,Yi,log10(abs(params.W))); shading flat; 
+    pcolor(Xi,Y,log10(abs(params.W))); shading flat; 
     hold on
     plot(rpra,rpdec,'ko','markersize',5)
     plot(planet.ra,planet.dec,'kx','markersize',5)
@@ -205,21 +204,21 @@ if 0
 end
 end
 
-  else % neither mat-file nor fits-file
+  else, % neither mat-file nor fits-file
 
-    if ~isempty(iFile)
+    if ~isempty(iFile), 
       me = MException('MyFunction:fileTypeNotSupported',...
                       '%s is not a fits- nor a mat-file',iFile);
 		else
 		  me = MException('MyFunction:fileEmpty',...
                       'field iFile is empty');
       throw(me);
-    end
+		end
 
   end
 
 	% ensure that image is in floating precision
-	if isinteger(params.W)
+	if isinteger(params.W),
 	  params.W = single(params.W);
 	end
 
@@ -227,18 +226,19 @@ end
 	params = preprocessImage(params);
 
   % set colour and axes limits
-  if isempty(params.Wlim)
+  if isempty(params.Wlim),
     params.Wlim = [min(params.W(:)) max(params.W(:))];
   end
-  if isempty(params.xlim)
+  if isempty(params.xlim),
     params.xlim = [min(params.x) max(params.x)];
   end
-  if isempty(params.ylim)
+  if isempty(params.ylim),
     params.ylim = [min(params.y) max(params.y)];
   end
 
 catch me
 
+    % Removed unecessary brackets
 	disp('Problem when loading image file.');
   rethrow(me);
 
@@ -252,7 +252,7 @@ string = deblank(fliplr(deblank(fliplr(string))));
 function me = checkSpice()
 
 me = [];
-if isempty(which('mice')) || exist('mice') ~= 3
+if isempty(which('mice')) || exist('mice') ~= 3,
   me = MException('MyFunction:verifySpice', ...
                   ['Problem with Mice/Spice installation' ...
                   '\nCheck your installation']);
@@ -271,16 +271,13 @@ end
 function me = checkField(params,field)
 
 me = [];
-if ~isfield(params,field)
+if ~isfield(params,field),
   names = fieldnames(params);
 	strnames = '';
-	if ~isempty(names)
+	if ~isempty(names),
 	  strnames = '(';
-    for i=1:length(names)-1 
-        strnames = [strnames names{i} ', ']; 
-        return
-    end
-	    strnames = [strnames names{end} ')'];
+    for i=1:length(names)-1, strnames = [strnames names{i} ', ']; end
+	  strnames = [strnames names{end} ')'];
 	end
   me = MException('MyFunction:verifyParams', ...
                   ['Problem with ''params'' structure fields ''%s''' ...

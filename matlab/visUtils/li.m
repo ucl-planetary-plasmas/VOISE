@@ -32,13 +32,13 @@ function params = li(params,binlat,dawnmax,duskmin)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % set default variables
-if ~exist('binlat','var') || isempty(binlat)
+if ~exist('binlat','var') || isempty(binlat),
   binlat = 1; % latitude bin size in degrees
 end
-if ~exist('dawnmax','var') || isempty(dawnmax)
+if ~exist('dawnmax','var') || isempty(dawnmax),
   dawnmax = 13;
 end
-if ~exist('duskmin','var') || isempty(duskmin)
+if ~exist('duskmin','var') || isempty(duskmin),
   duskmin = 11;
 end
 
@@ -91,7 +91,7 @@ pause
 airglow = zeros(size(params.ext.lat1b));
 
 % loop over latitude bins
-for i = 1:nlats-1
+for i = 1:nlats-1,
 
   latmin = lats(i);
   latmax = lats(i+1);
@@ -106,17 +106,18 @@ for i = 1:nlats-1
   ovrl = find(lit & planet & latband & ltovrl);
 
   glow = [dusk;dawn];
-	if isempty(glow)
+	if isempty(glow),
 	  break; 
 	end
 
+  % Commented out as it is instantly overwritten
   %glowthrs = median(params.W(glow))+mad(params.W(glow));
   glowthrs = median(params.W(glow))+c*mad(params.W(glow));
   %glowthrs = median(params.W(glow))+3*c*mad(params.W(glow));
   %[~,~,glowthrs,~] = isoutlier(params.W(glow),'median');
   fprintf(1,'Airglow threshold %f\n', glowthrs);
 
-	if exist('thrshold.mat','file')
+	if exist('thrshold.mat','file'),
 	  glowthrs = getthrshold(.5*(lats(i)+lats(i+1)));
 		fprintf(1,'Airglow threshold %f\n', glowthrs);
 	end
@@ -127,7 +128,7 @@ for i = 1:nlats-1
   % evening sector without aurora
   duskthrs = find(lit & planet & latband & ltdusk & params.W <= glowthrs);
 
-  if length(dawnthrs)>1 % morning
+  if length(dawnthrs)>1, % morning
     % 1D fitting to x1 
     pdawn1 = polyfit(x1(dawnthrs),y(dawnthrs),1);
     fprintf(1,'dawn = %+f x1 %+f\n',pdawn1)
@@ -144,7 +145,7 @@ for i = 1:nlats-1
     fdawn2 = NaN*ones(size(dawn));
 		lgdawn = {};
   end
-  if length(duskthrs)>1 % afternoon
+  if length(duskthrs)>1, % afternoon
     % 1D fitting to x1 
     pdusk1 = polyfit(x1(duskthrs),y(duskthrs),1);
     fprintf(1,'dusk = %+f x1 %+f\n',pdusk1)
@@ -167,6 +168,7 @@ for i = 1:nlats-1
        x1(dusk),y(dusk),'o',x1(dusk),fdusk1,'x')
   xlabel('\mu')
   ylabel('I')
+  % Concatenation insteaad of extraction for efficiency
 	legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
 
   subplot(212),
@@ -179,13 +181,13 @@ for i = 1:nlats-1
   drawnow
 %pause
 
-  if length(dawnthrs)>1 % morning
+  if length(dawnthrs)>1, % morning
     [pdawn,gofdawn]  = fit([x1(dawnthrs),x2(dawnthrs)], y(dawnthrs),'poly11');
 		disp(pdawn)
   else
     pdawn = @(x) NaN*ones(size(x,1));
   end
-  if length(duskthrs)>1 % afternoon
+  if length(duskthrs)>1, % afternoon
     [pdusk,gofdusk]  = fit([x1(duskthrs),x2(duskthrs)], y(duskthrs),'poly11');
 		disp(pdusk)
   else
@@ -194,7 +196,7 @@ for i = 1:nlats-1
 
   airglow(dawn) = pdawn([x1(dawn),x2(dawn)]);
   airglow(dusk) = pdusk([x1(dusk),x2(dusk)]);
-	if ~isempty(ovrl) % overlap
+	if ~isempty(ovrl), % overlap
 	  x = [x1(ovrl),x2(ovrl)];
 	  airglow(ovrl) = 0.5*(pdawn(x)+pdusk(x));
 	end
