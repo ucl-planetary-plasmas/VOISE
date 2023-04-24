@@ -379,8 +379,9 @@ subEarthPoint = [earthx, earthy, earthz];
 subSolarPoint = [sunx, suny, sunz];
 
 % Scattered light from the surface to the observer
-subEarthPoint = subEarthPoint ./ norm(subEarthPoint);
-dotProdEm = Nhat * subEarthPoint'; % Emission
+% Changed variable name so View vector in phong can be calculated correctly
+subEarthPointNorm = subEarthPoint ./ norm(subEarthPoint);
+dotProdEm = Nhat * subEarthPointNorm'; % Emission
 emAngle = acosd(dotProdEm);
 
 switch method % Method for specularity
