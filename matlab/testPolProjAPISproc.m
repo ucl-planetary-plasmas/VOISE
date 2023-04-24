@@ -32,7 +32,7 @@ params.verbose = verbose;
 
 params = loadImage(params);
 
-%close all
+close all
 
 binlat = 1;
 dawnmax = 13;
@@ -41,15 +41,17 @@ np = 3;
 params = minnaert(params,binlat,dawnmax,duskmin,np);
 params = li(params,binlat,dawnmax,duskmin);
 
-%subplot(211)
-%imagesc(params.x,params.y,params.W)
-%axis xy
 
+if 0
 figure
+subplot(211)
+imagesc(params.x,params.y,params.W)
+axis xy
 
-%subplot(212)
-%pcolor(params.x,params.y,params.W)
-%shading flat
+subplot(212)
+pcolor(params.x,params.y,params.W)
+shading flat
+end
 
 if 1,
 latgrid = params.ext.lat1b;
@@ -59,8 +61,7 @@ latgrid = params.ext.lat300km;
 ltgrid = params.ext.lt300km;
 end
 
-maskPlanet = find(latgrid~=-100);
-maskNotPlanet = find(latgrid==-100);
+
 
 maskPlanet = find(latgrid<=-45 & latgrid~=-100);
 maskNotPlanet = find(latgrid>-45 | latgrid==-100);
@@ -117,74 +118,94 @@ longrid = lt2lon(ltgrid);
 fprintf(1,'longitude extent = %+8.1f, %+8.1f deg\n', ...
         [min(longrid(maskPlanet)),max(longrid(maskPlanet))])
 
-[x,y,z] = latlon2xyz(latgrid(maskPlanet),longrid(maskPlanet));
 c1 = W1(maskPlanet);
 c2 = W2(maskPlanet);
 
-% griddedInterpolant({x1g,x2g,...,xng}
-opts = {'linear','none'};
-F1 = scatteredInterpolant([latgrid(maskPlanet),longrid(maskPlanet)],c1,opts{:});
+% Corrected for local gravity field
+latgrid = planetodetic(latgrid(maskPlanet));
+[x, y, z] = latlon2xyz(latgrid, longrid(maskPlanet));
 
-F2 = scatteredInterpolant([latgrid(maskPlanet),longrid(maskPlanet)],c2,opts{:});
+% Increases intensity as the angle between observer and surface normal
+% increases. When plotting, clim limits max intensity. Set to 0 for
+% original intensities in plot.
+adjust_intensity = 1;
 
-%[xgrid,ygrid,zgrid]=latlon2xyz(latgrid(maskPlanet),longrid(maskPlanet));
-%opts = {'linear','none'};
-%Fxyz = scatteredInterpolant(xgrid,ygrid,zgrid,c,opts{:});
+if adjust_intensity
+% Correction value added to cos(diff) * cos(spec) + corr
+% (Different values may work better)
+corr = 0.5; 
+method = 'phong'; % Can be phong, lambertian or none (specularity model)
+%method = 'lambertian';
+% Creates reference model for specularity and diffusion when looking at the
+% planet from the sub-earth point direction.
+adj = intensityAdjustment(x, y, z, params.HST.APIS.SUBELAT, ...
+    params.HST.APIS.SUBELON, params.HST.APIS.SUBSLAT, ...
+    params.HST.APIS.SUBSLON, corr, method);
+reorient = intensityAdjustment(x, y, z, -90, params.HST.APIS.SUBELON,...
+    params.HST.APIS.SUBSLAT,params.HST.APIS.SUBSLON, 0, 'none');
+% First two lines are dividing original images by the reference model such
+% that the images' intensities are adjusted
+c1 = c1 ./ adj;
+c2 = c2 ./ adj;
+% Multiplies with an assumed lambertian scatter for the observer at the
+% south pole (Highest values directly at the pole.
+c1 = c1 .* reorient; 
+c2 = c2 .* reorient;
+end
 
-xi = linspace(-0.8,0.8,200);
-yi = linspace(-0.8,0.8,200);
-e = 0.3543;
-[X,Y] = meshgrid(xi,yi);
-Z = -sqrt(1-e^2)*sqrt(1-X.^2-Y.^2);
-ii = find(X.^2-Y.^2>=1);
-ii = find(imag(Z)~=0);
-X(ii) = 1; Y(ii) = 0; Z(ii) = 0;
-[LAT,LON] = xyz2latlon(X,Y,Z);
-C1 = F1(LAT,LON);
-C2 = F2(LAT,LON);
+opts = {'linear', 'none'}; % Nearest instead of linear can produce slightly different result
 
-subplot(311),
-pcolor(X,Y,C1),
-shading flat
-set(gca,'xlim',[-.8,.8],'ylim',[-.8,.8])
-axis square
-colorbar
-set(gca,'clim',clim);
-%pause
+% Few points around the pole, interpolation somewhat fixes this.
+F1 = scatteredInterpolant(x, y, c1, opts{:});
+F2 = scatteredInterpolant(x, y, c2, opts{:});
 
-subplot(312),
-pcolor(X,Y,C2),
-shading flat
-set(gca,'xlim',[-.8,.8],'ylim',[-.8,.8])
-axis square
-colorbar
-set(gca,'clim',clim);
+xi = linspace(min(x), max(x), 400); % Seems to be trivial difference above 400
+yi = linspace(min(y), max(y), 400);
+[X, Y] = meshgrid(xi, yi);
 
-subplot(313),
-pcolor(X,Y,C1-C2),
-shading flat
-set(gca,'xlim',[-.8,.8],'ylim',[-.8,.8])
-axis square
-colorbar
-set(gca,'clim',dlim);
+% rho calculated for limits in polar plot
+[~, rho] = cart2pol(x, y);
+[THETA, RHO] = cart2pol(X, Y);
+
+C1 = F1(X, Y);
+C2 = F2(X, Y); 
+
+%Convert from electrons S^-1 to kR
+C1 = conversionFactor(C1);
+C2 = conversionFactor(C2);
+clim = conversionFactor(clim);
+dlim = conversionFactor(dlim);
+
+pause
+
+showLogarithmic = 0; % Set to 1 to display in logarithmic scale
+figure
+subplot(311)
+polarproj(X, Y, C1, clim, 'Minnaert', showLogarithmic) 
+subplot(312)
+polarproj(X, Y, C2, clim, 'Li', showLogarithmic)
+subplot(313)
+polarproj(X, Y, C1 - C2, dlim, 'Minnaert - Li', showLogarithmic)
 
 orient tall
 print('-dpdf',replace(filename,'.fits','_2.pdf'));
 
+pause
 
+% Alternate plotting using polarscatter instead of scatter
+showLogarithmic = 0;
 figure
-
 subplot(311)
-polarproj(x,y,c1,clim,['Minnaert np=' num2str(np)])
-
+polarprojAlt(THETA, RHO, C1, clim, 'Minnaert', rho, showLogarithmic)
 subplot(312)
-polarproj(x,y,c2,clim,'Li')
-
+polarprojAlt(THETA, RHO, C2, clim, 'Li', rho, showLogarithmic)
 subplot(313)
-polarproj(x,y,c1-c2,dlim,'Minneart-Li')
+polarprojAlt(THETA, RHO, C1 - C2, dlim, 'Minnaert - Li', rho, showLogarithmic)
 
 orient tall
 print('-dpdf',replace(filename,'.fits','_3.pdf'));
+
+return
 
 if 0,
 [x,y,z] = latlon2xyz([-30,-45],60)
@@ -212,9 +233,9 @@ end
 
 function y = model(b,x)
 % Jupiter
-e = 0.3543;
 re = 71492; % km
 rp = 66854; % km
+e = sqrt(1 - rp^2 / re^2);
 lat = x(:,:,1);
 lon = x(:,:,2);
 x = b(1)*sind(lon).*cosd(lat);
@@ -226,53 +247,201 @@ lon = 180-lt/24*360;
 
 function [x,y,z] = latlon2xyz(lat,lon)
 % Jupiter
-e = 0.3543;
 re = 71492; % km
 rp = 66854; % km
-x = sind(lon).*cosd(lat);
-y = cosd(lon).*cosd(lat);
-z = sqrt(1-e^2)*sind(lat);
+e = sqrt(1 - rp^2 / re^2);
+% Eq. 4 in planetproj
+x = re * cosd(lon) .* cosd(lat);
+y = re * sind(lon) .* cosd(lat);
+z = re * sqrt(1 - e^2) * sind(lat);
 
 function [lat,lon] = xyz2latlon(x,y,z)
 % Jupiter
-e = 0.3543;
 re = 71492; % km
 rp = 66854; % km
+e = sqrt(1 - rp^2 / re^2);
 %lat = -acosd(sqrt(x.^2+y.^2));
 lat = atan2d(z/sqrt(1-e^2),sqrt(x.^2+y.^2));
 lon = atan2d(x,y);
 
-function polarproj(x,y,c,clim,model)
+function latCorrected = planetodetic(lat)
+% Takes into account local gravity
+% Approximation using Clairaut's equation
+% Eq. 6 and 7 in planetproj 
+re = 71492; % km
+rp = 66854; % km
+f = (re - rp) / re;
+latCorrected = lat + atand(f * sind(2 .* lat) ./ (1 - f .* sind(lat).^2));
 
-scatter(x,y,[],c,'filled')
+function polarproj(x, y, c, clim, model, logScale)
+% Plots values using cartesian coordinates
+scatter(x(:), y(:), [], c(:), 'filled')
 hold on
-lat = -[20:10:80,85];
-lat = -[45:10:85];
-lon = linspace(0,360,100);
-for i=1:length(lat),
-  [x,y,z] = latlon2xyz(lat(i),lon);
-  plot(x,y,'k:')
-end
-lat = -linspace(20,85,100);
-lat = -linspace(45,85,100);
-lon = [0:15:360];
-for i=1:length(lon),
-  [x,y,z] = latlon2xyz(lat,lon(i));
-  plot(x,y,'k:')
-end
-[x,y,z] = latlon2xyz([-90,-45],0);
-noon = plot(x,y,'r-');
-[x,y,z] = latlon2xyz([-90,-45],90);
-dawn = plot(x,y,'c-');
-[x,y,z] = latlon2xyz([-90,-45],-90);
-dusk = plot(x,y,'m-');
-[x,y,z] = latlon2xyz([-90,-45],180);
-midnight = plot(x,y,'k-');
-title(model)
-legend([noon,dawn,dusk,midnight],{'noon','dawn','dusk','midnight'},...
-       'location','eastoutside')
-axis square
+plotgrid
 hold off
+axis square
 colorbar
+ylabel(colorbar, 'kR H_2')
 set(gca,'clim',clim);
+if logScale
+set(gca,'ColorScale','log')
+end
+title(model)
+view(90, -90)
 
+function plotgrid
+% Plotgrid made own function for better readability
+% Plots gridlines
+lat = -(45: 10: 85);
+lat = planetodetic(lat);
+lon = linspace(0, 360, 100);
+for i = 1: length(lat)
+  [x, y, ~] = latlon2xyz(lat(i), lon);
+  plot(x, y, 'k:')
+end
+lat = -linspace(45, 85, 100);
+lat = planetodetic(lat);
+lon = 0: 15: 360;
+for i = 1: length(lon)
+  [x, y, ~] = latlon2xyz(lat, lon(i));
+  plot(x, y, 'k:')
+end
+[x, y, ~] = latlon2xyz([-90, -45], 0);
+noon = plot(x, y, 'r-');
+[x, y, ~] = latlon2xyz([-90, -45], 90);
+dawn = plot(x, y, 'c-');
+[x, y, ~] = latlon2xyz([-90, -45], -90);
+dusk = plot(x,y,'m-');
+[x, y, ~] = latlon2xyz([-90, -45], 180);
+midnight = plot(x, y, 'k-');
+legend([noon, dawn, dusk, midnight], {'noon', 'dawn', 'dusk', 'midnight'},...
+       'location', 'eastoutside')
+
+function polarprojAlt(theta, rho, c, clim, model, rlimit, logScale)
+% Alternate display using polarscatter which uses polar coordinates
+polarscatter(theta(:), rho(:), [], c(:), 'filled')
+hold on
+
+rmax = max(rlimit); 
+noon = polarplot([0, 0], [0, rmax], Color="r");
+dawn = polarplot([pi / 2, pi / 2], [0, rmax], Color="c");
+dusk = polarplot([3 / 2 * pi, 3 / 2 * pi], [0, rmax], Color="m");
+midnight = polarplot([pi, pi], [0, rmax], Color="w");
+legend([noon, dawn, dusk, midnight], {'noon', 'dawn', 'dusk', 'midnight'})
+
+ax = gca;
+ax.Layer = 'top';
+ax.GridLineStyle = ':';
+ax.Color = [0, 0, 0];
+ax.GridColor = [1, 1, 1];
+ax.GridAlpha = 0.5;
+ax.ThetaZeroLocation = 'top';
+ax.ThetaDir = 'clockwise';
+ax.RTick = linspace(0, rmax, 6);
+ax.CLim = clim;
+
+rlim([0, rmax]);
+rticklabels([]);
+thetaticks(0:15:360);
+thetaticklabels({0, '', '', '', '', '',...
+    90, '', '', '', '', '',...
+    180, '', '', '', '', '',...
+    270, '', '', '', '', ''})
+
+title(model)
+colorbar
+ylabel(colorbar, 'kR H_2')
+if logScale
+    set(gca,'ColorScale','log')
+end
+
+function adjustment = intensityAdjustment(x, y, z, subelat, subelon, ...
+    subslat, subslon, corr, method)
+% Adjusts the intensity taking into account the viewing angle and incidence
+% angle. The specularity can be corrected for as well with two different
+% models. The normal lambertian scatter model for the sun hitting the
+% planet's surface and a phong model, which is dependent on a shininess
+% exponent n.
+
+% Jupiter
+re = 71492; % km
+rp = 66854; % km
+e = sqrt(1 - rp^2 / re^2);
+        
+% Direction of normal surface
+mag = 1 ./ sqrt(x.^2 + y.^2 + z.^2 / (1 - e^2)^2);
+Nhat = mag .* [x, y, z ./ (1 - e^2)];
+        
+[earthx, earthy, earthz] = latlon2xyz(subelat, subelon);
+subEarthPoint = [earthx, earthy, earthz];
+        
+[sunx, suny, sunz] = latlon2xyz(subslat, subslon);
+subSolarPoint = [sunx, suny, sunz];
+
+% Scattered light from the surface to the observer
+% Changed variable name so View vector in phong can be calculated correctly
+subEarthPointNorm = subEarthPoint ./ norm(subEarthPoint);
+dotProdEm = Nhat * subEarthPointNorm'; % Emission
+emAngle = acosd(dotProdEm);
+
+switch method % Method for specularity
+    case 'phong'
+        % https://dl.acm.org/doi/abs/10.1145/360825.360839
+        % https://dicklyon.com/tech/Graphics/Phong_TR-Lyon.pdf
+   
+        % View vector
+        % https://se.mathworks.com/help/matlab/ref/vecnorm.html
+        V = subEarthPoint - [x, y, z];
+        Vhat = V ./ vecnorm(V, 2, 2);
+        
+        % Reflection vector
+        L = [x, y, z] - subSolarPoint;
+        Lhat = L ./ vecnorm(L, 2, 2);
+        
+        % Direction Vector
+        % https://se.mathworks.com/help/matlab/ref/dot.html
+        R = 2 * dot(Nhat, Lhat, 2) .* Nhat - Lhat;
+        Rhat = R ./ vecnorm(R, 2, 2);
+        
+        n = 2; % Shininess exponent (Different values may work better)
+
+        % Diffuse reflection coefficient
+        Kdiff = dot(Lhat, Nhat, 2); % Seems to get an unexpected result
+        
+        % Specular reflection coefficient
+        Kspec = dot(Rhat, Vhat, 2) .^ n;
+        
+        % Total reflection
+        Ks = 1 ; % Specular reflection constant (assumed 1)
+        Kd = 1 ; % Specular diffusion constant (assumed 1)
+        
+        Ktot = Kd .* Kdiff + Ks .* Kspec;
+                
+        % Total Illumination
+        % Corr is value added to avoid large values near terminator and limb.
+        % 1 avoids values larger than original, lower values makes the brightness
+        % proportionally higher than the original maximum value, which lowers the
+        % intensity in the rest of the image relatively if clim is not applied to
+        % the plots. A too low value will make too much of the original image's
+        % intensity be above the maximum limit.
+
+        adjustment = cosd(emAngle) .* Ktot + corr;
+
+    case 'lambertian'        
+        subSolarPoint = subSolarPoint ./ norm(subSolarPoint);
+        dotProdInc = Nhat * subSolarPoint'; % Incidence
+        incAngle = acosd(dotProdInc);
+        
+        % Adds factor to avoid extremely high values near
+        % terminator and limb.
+        adjustment = cosd(emAngle) .* cosd(incAngle) + corr; 
+
+    case 'none'
+        adjustment = cosd(emAngle) + corr; % No specularity
+
+    otherwise
+        disp('method must be either phong or lambertian, or none for no specularity')
+end
+
+function c = conversionFactor(c)
+c = c / (1.473 * 10^-3); % Convert to kR

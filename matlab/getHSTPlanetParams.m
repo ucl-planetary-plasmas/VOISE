@@ -413,16 +413,27 @@ end
 plot(Xmg,Ymg,'k-');
 hold on
 plot(Xpg,Ypg,'k-');
+% Changed North and South pole from km to pix
 XN = dot(N,xhat);
 YN = dot(N,yhat);
 ZN = dot(N,zhat);
 XS = dot(S,xhat);
 YS = dot(S,yhat);
 ZS = dot(S,zhat);
-if 0
-plot([XN,XS]+Xpc,[YN,YS]+Ypc,'bx')
-text(XN+Xpc,YN+Ypc,'N')
-text(XS+Xpc,YS+Ypc,'S')
+% North and south pole in pixels
+XpcAlt = dot(planetposn,xhat); % Different name to avoid overwrite
+YpcAlt = dot(planetposn,yhat); 
+
+XNPix = atan2(XN + XpcAlt, planetdist)*radPerPixel + rpx;
+YNPix = atan2(YN + YpcAlt, planetdist)*radPerPixel + rpy;
+
+XSPix = atan2(XS + XpcAlt, planetdist)*radPerPixel + rpx;
+YSPix = atan2(YS + YpcAlt, planetdist)*radPerPixel + rpy;
+
+if 1
+plot([XNPix, XSPix], [YNPix, YSPix], 'bx', 'Markersize', 10)
+text(XN, YN, 'N')
+text(XS, YS, 'S')
 end
 % cusp, limb and terminator
 plot(cusp{1}+Xpc,cusp{2}+Ypc,'ko','Markersize',10);
@@ -450,7 +461,8 @@ Wt(Xgrid.^2/a^2+Ygrid.^2/b^2<=1) = 1;
 
 figure
 subplot(121),
-imagesc(X,Y,log10(abs(W))),
+imagesc(X,Y,W),
+set(gca,'ColorScale','log')
 axis xy
 axis square
 
@@ -485,7 +497,8 @@ end
 end
 
 figure
-imagesc(X,Y,log10(abs(W)))
+imagesc(X,Y,W)
+set(gca,'ColorScale','log')
 axis xy
 hold on
 axis auto

@@ -83,7 +83,7 @@ elseif length(PIXSIZE) == 2,
   pixsizeY = PIXSIZE(2);
   PIXSIZE = ( pixsizeX + pixsizeY)/2;
 else
-  CR = char(10); % Carriage Return ASCII code
+  CR = newline; % Carriage Return ASCII code. Changed to newline to work on all OS
   error(['PIXSIZE value (arcseconds per pixel) in wrong format!',CR,...
          'Expecting either single value or length-two vector',CR,...
          'containing PIXSIZE value for each axis (see HST.PIXSCALE).'])
@@ -91,7 +91,7 @@ end
 
 % Warning in case PIXSIZE values for X & Y axis differ by more than 1%
 if ~(0.999 < pixsizeX/pixsizeY < 1.001),
-  CR = char(10); % Carriage Return ASCII code
+  CR = newline; % Carriage Return ASCII code
   warning(['PIXSIZE (arcseconds per pixel) differ by more than 1%!',CR,...
            'Graphs may be very wrong!'])
 end
@@ -122,7 +122,7 @@ else,
     plotgrid  = 1;
     RingRadii = ringplot;
   else
-    CR = char(10); % Carriage Return ASCII code
+    CR = newline; % Carriage Return ASCII code
     error(['ringplot specified in unknown format!',CR,...
            '   Do NOT plot any rings:         Use 0 or "no rings" ',CR,...
            '   Plot rings automatically:      Use 1 or "plot rings" ',CR,...
@@ -285,7 +285,8 @@ fprintf(1,'psi %f orientat %f alpha %f (deg)\n',se.psi,orientat,alpha);
 hold on
 
 if 1,
-A = viewmtx(90+se.CML,se.lat)
+% Commented out since it is instantly overwritten.
+%A = viewmtx(90+se.CML,se.lat)
 A = viewmtx(90-phiobs*180/pi,90-theobs*180/pi)
 pause
 A(4,4) = 1/km2asec;
@@ -298,6 +299,8 @@ x2 = zeros(m,n); y2 = zeros(m,n); z2 = zeros(m,n);
 x2(:) = x3d(1,:)./x3d(4,:);
 y2(:) = x3d(2,:)./x3d(4,:);
 z2(:) = x3d(3,:)./x3d(4,:);
+% Rotated to allign with rest of the calculations
+[x2, y2] = Rotate(alpha,x2,y2);
 mesh(x2,y2,z2,zeros(size(x2)));hidden off, alpha(1), view(0,90)
 pause
 f=figure;
@@ -564,7 +567,8 @@ for i = 1:length(uniqueRings),
 
   % Get indicees of points that are inside limb and behind planet
   iInside = find((fLimb(xsky,ysky)<0));
-  iBehind = iInside(find(zsky(iInside)<0));
+  % Logical indexing for improved efficiency
+  iBehind = iInside(zsky(iInside)<0);
 
   % Plot points of rings Infront of Planet limb on sky plane
   % Replace points behind planet with "NaN" which then get ignored by plot

@@ -217,22 +217,22 @@ if exist('raimcce','var') && exist('decimcce','var')
   text(raimcce(1),decimcce(1),'  1')
   text(raimcce(2),decimcce(2),'  2')
 	Hs = [Hs; h2];
-	Ls = {Ls{:},'IMCCE JUP CENTRE'}; 
+	Ls = [Ls(:)',{'IMCCE JUP CENTRE'}]; 
 end
 
 if exist('arRenee','var') && exist('decRenee','var')
   h3 = plot(arRenee,decRenee,'kx','MarkerSize',10);
 	Hs = [Hs; h3];
-	Ls = {Ls{:},'RENEE JUP CENTRE'}; 
+	Ls = [Ls(:)',{'RENEE JUP CENTRE'}]; 
 end
 
 pcolor(AR,DEC,params.W),shading flat
 h4 = plot(raAPER,decAPER,'mx','MarkerSize',10);
 Hs = [Hs; h4];
-Ls = {Ls{:},'APER CENTRE'}; 
+Ls = [Ls(:)',{'APER CENTRE'}]; 
 h5 = plot(AR0,DEC0,'mo','MarkerSize',10);
 Hs = [Hs; h5];
-Ls = {Ls{:},'IMG CENTRE'}; 
+Ls = [Ls(:)',{'IMG CENTRE'}]; 
 hold off
 xlabel('RA [deg]')
 ylabel('DEC [deg]')
@@ -343,8 +343,13 @@ platesc = getFitsKeyVal(filename,{'PLATESC'},verbose)
 imageData = fitsread(filename,'image','Info', info);
 size(imageData)
 
-pData = fitsread(filename,'primarydata');
+% Fitsread cannot read PrimaryData, but can read primary
+% Changed from primarydata to primary in fitsread
+pData = fitsread(filename, 'primary');
 size(pData)
+% Fitsinfo can read PrimaryData
+pDataAlt = info.PrimaryData;
+size(pDataAlt)
 
 tableData = fitsread(filename,'binarytable');
 size(tableData)

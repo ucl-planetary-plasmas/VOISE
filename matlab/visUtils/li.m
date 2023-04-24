@@ -110,7 +110,8 @@ for i = 1:nlats-1,
 	  break; 
 	end
 
-  glowthrs = median(params.W(glow))+mad(params.W(glow));
+  % Commented out as it is instantly overwritten
+  %glowthrs = median(params.W(glow))+mad(params.W(glow));
   glowthrs = median(params.W(glow))+c*mad(params.W(glow));
   %glowthrs = median(params.W(glow))+3*c*mad(params.W(glow));
   %[~,~,glowthrs,~] = isoutlier(params.W(glow),'median');
@@ -167,14 +168,15 @@ for i = 1:nlats-1,
        x1(dusk),y(dusk),'o',x1(dusk),fdusk1,'x')
   xlabel('\mu')
   ylabel('I')
-	legend({lgdawn{:},lgdusk{:}},'location','southeast')
+  % Concatenation insteaad of extraction for efficiency
+	legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
 
   subplot(212),
   plot(x2(dawn),y(dawn),'o',x2(dawn),fdawn2,'x',...
        x2(dusk),y(dusk),'o',x2(dusk),fdusk2,'x')
   xlabel('\mu_0')
   ylabel('I')
-  legend({lgdawn{:},lgdusk{:}},'location','southeast')
+  legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
 
   drawnow
 %pause

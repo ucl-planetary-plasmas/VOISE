@@ -54,7 +54,8 @@ try
     iFile = params.iFile;
   end
 
-  if strfind(iFile,'.mat'), % mat-file
+  %Changed to contains instead of strfind for readability
+  if contains(iFile,'.mat'), % mat-file
     %   north_proj.mat is a mat file containing a polar projection of
     %   Jupiter observed by HST:
     %   Z           256x256         524288  double  image intensity
@@ -65,7 +66,8 @@ try
     img = load(iFile);
     % set image, axes and related
     params.W = double(img.Z);
-		if isfield(img,'x') & isfield(img,'y'),
+        % Changed from & to && for efficiency
+		if isfield(img,'x') && isfield(img,'y'),
       params.x = double(img.x);
       params.y = double(img.y);
 			% overwrite pixelSize and imageOrigo deduced from x and y
@@ -82,13 +84,13 @@ try
       params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
       params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 		end
-		if isfield(img,'pixelUnit') & ...
-       isa(img.pixelUnit,'cell') & ...
+		if isfield(img,'pixelUnit') && ...
+       isa(img.pixelUnit,'cell') && ...
        length(img.pixelUnit) == 2,
 			 params.pixelUnit = img.pixelUnit;
     end
 
-  elseif strfind(iFile,'.fits'), % fits-file
+  elseif contains(iFile,'.fits'), % fits-file
 
     me = checkiFile(params);
 		if ~isempty(me), throw(me), end
@@ -236,7 +238,8 @@ end
 
 catch me
 
-	disp(['Problem when loading image file.']);
+    % Removed unecessary brackets
+	disp('Problem when loading image file.');
   rethrow(me);
 
 end
