@@ -27,7 +27,7 @@ function params = loadImage(params)
 %   the origo
 
 %
-% $Id: loadImage.m,v 1.26 2021/06/24 17:45:12 patrick Exp $
+% $Id: loadImage.m,v 1.27 2023/05/17 14:09:28 patrick Exp $
 %
 % Copyright (c) 2010-2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -48,24 +48,25 @@ function params = loadImage(params)
 try
 
 	me = checkField(params,'iFile');
-  if ~isempty(me), 
+  if ~isempty(me) 
     throw(me),
   else
     iFile = params.iFile;
   end
 
-  if strfind(iFile,'.mat'), % mat-file
+  if contains(iFile,'.mat') % mat-file
     %   north_proj.mat is a mat file containing a polar projection of
     %   Jupiter observed by HST:
     %   Z           256x256         524288  double  image intensity
     %   x             1x256           2048  double  x-axis (# cols in Z)
     %   y           256x1             2048  double  y-axis (# rows in Z)
 		me = checkiFile(params);
-		if ~isempty(me), throw(me), end
+		if ~isempty(me), throw(me)
+        end
     img = load(iFile);
     % set image, axes and related
     params.W = double(img.Z);
-		if isfield(img,'x') & isfield(img,'y'),
+		if isfield(img,'x') && isfield(img,'y')
       params.x = double(img.x);
       params.y = double(img.y);
 			% overwrite pixelSize and imageOrigo deduced from x and y
@@ -81,17 +82,18 @@ try
       [nr, nc] = size(params.W);
       params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
       params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
-		end
-		if isfield(img,'pixelUnit') & ...
-       isa(img.pixelUnit,'cell') & ...
-       length(img.pixelUnit) == 2,
-			 params.pixelUnit = img.pixelUnit;
+    end
+    if isfield(img,'pixelUnit') && ...
+       isa(img.pixelUnit,'cell') && ...
+       length(img.pixelUnit) == 2
+      params.pixelUnit = img.pixelUnit;
     end
 
-  elseif strfind(iFile,'.fits'), % fits-file
+  elseif contains(iFile,'.fits') % fits-file
 
     me = checkiFile(params);
-		if ~isempty(me), throw(me), end
+		if ~isempty(me), throw(me)
+        end
 		%  from [msg,msgID] = lastwarn;
     warning('off','MATLAB:imagesci:fitsinfo:unknownFormat');
 
@@ -99,33 +101,43 @@ try
     opts = {'Info', info};
 
     % get HST fits parameters if requested
-    if params.HSTFitsParam,
+    if params.HSTFitsParam
       params = getHSTInfo(params);
     end
 
     ext = [];
-    if ~isfield(info,'Image') ...
+    if ~isfield(info,'Image')
       img = squeeze(fitsread(iFile,'primary',opts{:}));
-    elseif length(info.Image)==6, % APIS level 2 data _proc.fits
+		% Information about APIS data can be found in Lamy et 2015, 
+    % The Auroral Planetary Imaging and Spectroscopy (APIS) service,
+    % Astronomy and Computing 11 (2015) 138–145
+		% http://dx.doi.org/10.1016/j.ascom.2015.01.005
+    elseif length(info.Image)==6 % APIS level 2 data _proc.fits
+      % science image
       img = squeeze(fitsread(iFile,'primary',opts{:}));
       % latitude in degree at the 1-bar level
       ext.lat1b = fitsread(iFile,'image',1,opts{:});
       % local time at the 1-bar level
       ext.lt1b = fitsread(iFile,'image',2,opts{:});
-      % observing zenith angle at the 1-bar level
-      ext.oza1b = fitsread(iFile,'image',3,opts{:});
       % zenithal solar angle at the 1-bar level
-      ext.sza1b = fitsread(iFile,'image',4,opts{:});
+      ext.sza1b = fitsread(iFile,'image',3,opts{:});
+      % zenithal observing angle at the 1-bar level
+      ext.oza1b = fitsread(iFile,'image',4,opts{:});
       % auroral latitude at 300km above the 1-bar level
       ext.lat300km = fitsread(iFile,'image',5,opts{:});
       % auroral local time at 300km above the 1-bar level
       ext.lt300km = fitsread(iFile,'image',6,opts{:});
-    elseif length(info.Image)==3, % APIS level 1 data _drz.fits
-      % Science Image
+    elseif length(info.Image)==3 % APIS level 1 data
+      % original calibrated image (correction for dark current,
+      % flat-fielding, correction for geometric distortion)
+      % *_drz.fits => calibrated ACS,  units = electrons s−1 pix−1,
+      % The (dark) line of bad pixels visible was replaced by values
+      % linearly interpolated from neighbor pixels.
+      % *_x2d.fits => calibrated STIS, units = counts pix−1
       img = squeeze(fitsread(iFile,'image',1,opts{:})); 
-      % Weight Image
+      % weight(?) image
       ext.wht = squeeze(fitsread(iFile,'image',2,opts{:})); 
-      % Context Image
+      % context(?) image
       ext.ctx = squeeze(fitsread(iFile,'image',3,opts{:})); 
     end
     warning('on','MATLAB:imagesci:fitsinfo:unknownFormat');
@@ -134,12 +146,13 @@ try
     params.W = img;
     params.ext = ext;
 
-    if isfield(params,'HST') && ~isempty(params.HST) && params.HSTPlanetParam,
+    if isfield(params,'HST') && ...
+       ~isempty(params.HST) && ...
+       params.HSTPlanetParam
       me = checkSpice; 
       if ~isempty(me), throw(me), end
       params = getHSTPlanetParams(params);
     end
-    %pause
 
 		me = checkField(params,'imageOrigo'); 
 		if ~isempty(me), throw(me), end
@@ -151,7 +164,7 @@ try
     params.x = ([0:nc-1]-params.imageOrigo(1))*params.pixelSize(1);
     params.y = ([0:nr-1]-params.imageOrigo(2))*params.pixelSize(2);
 
-if 0,
+if 0
     % pixel coordinates (indices j)
     [Xj,Yj] = meshgrid(1:nc, 1:nr);
 
@@ -180,7 +193,7 @@ if 0
     hold off
 
     figure
-    if 1,
+    if 1
       % convert to arcsec and set relative ra/dec to ref pix
       [Xi,Yi] = getHSTabs2relRadec(HST,Xi,Yi);
       [rpra,rpdec] = getHSTabs2relRadec(HST,rpra,rpdec);
@@ -192,7 +205,7 @@ if 0
       xlbl = 'ra [deg]';
       ylbl = 'dec [deg]';
     end
-    pcolor(Xi,Y,log10(abs(params.W))); shading flat; 
+    pcolor(Xi,Yi,log10(abs(params.W))); shading flat; 
     hold on
     plot(rpra,rpdec,'ko','markersize',5)
     plot(planet.ra,planet.dec,'kx','markersize',5)
@@ -202,41 +215,41 @@ if 0
 end
 end
 
-  else, % neither mat-file nor fits-file
+  else % neither mat-file nor fits-file
 
-    if ~isempty(iFile), 
+    if ~isempty(iFile)
       me = MException('MyFunction:fileTypeNotSupported',...
                       '%s is not a fits- nor a mat-file',iFile);
-		else
+    else
 		  me = MException('MyFunction:fileEmpty',...
                       'field iFile is empty');
       throw(me);
-		end
+    end
 
   end
 
 	% ensure that image is in floating precision
-	if isinteger(params.W),
-	  params.W = single(params.W);
-	end
+  if isinteger(params.W)
+    params.W = single(params.W);
+  end
 
   % apply misc. filtering if required
 	params = preprocessImage(params);
 
   % set colour and axes limits
-  if isempty(params.Wlim),
+  if isempty(params.Wlim)
     params.Wlim = [min(params.W(:)) max(params.W(:))];
   end
-  if isempty(params.xlim),
+  if isempty(params.xlim)
     params.xlim = [min(params.x) max(params.x)];
   end
-  if isempty(params.ylim),
+  if isempty(params.ylim)
     params.ylim = [min(params.y) max(params.y)];
   end
 
 catch me
 
-	disp(['Problem when loading image file.']);
+  disp('Problem when loading image file.');
   rethrow(me);
 
 end
@@ -249,7 +262,7 @@ string = deblank(fliplr(deblank(fliplr(string))));
 function me = checkSpice()
 
 me = [];
-if isempty(which('mice')) || exist('mice') ~= 3,
+if isempty(which('mice')) || exist('mice') ~= 3
   me = MException('MyFunction:verifySpice', ...
                   ['Problem with Mice/Spice installation' ...
                   '\nCheck your installation']);
@@ -268,12 +281,15 @@ end
 function me = checkField(params,field)
 
 me = [];
-if ~isfield(params,field),
+if ~isfield(params,field)
   names = fieldnames(params);
 	strnames = '';
-	if ~isempty(names),
+	if ~isempty(names)
 	  strnames = '(';
-    for i=1:length(names)-1, strnames = [strnames names{i} ', ']; end
+    for i=1:length(names)-1 
+      strnames = [strnames names{i} ', ']; 
+      return
+    end
 	  strnames = [strnames names{end} ')'];
 	end
   me = MException('MyFunction:verifyParams', ...
