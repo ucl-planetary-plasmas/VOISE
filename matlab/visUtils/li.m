@@ -13,7 +13,7 @@ function params = li(params,binlat,dawnmax,duskmin)
 % duskmin: minimum local time for dusk sector fit (default 11h)
 
 %
-% $Id: li.m,v 1.2 2023/05/17 15:21:10 patrick Exp $
+% $Id: li.m,v 1.3 2023/05/17 16:18:14 patrick Exp $
 %
 % Copyright (c) 2021 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -191,7 +191,9 @@ for i = 1:nlats-1
   xlabel('\mu')
   ylabel('I')
 	title('Li')
-  % cell array {lgdawn{:},lgdusk{:}} or [lgdawn(:)',lgdusk(:)'] 
+  % cell array construction 
+  % by extraction {lgdaw{:},lgdusk{:}} 
+  % by concatenation [lgdawn(:)',lgdusk(:)'] 
   legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
 
   subplot(212),

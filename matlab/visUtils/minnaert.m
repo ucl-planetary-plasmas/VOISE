@@ -14,7 +14,7 @@ function params = minnaert(params,binlat,dawnmax,duskmin,np)
 
 
 %
-% $Id: minnaert.m,v 1.2 2023/05/17 15:18:51 patrick Exp $
+% $Id: minnaert.m,v 1.3 2023/05/17 16:18:14 patrick Exp $
 %
 % Copyright (c) 2021 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -206,8 +206,10 @@ for i = 1:nlats-1,
        x(dusk),y(dusk),'o',x(dusk),fdusk,'x')
   xlabel('log(\mu\mu_0)')
   ylabel('log(\mu I)')
-	% cell array {lgdawn{:},lgdusk{:}} or [lgdawn(:)',lgdusk(:)']
-  legend({lgdawn{:},lgdusk{:}},'location','southeast')
+  % cell array construction
+  % by extraction {lgdaw{:},lgdusk{:}}
+  % by concatenation [lgdawn(:)',lgdusk(:)']
+  legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
 	end
 	title('Minnaert')
 
