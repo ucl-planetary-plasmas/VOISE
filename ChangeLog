@@ -1,3 +1,27 @@
+2023-05-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/visUtils/li.m (1.2):
+	  Added diagnostic to be similar to minnaert().  Improved some code
+	  comments.  Cosmetic changes.
+
+2023-05-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/visUtils/minnaert.m (1.2):
+	  Fixed legend label lgd into lgdawn.  Improved diagnostics.
+	  Equivalent use of cell array construction {lgdawn{:},lgdusk{:}}
+	  and [lgdawn(:)',lgdusk(:)'] for first argument of legend().
+	  Cosmetic changes.
+
+2023-05-17  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/loadImage.m (1.27):
+	  Fixed bug where the images for observing zenith angles oza1b
+	  (extension 4) and solar zenithal angles sza1b (extension 3) were
+	  swapped.  Fixed logical AND short-circuiting (& => &&).  Replaced
+	  strfind() with contains().  Added information and reference for
+	  APIS Level 1 and 2 fits format.  Fixed pcolor(Xi,Y,...) to
+	  pcolor(Xi,Yi,...).  Cosmetic changes.
+
 2023-04-16  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getEllipseAxes.m (1.4):
@@ -340,7 +364,7 @@
 	  Imported C++ code for VOISE written by Jack Scantlebury for his
 	  MSc project in the academic year 2017-2018.
 
-2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/cmpVDalgo.m (1.7), matlab/computeHCThreshold.m (1.4),
 	  matlab/divideVD.m (1.17), matlab/divideVDFast.m (1.9),
@@ -352,12 +376,12 @@
 	  (1.2):
 	  Changed the API to getVDOp and plotVDOp.
 
-2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getVDOp.m (1.8):
 	  Changed API to deal with mex version of getVDOp.
 
-2020-05-03  Patrick Guio <p.guio@ucl.ac.uk>
+2020-05-02  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/plotVDOp.m (1.6):
 	  Removed comment.
@@ -2822,7 +2846,7 @@
 	  Added support for random generator seeding via RandStream new
 	  class available from Matlab version 7.7.
 
-2009-11-07  Patrick Guio <p.guio@ucl.ac.uk>
+2009-11-06  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/Makefile.am (1.3):
 	  Do not forget to export VOISEtiming.mat file.
@@ -3100,18 +3124,18 @@
 	  matlab/getCentroidVD.m (1.9), matlab/mergeVD.m (1.8):
 	  Cosmetic changes in report/diagnostics.
 
-2009-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getCentroidVD.m (1.8):
 	  Changed control structure to conform to dividing and merging
 	  phases.  Added similar diagnostic as dividing and merging phases.
 
-2009-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/getDefaultParams.m (1.3):
 	  Added flag for exporting figures during regularisation phase.
 
-2009-07-18  Patrick Guio <p.guio@ucl.ac.uk>
+2009-07-17  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/divideVD.m (1.6), matlab/mergeVD.m (1.7):
 	  Cosmetic changes in standard output report.
