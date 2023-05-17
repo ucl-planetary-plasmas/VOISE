@@ -14,7 +14,7 @@ function params = minnaert(params,binlat,dawnmax,duskmin,np)
 
 
 %
-% $Id: minnaert.m,v 1.1 2023/02/03 16:50:25 patrick Exp $
+% $Id: minnaert.m,v 1.2 2023/05/17 15:18:51 patrick Exp $
 %
 % Copyright (c) 2021 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -63,14 +63,17 @@ scatter(params.ext.lt1b(i1),params.ext.lat1b(i1),5,params.ext.oza1b(i1))
 x = [params.ext.lt1b(i1);params.ext.lt1b(i2)];
 set(gca,'xlim',xlim,'ylim',ylim);
 colorbar
-xlabel('local time 1bar'); ylabel('latitutde 1bar'); title('oza1b')
+xlabel('local time @ 1bar'); 
+ylabel('latitutde @ 1bar'); 
+title('Observer zenithal angle @ 1bar')
 
 subplot(212),
 scatter(params.ext.lt1b(i2),params.ext.lat1b(i2),5,params.ext.sza1b(i2))
 set(gca,'xlim',xlim,'ylim',ylim);
 colorbar
-xlabel('local time 1bar'); ylabel('latitude 1bar'); title('sza1b')
-pause
+xlabel('local time @ 1bar'); 
+ylabel('latitude @ 1bar'); 
+title('Solar zenithal angle @ 1bar')
 
 x = log(mu.*mu0);
 y = log(mu.*I);
@@ -149,18 +152,18 @@ for i = 1:nlats-1,
 	  break; 
 	end
 
-  glowthrs = median(params.W(glow))+mad(params.W(glow));
-	glowthrs = median(params.W(glow))+c*mad(params.W(glow));
+  %glowthrs = median(params.W(glow))+mad(params.W(glow));
+  glowthrs = median(params.W(glow))+c*mad(params.W(glow));
   %glowthrs = median(params.W(glow))+3*c*mad(params.W(glow));
   %[~,~,glowthrs,~] = isoutlier(params.W(glow),'median');
-  fprintf(1,'Airglow threshold %f\n', glowthrs);
+  fprintf(1,'Minnaert: Airglow threshold %f\n', glowthrs);
 
   MED(i) = median(params.W(glow));
   MAD(i) = mad(params.W(glow));
   THRS(i) = glowthrs;
 	if exist('thrshold.mat','file'),
 	  glowthrs = getthrshold(LATS(i));
-    fprintf(1,'Airglow threshold %f\n', glowthrs);
+    fprintf(1,'Minnaert: Airglow threshold %f (from getthrshold)\n', glowthrs);
 	end
 
   % morning sector without aurora 
@@ -203,8 +206,10 @@ for i = 1:nlats-1,
        x(dusk),y(dusk),'o',x(dusk),fdusk,'x')
   xlabel('log(\mu\mu_0)')
   ylabel('log(\mu I)')
+	% cell array {lgdawn{:},lgdusk{:}} or [lgdawn(:)',lgdusk(:)']
   legend({lgdawn{:},lgdusk{:}},'location','southeast')
 	end
+	title('Minnaert')
 
   % using fit
   %opts = {'Robust', 'LAR'};
@@ -214,7 +219,7 @@ for i = 1:nlats-1,
     [pdawn,gofdawn] = fit(x(dawnthrs), y(dawnthrs),fitfun, opts{:});
 		disp(pdawn)
     airglow(dawn) = exp(pdawn(x(dawn)))./mu(dawn);
-    lgd = {'dawn','dawn fit'};
+    lgdawn = {'dawn','dawn fit'};
   else
     pdawn = @(x) NaN*ones(size(x));
     lgdawn = {};
@@ -239,22 +244,26 @@ for i = 1:nlats-1,
   xlabel('log(\mu\mu_0)')
   ylabel('log(\mu I)')
 
-  legend({lgdawn{:},lgdusk{:}},'location','southeast')
+  legend([lgdawn(:)',lgdusk(:)'],'location','southeast')
   drawnow
 
   %pause
 
 end
-pause
+%pause
 
 clf
 plot(LATS,MED,LATS,MAD,LATS,THRS),
 xlabel('latitude bin')
 ylabel('Intensity');
+title('Minnaert')
 legend({'MEDIAN','MAD','THRSHOLD'});
 
 if ~exist('thrshold.mat','file'),
-save thrshold LATS MED MAD THRS
+  fprintf(1,'*** thrshold.mat does not exists, avin!\n');
+  save thrshold LATS MED MAD THRS
+else
+  fprintf(1,'*** thrshold.mat exists, not saving!\n');
 end
 
 pause
