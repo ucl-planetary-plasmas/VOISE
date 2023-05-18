@@ -2,7 +2,7 @@ function params = getHSTInfo(params)
 % function params = getHSTInfo(params)
 
 %
-% $Id: getHSTInfo.m,v 1.14 2021/04/26 13:05:12 patrick Exp $
+% $Id: getHSTInfo.m,v 1.15 2023/05/18 14:35:16 patrick Exp $
 %
 % Copyright (c) 2012 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -30,6 +30,9 @@ HST = [];
 TELESCOP = getFitsKeyVal(iFile,{'TELESCOP'},verbose);
 
 if ~isempty(TELESCOP) && strcmp(TELESCOP,'HST'), % level 1 and level 2 HST
+  fprintf(1,'*********************************\n');
+  fprintf(1,'Level 1/2 APIS HST fits detected.\n');
+  fprintf(1,'*********************************\n');
 
   % instrument identifier
   HST.INSTRUME = getFitsKeyVal(iFile,{'INSTRUME'},verbose);
@@ -167,10 +170,13 @@ end
 % level 2 APIS specific
 SOURCE = getFitsKeyVal(iFile,{'SOURCE'},verbose);
 if ~isempty(SOURCE) && strcmp(SOURCE,'APIS database'),
-  fprintf(1,'Level 2 APIS fits detected.\n');
+  fprintf(1,'*******************************\n');
+  fprintf(1,'Level 2 APIS HST fits detected.\n');
+  fprintf(1,'*******************************\n');
 
   % DATA DESCRIPTION
 	HST.SOURCE = SOURCE;
+  HST.APIS.INSTRUM = getFitsKeyVal(iFile,{'INSTRUM'},verbose);
   HST.APIS.TARGET1 = getFitsKeyVal(iFile,{'TARGET1'},verbose);
   HST.APIS.HEMIS1 = getFitsKeyVal(iFile,{'HEMIS1'},verbose);
   HST.APIS.HEMIS2 = getFitsKeyVal(iFile,{'HEMIS2'},verbose);
