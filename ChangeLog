@@ -1,3 +1,27 @@
+2023-05-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testReadAPISLevel2.m (1.5):
+	  Updated colormap to hot.
+
+2023-05-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/testReadAPISLevel2.m (1.4):
+	  Added structure params as output.  Added example in help text.
+	  Added test for detecting hemisphere and plot latitude scale
+	  correctly for both hemispheres.  Added function to plot minimum
+	  zenith angle x-coordinates as function of y-coordinates.
+
+2023-05-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/loadImage.m (1.28):
+	  Reversed swap between sza and oza (typo in Lamy 2015).
+
+2023-05-18  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* matlab/getHSTInfo.m (1.15):
+	  Added INSTRUM keyword from level 2 APIS.  Added diagnostics for
+	  HST information detection.
+
 2023-05-17  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/visUtils/li.m (1.3), matlab/visUtils/minnaert.m (1.3):
