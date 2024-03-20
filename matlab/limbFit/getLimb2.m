@@ -2,7 +2,7 @@ function fit = getLimb2(VD,params,fit)
 % function fit = getLimb2(VD,params,fit)
 
 %
-% $Id: getLimb2.m,v 1.9 2020/01/29 15:56:24 patrick Exp $
+% $Id: getLimb2.m,v 1.10 2024/03/20 21:42:45 patrick Exp $
 %
 % Copyright (c) 2009-2015 Patrick Guio <patrick.guio@gmail.com>
 % All Rights Reserved.
@@ -21,7 +21,7 @@ function fit = getLimb2(VD,params,fit)
 % along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 % Calculate equivalent scale length from VD as sqrt(S)
-[imls, Sls] = getVDOp(VD, params.W, @(x) sqrt(length(x)));
+[imls, Sls] = getVDOp(VD, params.W, 'sqrtLen');
 fprintf('min(Sls) %.2f max(Sls) %.2f\n', [min(Sls), max(Sls)]);
 
 % image coordinate axes
