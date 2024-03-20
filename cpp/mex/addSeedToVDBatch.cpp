@@ -54,7 +54,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     return;
   }
 
-  bool timing = false;
+  //UNUSED bool timing = false;
 
   // Get new seed information
   real *Sdoub = mxGetDoubles(prhs[1]);
