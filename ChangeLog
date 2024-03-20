@@ -1,3 +1,77 @@
+2024-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* cpp/CMakeLists.txt (1.1), cpp/main.cpp (1.1),
+	  cpp/aux-functions/readMatrix.cpp (1.1),
+	  cpp/aux-functions/readMatrix.h (1.1),
+	  cpp/aux-functions/readSeeds.cpp (1.1),
+	  cpp/aux-functions/readSeeds.h (1.1),
+	  cpp/test/testAddSeedCheckLambda.cpp (1.1),
+	  cpp/test/testAddSeedCheckV.cpp (1.1),
+	  cpp/test/testGetCentroid.cpp (1.1), cpp/test/testGetVDOp.cpp
+	  (1.1), cpp/test/testInVector.cpp (1.1), cpp/test/testMetrics.cpp
+	  (1.1), cpp/test/testPointInRegion.cpp (1.1),
+	  cpp/test/testProposition2.cpp (1.1),
+	  cpp/test/testRemoveSeedCheckLambda.cpp (1.1),
+	  cpp/test/testRemoveSeedCheckV.cpp (1.1), cpp/test/testSqDist.cpp
+	  (1.1), cpp/test/Catch2/catch.hpp (1.1),
+	  cpp/test/Catch2/test_main.cpp (1.1), cpp/test/resources/W.txt
+	  (1.1), cpp/test/resources/Wop.txt (1.1),
+	  cpp/test/resources/benchVDLambda.txt (1.1),
+	  cpp/test/resources/benchVDLambda10.txt (1.1),
+	  cpp/test/resources/benchVDLambda1024.txt (1.1),
+	  cpp/test/resources/benchVDLambda128.txt (1.1),
+	  cpp/test/resources/benchVDLambda256.txt (1.1),
+	  cpp/test/resources/benchVDLambda512.txt (1.1),
+	  cpp/test/resources/benchVDSeeds.txt (1.1),
+	  cpp/test/resources/benchVDSeeds10.txt (1.1),
+	  cpp/test/resources/benchVDSeeds1024.txt (1.1),
+	  cpp/test/resources/benchVDSeeds128.txt (1.1),
+	  cpp/test/resources/benchVDSeeds256.txt (1.1),
+	  cpp/test/resources/benchVDSeeds512.txt (1.1),
+	  cpp/test/resources/benchVDV.txt (1.1),
+	  cpp/test/resources/benchVDV10.txt (1.1),
+	  cpp/test/resources/benchVDV1024.txt (1.1),
+	  cpp/test/resources/benchVDV128.txt (1.1),
+	  cpp/test/resources/benchVDV256.txt (1.1),
+	  cpp/test/resources/benchVDV512.txt (1.1),
+	  cpp/test/test-help-fns/bruteForceCheckLambda.cpp (1.1),
+	  cpp/test/test-help-fns/bruteForceCheckLambda.h (1.1),
+	  cpp/test/test-help-fns/bruteForceCheckV.cpp (1.1),
+	  cpp/test/test-help-fns/bruteForceCheckV.h (1.1),
+	  cpp/test/test-help-fns/generateProposition2VD.cpp (1.1),
+	  cpp/test/test-help-fns/generateProposition2VD.h (1.1),
+	  cpp/test/test-help-fns/loadStruct.h (1.1),
+	  cpp/test/test-help-fns/loadVD.cpp (1.1),
+	  cpp/test/test-help-fns/loadVD.h (1.1):
+	  Imported testsuite for mex function files from C++ source written
+	  by Jack Scantlebury for his MSc thesis at UCL in 2018.
+
+2024-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* cpp/getRegion.cpp (1.3):
+	  Added a int() cast to avoid a compiler warning.
+
+2024-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* cpp/mex/addSeedToVDBatch.cpp (1.2):
+	  Commented unused variable.
+
+2024-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* cpp/mex/grabVD.cpp (1.2), cpp/mex/pushVD.cpp (1.2):
+	  Commented unused variables.
+
+2024-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* cpp/typedefs.h (1.2), cpp/mex/sopToWop.cpp (1.3):
+	  Defined RealVec_size_type to represent the length of RealVec to
+	  be used in controlled sequences and use it for a "for ()" loop.
+
+2024-03-20  Patrick Guio <p.guio@ucl.ac.uk>
+
+	* CMakeLists.txt (1.1):
+	  cmake config file to generate mex-files.
+
 2023-05-18  Patrick Guio <p.guio@ucl.ac.uk>
 
 	* matlab/testReadAPISLevel2.m (1.5):
