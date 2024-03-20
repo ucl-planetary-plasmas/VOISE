@@ -108,9 +108,9 @@ void pushVD(vd outputVD, mxArray *plhs[])
 
   // Populate VD.Nk (cell array of neighbour relationships)
   int nkLen = mxGetNumberOfElements(nkOutgoingArray);
-  mxArray *cellPtrs[nkLen];
+  //UNUSED mxArray *cellPtrs[nkLen];
   for (int i = 0; i < nkLen; ++i) {
-    cellPtrs[i] = mxGetCell(nkOutgoingArray, i);
+    //UNUSED cellPtrs[i] = mxGetCell(nkOutgoingArray, i);
     int cellLen = outputVD.getNkByIdx(i + 1).size();
     mxArray *tmpArr = mxCreateDoubleMatrix(cellLen, 1, mxREAL);
     real *tmpPtr = mxGetDoubles(tmpArr);

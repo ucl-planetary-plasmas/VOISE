@@ -37,8 +37,8 @@ vd grabVD(const mxArray *prhs[], const uint32 field)
   memset(&S_struct, 0, sizeof(S_struct));
 
   // Get all input information from vd
-  real nFields = mxGetNumberOfFields(prhs[field]);
-  real nElements = mxGetNumberOfElements(prhs[field]);
+  //UNUSED real nFields = mxGetNumberOfFields(prhs[field]);
+  //UNUSED real nElements = mxGetNumberOfElements(prhs[field]);
 
   // Create mxArrays with data from VD ML struct
   mxArray *nrIncomingArray = mxGetField(prhs[field], 0, "nr");
@@ -149,3 +149,4 @@ vd grabVD(const mxArray *prhs[], const uint32 field)
 
   return VD;
 }
+
