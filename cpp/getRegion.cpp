@@ -57,7 +57,7 @@ Mat getRegion(const vd &VD, const real &s)
   boundsDown *= -1;
 
   // Upward sweep including s2 row
-  for (int i = s2; i < VD.getNr() + 1; ++i) {
+  for (int i = s2; i < int(VD.getNr()) + 1; ++i) {
 
     RealVec lb, ub;
     const int boundsIdx = i - s2 + 1;
