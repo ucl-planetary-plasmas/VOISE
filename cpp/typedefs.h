@@ -25,6 +25,7 @@ typedef unsigned int uint32;
  * @brief std::vector of reals. Used for Sx, Sy, Sk, Nk.
  */
 typedef std::vector<real> RealVec;
+typedef std::vector<real>::size_type RealVec_size_type;
 
 /**
  * @typedef Mat

@@ -50,7 +50,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   // Average for each VR is independent (embarrassingly parallel)
   //#pragma omp parallel for
-  for (int f = 0; f < VD.getSk().size(); ++f) {
+  for (RealVec_size_type f = 0; f < VD.getSk().size(); ++f) {
     real s = VD.getSk().at(f);
     bool finish = false;
     real val = sopReals[f];
