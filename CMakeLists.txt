@@ -41,8 +41,8 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 #  set(CMAKE_BUILD_TYPE Debug)
 endif()
-set(CMAKE_CXX_FLAGS_RELEASE "-DMX_COMPAT_64 -DMATLAB_MEXCMD_RELEASE=R2018a -Wall -fPIC -O3 -fopenmp")
-set(CMAKE_CXX_FLAGS_DEBUG "-DMX_COMPAT_64 -DMATLAB_MEXCMD_RELEASE=R2018a -Wall -fPIC -O0 -g -fopenmp")
+set(CMAKE_CXX_FLAGS_RELEASE "-DMX_COMPAT_64 -DMATLAB_MEXCMD_RELEASE=R2018a -DUSE_MEX_CMD   -D_GNU_SOURCE -DMATLAB_MEX_FILE -Wall -fexceptions -fPIC -O3 -fno-omit-frame-pointer -pthread -fwrapv -fopenmp")
+set(CMAKE_CXX_FLAGS_DEBUG "-DMX_COMPAT_64 -DMATLAB_MEXCMD_RELEASE=R2018a -DUSE_MEX_CMD   -D_GNU_SOURCE -DMATLAB_MEX_FILE -Wall -fexceptions -fPIC -O0 -g -fno-omit-frame-pointer -pthread -fwrapv -fopenmp")
 
 
 find_package(Matlab)
